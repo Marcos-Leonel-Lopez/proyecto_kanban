@@ -8,6 +8,19 @@
             <li class="list-group-item"><a asp-controller="Usuario" asp-action="GetAll">Ver lista completa de
                     usuarios</a>
             </li>
+            <li class="list-group-item">
+                <form asp-controller="Usuario" asp-action="GetById" method="get">
+                    <label for="idUsuario">Ver Usuario por ID:</label>
+                    <input type="text" id="idUsuario" name="idUsuario" required />
+                    <button type="submit">Ver Usuario</button>
+                </form>
+            </li>
+            <li class="list-group-item">
+                <a asp-controller="Usuario" asp-action="Create">Crear un nuevo usuario</a>
+            </li>
+            <li class="list-group-item">
+                <a asp-controller="Usuario" asp-action="ListToEdit">Editar usuarios</a>
+            </li>
                 @* hace referencia al nombre de la funcion en el controlador *@
             @* <li class="list-group-item">
                 <form asp-controller="Cliente" asp-action="GetById" method="get">

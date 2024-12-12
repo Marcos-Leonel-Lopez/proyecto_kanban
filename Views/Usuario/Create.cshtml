@@ -1,0 +1,43 @@
+@{
+    ViewData["Title"] = "Crear un Usuario";
+}
+@model Usuario
+
+<form asp-controller="Usuario" asp-action="Create" method="post" enctype="multipart/form-data">
+    <section class="d-flex flex-column">
+        <section class="d-flex justify-content-start mb-2">
+            <section class="me-3">
+                <label for="nombre_de_usuario">Nombre</label>
+                <input type="text" id="nombre_de_usuario" name="Nombre_de_usuario" class="form-control"
+                    asp-for="Nombre_de_usuario" />
+                <span class="text-danger" asp-validation-for="Nombre_de_usuario"></span>
+            </section>
+        </section>
+        <section class="d-flex justify-content-start mb-2">
+            <section class="me-3">
+                <label for="password">Contraseña</label>
+                <input type="password" id="password" name="Password" class="form-control" asp-for="Password" />
+                <span class="text-danger" asp-validation-for="Password"></span>
+            </section>
+        </section>
+        <section class="d-flex justify-content-start mb-2">
+            <section class="me-3">
+                <label for="rol_usuario">Rol</label>
+                <select id="rol_usuario" name="Rol_usuario" class="form-select" asp-for="Rol_usuario">
+                    <option value="">Seleccione un rol</option>
+                    @foreach (var rol in Enum.GetValues(typeof(MisEnums.RolUsuario)))
+                    {
+                        <option value="@rol">@rol</option>
+                    }
+                </select>
+                <span class="text-danger" asp-validation-for="Rol_usuario"></span>
+            </section>
+        </section>
+        <section class="d-flex justify-content-start mb-2">
+            <button type="button" class="btn btn-secondary me-1">
+                <a asp-controller="Usuario" asp-action="Index" class="text-white text-decoration-none">Volver</a>
+            </button>
+            <button type="submit" class="btn btn-primary ms-1">CREAR</button>
+        </section>
+    </section>
+</form>

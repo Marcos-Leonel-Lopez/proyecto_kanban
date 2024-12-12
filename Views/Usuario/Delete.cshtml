@@ -1,0 +1,30 @@
+@{
+    ViewData["Title"] = "Eliminar un Usuario";
+}
+@model DataUsuario;
+
+<section class="container">
+    <h2>¿Está seguro que desea eliminar el siguiente usuario?</h2>
+    <table class="table table-hover">
+        <thead>
+            <tr>
+                <th scope="col">Id</th>
+                <th scope="col">Nombre</th>
+                <th scope="col">Rol</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>@Model.Id</td>
+                <td>@Model.Nombre</td>
+                <td>@Model.Rol</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <form asp-action="DeleteConfirmed" method="post">
+        <input type="hidden" name="idUsuario" value="@Model.Id" />
+        <button type="submit" class="btn btn-danger">ELIMINAR</button>
+        <a asp-controller="Usuario" asp-action="ListToEdit" class="btn btn-secondary">CANCELAR</a>
+    </form>
+</section>
