@@ -1,0 +1,40 @@
+@{
+    ViewData["Title"] = "Gestión de Usuarios";
+}
+<section class="container">
+    <div class="text-left">
+        <h1>Gestión de Usuarios</h1>
+        <ul class="list-group">
+            <li class="list-group-item"><a asp-controller="Usuario" asp-action="GetAll">Ver lista completa de
+                    usuarios</a>
+            </li>
+                @* hace referencia al nombre de la funcion en el controlador *@
+            @* <li class="list-group-item">
+                <form asp-controller="Cliente" asp-action="GetById" method="get">
+                    <label for="clientId">Ver clientes por ID:</label>
+                    <input type="text" id="clientId" name="id" required />
+                    <button type="submit">Ver Clientes</button>
+                </form>
+            </li>
+            <li class="list-group-item">
+                <a asp-controller="Cliente" asp-action="Create">Crear un nuevo clientes</a>
+            </li>
+            <li class="list-group-item">
+                <form asp-controller="Cliente" asp-action="Update" method="get">
+                    <label for="clientId">Modificar un cliente por ID:</label>
+                    <input type="text" id="clientId" name="id" required />
+                    <button type="submit">Ir</button>
+                </form>
+            </li>
+            <li class="list-group-item">
+                <form asp-controller="Cliente" asp-action="Delete" method="get">
+                    <label for="deleteId">Borrar cliente por ID:</label>
+                    <input type="text" id="deleteId" name="id" required />
+                    <button type="submit">Borrar Cliente</button>
+                </form>
+            </li> *@
+        </ul>
+        <button type="button" class="btn btn-secondary mt-4">
+            <a href="@Url.Action("Index", "Home")" class="text-white text-decoration-none">Volver</a>
+        </button>
+</section>

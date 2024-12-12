@@ -4,5 +4,37 @@
 
 <div class="text-center">
     <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
 </div>
+<section class="conteiner">
+    <ul>
+        <li class="list-group-item">
+            <a asp-controller="Usuario" asp-action="Index">Usuarios</a>
+        </li>
+    </ul>
+    @* <ul class="list-group">
+        @if (Loggeado)
+        {
+            <li class="list-group-item">
+                <a asp-controller="Producto" asp-action="Index">Productos</a>
+            </li>
+            <li class="list-group-item">
+                <a asp-controller="Presupuesto" asp-action="Index">Presupuestos</a>
+            </li>
+            @if (role == "admin"){
+                <li class="list-group-item">
+                <a asp-controller="Cliente" asp-action="Index">Clientes</a>
+            </li>
+            }
+
+            <li class="list-group-item">
+                <a asp-controller="Usuario" asp-action="Logout">Salir</a>
+            </li>
+        }
+        else
+        {
+            <li class="list-group-item">
+                <a asp-controller="Usuario" asp-action="Index">Ingresar</a>
+            </li>
+        }
+    </ul> *@
+</section>
