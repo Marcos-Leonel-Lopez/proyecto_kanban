@@ -32,26 +32,34 @@ namespace UsuarioRepo
             }
             return usuario;
         }
-        public Usuario Update(Usuario newUsuario, int id)
+        public bool EditarPerfil(DataUsuario newUsuario, int id)
         {
-            Usuario usuario = newUsuario;
-            string query = "UPDATE Usuario SET nombre_de_usuario=@nombre, password=@password, rol_usuario=@rol WHERE id_usuario=@id";
-            using (var connection = new SqliteConnection(_ConnectionString))
+            try
             {
-                connection.Open();
-                using (var command = new SqliteCommand(query, connection))
+                DataUsuario usuario = newUsuario;
+                string query = "UPDATE Usuario SET nombre_de_usuario=@nombre, rol_usuario=@rol WHERE id_usuario=@id";
+                using (var connection = new SqliteConnection(_ConnectionString))
                 {
-                    command.Parameters.AddWithValue("@nombre", usuario.Nombre_de_usuario);
-                    command.Parameters.AddWithValue("@password", usuario.Password);
-                    command.Parameters.AddWithValue("@rol", usuario.Rol_usuario);
-                    command.Parameters.AddWithValue("@id", id);
-                    command.ExecuteNonQuery();
+                    connection.Open();
+                    using (var command = new SqliteCommand(query, connection))
+                    {
+                        command.Parameters.AddWithValue("@nombre", usuario.Nombre);
+                        command.Parameters.AddWithValue("@rol", usuario.Rol);
+                        command.Parameters.AddWithValue("@id", id);
+                        int rowsAffected = command.ExecuteNonQuery();
+                        return rowsAffected > 0;
+                    }
                 }
-                connection.Close();
             }
-            return usuario;
+            catch (Exception ex)
+            {
+                Console.Error.WriteLine(ex);
+                return false;
+            }
+
         }
-        public List<Usuario> GetAll(){
+        public List<Usuario> GetAll()
+        {
             List<Usuario> usuarios = new List<Usuario>();
             string query = "SELECT * FROM Usuario";
             using (var connection = new SqliteConnection(_ConnectionString))
@@ -78,7 +86,8 @@ namespace UsuarioRepo
             }
             return usuarios;
         }
-        public Usuario GetById(int id_usuario){
+        public Usuario GetById(int id_usuario)
+        {
             Usuario usuario = null;
             string query = "SELECT * FROM Usuario WHERE id_usuario = @id_usuario";
             using (var connection = new SqliteConnection(_ConnectionString))
@@ -105,7 +114,8 @@ namespace UsuarioRepo
             }
             return usuario;
         }
-        public bool Remove(int id){
+        public bool Remove(int id)
+        {
             bool success = false;
             string query = "DELETE FROM Usuario WHERE id_usuario = @id";
             using (var connection = new SqliteConnection(_ConnectionString))
@@ -120,7 +130,8 @@ namespace UsuarioRepo
             }
             return success;
         }
-        public Usuario UpdatePass(Usuario usuario, int id){
+        public Usuario UpdatePass(Usuario usuario, int id)
+        {
             string query = "UPDATE Usuario SET passsword = @pass WHERE id_usuario = @id";
             using (var connection = new SqliteConnection(_ConnectionString))
             {

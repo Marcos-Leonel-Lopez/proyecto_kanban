@@ -89,14 +89,43 @@ public class UsuarioController : Controller
         return RedirectToAction("GetAll");
     }
     [HttpGet]
-    public IActionResult Update(int idUsuario){
+    // Verificar que el usuario sea admin o que el id de las ession coincida con el 'idUsuario'
+    public IActionResult EditarPerfil(int idUsuario)
+    {
         var usuario = _usuarioRepository.GetById(idUsuario);
-        if(usuario == null){
-            ViewData["ErrorMessage"] = "El usuario con el ID proporcionado no existe.";
+        if (usuario == null)
+        {
+            ViewData["ErrorMessage"] = "Hubo un problema al intentar actualizar el usuario.";
             return View("Error");
         }
-        return View(usuario);
+        var viewModel = new DataUsuario(usuario);
+        return View(viewModel);
     }
+    [HttpPost]
+    public IActionResult EditPerfil(DataUsuario usuarioModif)
+    {
+        if (ModelState.IsValid)
+        {
+            var usuarioExistente = _usuarioRepository.GetById(usuarioModif.Id);
+            if (usuarioExistente == null)
+            {
+                ViewData["ErrorMessage"] = "Hubo un problema al intentar actualizar el usuario.";
+                return View("Error");
+            }
+            var modif = _usuarioRepository.EditarPerfil(usuarioModif, usuarioModif.Id);
+            if (!modif)
+            {
+                ViewData["ErrorMessage"] = "Hubo un problema al intentar actualizar el usuario.";
+                return View("Error");
+            }
+            return RedirectToAction("GetAll");
+        }
+
+        return View(usuarioModif);
+    }
+
+
+
 
     [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
     public IActionResult Error()

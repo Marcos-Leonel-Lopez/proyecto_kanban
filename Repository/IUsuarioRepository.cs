@@ -2,7 +2,7 @@ namespace IUsuarioRepo
 {
     public interface IUsuarioRepository{
         Usuario Create(Usuario usuario);
-        Usuario Update(Usuario usuario, int id);
+        bool EditarPerfil(DataUsuario usuario, int id);
         List<Usuario> GetAll();
         Usuario GetById(int id);
         bool Remove(int id);

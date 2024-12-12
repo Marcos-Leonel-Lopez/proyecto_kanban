@@ -22,7 +22,7 @@
                 <div class="col-3">@usuario.Nombre</div>
                 <div class="col-3">@usuario.Rol</div>
                 <div class="col-4 d-flex justify-content-evenly justify-content-between">
-                    <form asp-action="UpdateUsuario" method="get" class="d-flex justify-content-center col-6">
+                    <form asp-action="EditarPerfil" method="get" class="d-flex justify-content-center col-6">
                         <input type="hidden" name="idUsuario" value="@usuario.Id" />
                         <button type="submit" class="btn btn-primary btn-sm ms-2 d-flex align-items-center px-md-4 px-lg-1">
                             <i class="bi bi-pencil"></i>
