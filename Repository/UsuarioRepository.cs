@@ -10,7 +10,6 @@ namespace UsuarioRepo
         {
             _ConnectionString = ConnectionString;
         }
-
         public Usuario Create(Usuario newUsuario)
         {
             try
@@ -41,7 +40,6 @@ namespace UsuarioRepo
                 throw;
             }
         }
-
         public bool EditarPerfil(DataUsuario newUsuario, int id)
         {
             try
@@ -67,7 +65,6 @@ namespace UsuarioRepo
                 return false;
             }
         }
-
         public List<Usuario> GetAll()
         {
             try
@@ -104,7 +101,6 @@ namespace UsuarioRepo
                 throw;
             }
         }
-
         public Usuario GetById(int id_usuario)
         {
             try
@@ -141,7 +137,6 @@ namespace UsuarioRepo
                 throw;
             }
         }
-
         public bool Remove(int id)
         {
             try
@@ -163,10 +158,9 @@ namespace UsuarioRepo
             catch (Exception ex)
             {
                 Console.Error.WriteLine($"Error en Remove: {ex.Message}");
-                throw;
+                return false;
             }
         }
-
         public Usuario UpdatePass(Usuario usuario, int id)
         {
             try

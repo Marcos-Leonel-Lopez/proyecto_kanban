@@ -15,12 +15,12 @@ public class UsuarioController : Controller
         _logger = logger;
         _usuarioRepository = usuarioRepository;
     }
+
     [HttpGet]
     public IActionResult Index() // Igual al nombre de los archivos en carpeta "Views"
     {
         return View();
     }
-
     [HttpGet]
     public IActionResult GetAll()
     {
@@ -37,7 +37,6 @@ public class UsuarioController : Controller
             return View("Error");
         }
     }
-
     [HttpGet]
     public IActionResult GetById(int idUsuario)
     {
@@ -59,7 +58,6 @@ public class UsuarioController : Controller
             return View("Error");
         }
     }
-
     [HttpGet]
     public IActionResult Create()
     {
@@ -85,7 +83,6 @@ public class UsuarioController : Controller
         }
         return View(usuario);
     }
-
     [HttpGet]
     // solo podria acceder un admin
     public IActionResult ListToEdit()
@@ -103,7 +100,6 @@ public class UsuarioController : Controller
             return View("Error");
         }
     }
-
     [HttpGet]
     public IActionResult Delete(int idUsuario)
     {
@@ -125,7 +121,6 @@ public class UsuarioController : Controller
             return View("Error");
         }
     }
-
     [HttpPost]
     public IActionResult DeleteConfirmed(int idUsuario)
     {
@@ -147,7 +142,6 @@ public class UsuarioController : Controller
             return View("Error");
         }
     }
-
     [HttpGet]
     // Verificar que el usuario sea admin o que el id de las ession coincida con el 'idUsuario'
     public IActionResult EditarPerfil(int idUsuario)
@@ -170,7 +164,6 @@ public class UsuarioController : Controller
             return View("Error");
         }
     }
-
     [HttpPost]
     public IActionResult EditPerfil(DataUsuario usuarioModif)
     {
@@ -202,7 +195,7 @@ public class UsuarioController : Controller
 
         return View(usuarioModif);
     }
-
+    
     [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
     public IActionResult Error()
     {
