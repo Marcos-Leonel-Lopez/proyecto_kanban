@@ -1,9 +1,7 @@
 using System.Diagnostics;
-
 using Microsoft.AspNetCore.Mvc;
 using trabajo_final.Models;
 using Microsoft.AspNetCore.Session; //Agregado
-
 using IUsuarioRepo;
 
 namespace trabajo_final.Controllers;
@@ -26,111 +24,188 @@ public class UsuarioController : Controller
     [HttpGet]
     public IActionResult GetAll()
     {
-        var usuarios = _usuarioRepository.GetAll();
-        var viewModel = usuarios.Select(usuario => new DataUsuario(usuario)).ToList();
-        return View(viewModel);
+        try
+        {
+            var usuarios = _usuarioRepository.GetAll();
+            var viewModel = usuarios.Select(usuario => new DataUsuario(usuario)).ToList();
+            return View(viewModel);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError($"Error en GetAll: {ex.Message}");
+            ViewData["ErrorMessage"] = "Hubo un problema al obtener los usuarios.";
+            return View("Error");
+        }
     }
+
     [HttpGet]
     public IActionResult GetById(int idUsuario)
     {
-        var viewModel = new DataUsuario(_usuarioRepository.GetById(idUsuario));
-        if (viewModel == null)
+        try
         {
-            ViewData["ErrorMessage"] = "El usuario con el ID proporcionado no existe.";
+            var usuario = _usuarioRepository.GetById(idUsuario);
+            if (usuario == null)
+            {
+                ViewData["ErrorMessage"] = "El usuario con el ID proporcionado no existe.";
+                return View("Error");
+            }
+            var viewModel = new DataUsuario(usuario);
+            return View(viewModel);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError($"Error en GetById: {ex.Message}");
+            ViewData["ErrorMessage"] = "Hubo un problema al obtener el usuario.";
             return View("Error");
         }
-        return View(viewModel);
     }
+
     [HttpGet]
     public IActionResult Create()
     {
         return View(new Usuario());
     }
+
     [HttpPost]
     public IActionResult Create(Usuario usuario)
     {
         if (ModelState.IsValid)
         {
-            _usuarioRepository.Create(usuario);
-            return RedirectToAction("GetAll");
+            try
+            {
+                _usuarioRepository.Create(usuario);
+                return RedirectToAction("GetAll");
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Error en Create: {ex.Message}");
+                ViewData["ErrorMessage"] = "Hubo un problema al crear el usuario.";
+                return View("Error");
+            }
         }
         return View(usuario);
     }
+
     [HttpGet]
     // solo podria acceder un admin
     public IActionResult ListToEdit()
     {
-        var usuarios = _usuarioRepository.GetAll();
-        var viewModel = usuarios.Select(usuario => new DataUsuario(usuario)).ToList();
-        return View(viewModel);
+        try
+        {
+            var usuarios = _usuarioRepository.GetAll();
+            var viewModel = usuarios.Select(usuario => new DataUsuario(usuario)).ToList();
+            return View(viewModel);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError($"Error en ListToEdit: {ex.Message}");
+            ViewData["ErrorMessage"] = "Hubo un problema al obtener la lista de usuarios para editar.";
+            return View("Error");
+        }
     }
+
     [HttpGet]
     public IActionResult Delete(int idUsuario)
     {
-        var usuario = _usuarioRepository.GetById(idUsuario);
-        if (usuario == null)
+        try
         {
-            ViewData["ErrorMessage"] = "El usuario con el ID proporcionado no existe.";
+            var usuario = _usuarioRepository.GetById(idUsuario);
+            if (usuario == null)
+            {
+                ViewData["ErrorMessage"] = "El usuario con el ID proporcionado no existe.";
+                return View("Error");
+            }
+            var viewModel = new DataUsuario(usuario);
+            return View(viewModel);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError($"Error en Delete: {ex.Message}");
+            ViewData["ErrorMessage"] = "Hubo un problema al obtener el usuario para eliminar.";
             return View("Error");
         }
-        var viewModel = new DataUsuario(usuario);
-        return View(viewModel);
     }
+
     [HttpPost]
     public IActionResult DeleteConfirmed(int idUsuario)
     {
-        var usuario = _usuarioRepository.GetById(idUsuario);
-        if (usuario == null)
+        try
         {
-            ViewData["ErrorMessage"] = "El usuario con el ID proporcionado no existe.";
+            var usuario = _usuarioRepository.GetById(idUsuario);
+            if (usuario == null)
+            {
+                ViewData["ErrorMessage"] = "El usuario con el ID proporcionado no existe.";
+                return View("Error");
+            }
+            _usuarioRepository.Remove(idUsuario);
+            return RedirectToAction("GetAll");
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError($"Error en DeleteConfirmed: {ex.Message}");
+            ViewData["ErrorMessage"] = "Hubo un problema al eliminar el usuario.";
             return View("Error");
         }
-        _usuarioRepository.Remove(idUsuario);
-        return RedirectToAction("GetAll");
     }
+
     [HttpGet]
     // Verificar que el usuario sea admin o que el id de las ession coincida con el 'idUsuario'
     public IActionResult EditarPerfil(int idUsuario)
     {
-        var usuario = _usuarioRepository.GetById(idUsuario);
-        if (usuario == null)
+        try
         {
-            ViewData["ErrorMessage"] = "Hubo un problema al intentar actualizar el usuario.";
+            var usuario = _usuarioRepository.GetById(idUsuario);
+            if (usuario == null)
+            {
+                ViewData["ErrorMessage"] = "Hubo un problema al intentar actualizar el usuario.";
+                return View("Error");
+            }
+            var viewModel = new DataUsuario(usuario);
+            return View(viewModel);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError($"Error en EditarPerfil: {ex.Message}");
+            ViewData["ErrorMessage"] = "Hubo un problema al cargar el perfil del usuario.";
             return View("Error");
         }
-        var viewModel = new DataUsuario(usuario);
-        return View(viewModel);
     }
+
     [HttpPost]
     public IActionResult EditPerfil(DataUsuario usuarioModif)
     {
         if (ModelState.IsValid)
         {
-            var usuarioExistente = _usuarioRepository.GetById(usuarioModif.Id);
-            if (usuarioExistente == null)
+            try
             {
-                ViewData["ErrorMessage"] = "Hubo un problema al intentar actualizar el usuario.";
+                var usuarioExistente = _usuarioRepository.GetById(usuarioModif.Id);
+                if (usuarioExistente == null)
+                {
+                    ViewData["ErrorMessage"] = "Hubo un problema al intentar actualizar el usuario.";
+                    return View("Error");
+                }
+                var modif = _usuarioRepository.EditarPerfil(usuarioModif, usuarioModif.Id);
+                if (!modif)
+                {
+                    ViewData["ErrorMessage"] = "Hubo un problema al intentar actualizar el usuario.";
+                    return View("Error");
+                }
+                return RedirectToAction("GetAll");
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Error en EditPerfil: {ex.Message}");
+                ViewData["ErrorMessage"] = "Hubo un problema al actualizar el perfil del usuario.";
                 return View("Error");
             }
-            var modif = _usuarioRepository.EditarPerfil(usuarioModif, usuarioModif.Id);
-            if (!modif)
-            {
-                ViewData["ErrorMessage"] = "Hubo un problema al intentar actualizar el usuario.";
-                return View("Error");
-            }
-            return RedirectToAction("GetAll");
         }
 
         return View(usuarioModif);
     }
-
-
-
 
     [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
     public IActionResult Error()
     {
         return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
     }
-
 }

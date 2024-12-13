@@ -10,28 +10,38 @@ namespace UsuarioRepo
         {
             _ConnectionString = ConnectionString;
         }
+
         public Usuario Create(Usuario newUsuario)
         {
-            Usuario usuario = newUsuario;
-            string query = "INSERT INTO Usuario (nombre_de_usuario,password,rol_usuario) VALUES (@nombre,@password,@rol)";
-            using (var connection = new SqliteConnection(_ConnectionString))
+            try
             {
-                connection.Open();
-                using (var command = new SqliteCommand(query, connection))
+                Usuario usuario = newUsuario;
+                string query = "INSERT INTO Usuario (nombre_de_usuario,password,rol_usuario) VALUES (@nombre,@password,@rol)";
+                using (var connection = new SqliteConnection(_ConnectionString))
                 {
-                    command.Parameters.AddWithValue("@nombre", usuario.Nombre_de_usuario);
-                    command.Parameters.AddWithValue("@password", usuario.Password);
-                    command.Parameters.AddWithValue("@rol", Convert.ToInt32(usuario.Rol_usuario));
-                    command.ExecuteNonQuery();
+                    connection.Open();
+                    using (var command = new SqliteCommand(query, connection))
+                    {
+                        command.Parameters.AddWithValue("@nombre", usuario.Nombre_de_usuario);
+                        command.Parameters.AddWithValue("@password", usuario.Password);
+                        command.Parameters.AddWithValue("@rol", Convert.ToInt32(usuario.Rol_usuario));
+                        command.ExecuteNonQuery();
+                    }
+                    using (var command = new SqliteCommand("SELECT last_insert_rowid();", connection))
+                    {
+                        usuario.Id_usuario = Convert.ToInt32(command.ExecuteScalar());
+                    }
+                    connection.Close();
                 }
-                using (var command = new SqliteCommand("SELECT last_insert_rowid();", connection))
-                {
-                    usuario.Id_usuario = Convert.ToInt32(command.ExecuteScalar());
-                }
-                connection.Close();
+                return usuario;
             }
-            return usuario;
+            catch (Exception ex)
+            {
+                Console.Error.WriteLine($"Error en Create: {ex.Message}");
+                throw;
+            }
         }
+
         public bool EditarPerfil(DataUsuario newUsuario, int id)
         {
             try
@@ -53,98 +63,133 @@ namespace UsuarioRepo
             }
             catch (Exception ex)
             {
-                Console.Error.WriteLine(ex);
+                Console.Error.WriteLine($"Error en EditarPerfil: {ex.Message}");
                 return false;
             }
-
         }
+
         public List<Usuario> GetAll()
         {
-            List<Usuario> usuarios = new List<Usuario>();
-            string query = "SELECT * FROM Usuario";
-            using (var connection = new SqliteConnection(_ConnectionString))
+            try
             {
-                connection.Open();
-                using (var command = new SqliteCommand(query, connection))
+                List<Usuario> usuarios = new List<Usuario>();
+                string query = "SELECT * FROM Usuario";
+                using (var connection = new SqliteConnection(_ConnectionString))
                 {
-                    using (var reader = command.ExecuteReader())
+                    connection.Open();
+                    using (var command = new SqliteCommand(query, connection))
                     {
-                        while (reader.Read())
+                        using (var reader = command.ExecuteReader())
                         {
-                            Usuario usuario = new Usuario
+                            while (reader.Read())
                             {
-                                Id_usuario = reader.GetInt32(0),
-                                Nombre_de_usuario = reader.GetString(1),
-                                Password = reader.GetString(2),
-                                Rol_usuario = (MisEnums.RolUsuario)reader.GetInt32(3) //Parseo el int a enum
-                            };
-                            usuarios.Add(usuario);
+                                Usuario usuario = new Usuario
+                                {
+                                    Id_usuario = reader.GetInt32(0),
+                                    Nombre_de_usuario = reader.GetString(1),
+                                    Password = reader.GetString(2),
+                                    Rol_usuario = (MisEnums.RolUsuario)reader.GetInt32(3)
+                                };
+                                usuarios.Add(usuario);
+                            }
                         }
                     }
+                    connection.Close();
                 }
-                connection.Close();
+                return usuarios;
             }
-            return usuarios;
+            catch (Exception ex)
+            {
+                Console.Error.WriteLine($"Error en GetAll: {ex.Message}");
+                throw;
+            }
         }
+
         public Usuario GetById(int id_usuario)
         {
-            Usuario usuario = null;
-            string query = "SELECT * FROM Usuario WHERE id_usuario = @id_usuario";
-            using (var connection = new SqliteConnection(_ConnectionString))
+            try
             {
-                connection.Open();
-                using (var command = new SqliteCommand(query, connection))
+                Usuario usuario = null;
+                string query = "SELECT * FROM Usuario WHERE id_usuario = @id_usuario";
+                using (var connection = new SqliteConnection(_ConnectionString))
                 {
-                    command.Parameters.AddWithValue("@id_usuario", id_usuario);
-                    using (var reader = command.ExecuteReader())
+                    connection.Open();
+                    using (var command = new SqliteCommand(query, connection))
                     {
-                        if (reader.Read())
+                        command.Parameters.AddWithValue("@id_usuario", id_usuario);
+                        using (var reader = command.ExecuteReader())
                         {
-                            usuario = new Usuario
+                            if (reader.Read())
                             {
-                                Id_usuario = reader.GetInt32(0),
-                                Nombre_de_usuario = reader.GetString(1),
-                                Password = reader.GetString(2),
-                                Rol_usuario = (MisEnums.RolUsuario)reader.GetInt32(3) //Parseo el int a enum
-                            };
+                                usuario = new Usuario
+                                {
+                                    Id_usuario = reader.GetInt32(0),
+                                    Nombre_de_usuario = reader.GetString(1),
+                                    Password = reader.GetString(2),
+                                    Rol_usuario = (MisEnums.RolUsuario)reader.GetInt32(3)
+                                };
+                            }
                         }
                     }
+                    connection.Close();
                 }
-                connection.Close();
+                return usuario;
             }
-            return usuario;
+            catch (Exception ex)
+            {
+                Console.Error.WriteLine($"Error en GetById: {ex.Message}");
+                throw;
+            }
         }
+
         public bool Remove(int id)
         {
-            bool success = false;
-            string query = "DELETE FROM Usuario WHERE id_usuario = @id";
-            using (var connection = new SqliteConnection(_ConnectionString))
+            try
             {
-                connection.Open();
-                using (var command = new SqliteCommand(query, connection))
+                bool success = false;
+                string query = "DELETE FROM Usuario WHERE id_usuario = @id";
+                using (var connection = new SqliteConnection(_ConnectionString))
                 {
-                    command.Parameters.AddWithValue("@id", id);
-                    success = command.ExecuteNonQuery() > 0;
+                    connection.Open();
+                    using (var command = new SqliteCommand(query, connection))
+                    {
+                        command.Parameters.AddWithValue("@id", id);
+                        success = command.ExecuteNonQuery() > 0;
+                    }
+                    connection.Close();
                 }
-                connection.Close();
+                return success;
             }
-            return success;
+            catch (Exception ex)
+            {
+                Console.Error.WriteLine($"Error en Remove: {ex.Message}");
+                throw;
+            }
         }
+
         public Usuario UpdatePass(Usuario usuario, int id)
         {
-            string query = "UPDATE Usuario SET passsword = @pass WHERE id_usuario = @id";
-            using (var connection = new SqliteConnection(_ConnectionString))
+            try
             {
-                connection.Open();
-                using (var command = new SqliteCommand(query, connection))
+                string query = "UPDATE Usuario SET password = @pass WHERE id_usuario = @id";
+                using (var connection = new SqliteConnection(_ConnectionString))
                 {
-                    command.Parameters.AddWithValue("@pass", usuario.Password);
-                    command.Parameters.AddWithValue("@id", id);
-                    command.ExecuteNonQuery();
+                    connection.Open();
+                    using (var command = new SqliteCommand(query, connection))
+                    {
+                        command.Parameters.AddWithValue("@pass", usuario.Password);
+                        command.Parameters.AddWithValue("@id", id);
+                        command.ExecuteNonQuery();
+                    }
+                    connection.Close();
                 }
-                connection.Close();
+                return usuario;
             }
-            return usuario;
+            catch (Exception ex)
+            {
+                Console.Error.WriteLine($"Error en UpdatePass: {ex.Message}");
+                throw;
+            }
         }
     }
 }
