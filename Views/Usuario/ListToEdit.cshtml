@@ -1,27 +1,27 @@
 @{
     ViewData["Title"] = "Todos los Usuarios";
 }
-@model List<DataUsuario>;
+@model List<UsuarioViewModel>;
 
 <section class="container">
     <h3>Listado de Usuarios</h3>
 
-    <div class="row bg-dark text-white p-2 rounded">
-        <div class="col-2 fw-bold">ID</div>
-        <div class="col-3 fw-bold">Nombre</div>
-        <div class="col-3 fw-bold">Rol</div>
-        <div class="col-4 fw-bold text-center">Acciones</div>
-    </div>
+    <section class="row bg-dark text-white p-2 rounded">
+        <section class="col-2 fw-bold">ID</section>
+        <section class="col-3 fw-bold">Nombre</section>
+        <section class="col-3 fw-bold">Rol</section>
+        <section class="col-4 fw-bold text-center">Acciones</section>
+    </section>
 
     @if (Model != null && Model.Any())
     {
         @foreach (var usuario in Model)
         {
-            <div class="row bg-light p-2 border-bottom d-flex align-items-center">
-                <div class="col-2">@usuario.Id</div>
-                <div class="col-3">@usuario.Nombre</div>
-                <div class="col-3">@usuario.Rol</div>
-                <div class="col-4 d-flex justify-content-evenly justify-content-between">
+            <section class="row bg-light p-2 border-bottom d-flex align-items-center">
+                <section class="col-2">@usuario.Id</section>
+                <section class="col-3">@usuario.Nombre</section>
+                <section class="col-3">@usuario.Rol</section>
+                <section class="col-4 d-flex justify-content-evenly justify-content-between">
                     <form asp-action="EditarPerfil" method="get" class="d-flex justify-content-center col-6">
                         <input type="hidden" name="idUsuario" value="@usuario.Id" />
                         <button type="submit" class="btn btn-primary btn-sm ms-2 d-flex align-items-center px-md-4 px-lg-1">
@@ -36,15 +36,15 @@
                             <span class="d-none d-lg-inline">Eliminar</span>
                         </button>
                     </form>
-                </div>
-            </div>
+                </section>
+            </section>
         }
     }
     else
     {
-        <div class="row bg-light p-2 border-bottom">
-            <div class="col-12"><em>No hay usuarios disponibles</em></div>
-        </div>
+        <section class="row bg-light p-2 border-bottom">
+            <section class="col-12"><em>No hay usuarios disponibles</em></section>
+        </section>
     }
 
     <!-- Botón de regreso -->

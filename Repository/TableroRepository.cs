@@ -136,7 +136,7 @@ namespace TableroRepo
                 throw;
             }
         }
-        public List<Tablero> GetForUsuario(int id_usuario)
+        public List<Tablero> GetByUsuario(int id_usuario)
         {
             try
             {
@@ -168,7 +168,7 @@ namespace TableroRepo
             }
             catch (Exception ex)
             {
-                Console.Error.WriteLine($"Error en GetForUsuario: {ex.Message}");
+                Console.Error.WriteLine($"Error en GetByUsuario: {ex.Message}");
                 throw;
             }
         }

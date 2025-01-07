@@ -1,4 +1,4 @@
-using ITareaRepo;
+    using ITareaRepo;
 using Microsoft.Data.Sqlite;
 
 namespace TareaRepo
@@ -131,7 +131,7 @@ namespace TareaRepo
                 throw;
             }
         }
-        public List<Tarea> GetForUsuario(int id_usuario)
+        public List<Tarea> GetByUsuario(int id_usuario)
         {
             try
             {
@@ -167,12 +167,12 @@ namespace TareaRepo
             }
             catch (Exception ex)
             {
-                Console.Error.WriteLine($"Error en GetForUsuario: {ex.Message}");
+                Console.Error.WriteLine($"Error en GetByUsuario: {ex.Message}");
                 throw;
             }
 
         }
-        public List<Tarea> GetForTablero(int id_tablero)
+        public List<Tarea> GetByTablero(int id_tablero)
         {
             try
             {
@@ -208,7 +208,7 @@ namespace TareaRepo
             }
             catch (Exception ex)
             {
-                Console.Error.WriteLine($"Error en GetForTablero: {ex.Message}");
+                Console.Error.WriteLine($"Error en GetByTablero: {ex.Message}");
                 throw;
             }
         }

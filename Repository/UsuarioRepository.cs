@@ -40,11 +40,11 @@ namespace UsuarioRepo
                 throw;
             }
         }
-        public bool EditarPerfil(DataUsuario newUsuario, int id)
+        public bool EditarPerfil(UsuarioViewModel newUsuario, int id)
         {
             try
             {
-                DataUsuario usuario = newUsuario;
+                UsuarioViewModel usuario = newUsuario;
                 string query = "UPDATE Usuario SET nombre_de_usuario=@nombre, rol_usuario=@rol WHERE id_usuario=@id";
                 using (var connection = new SqliteConnection(_ConnectionString))
                 {

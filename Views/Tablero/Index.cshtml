@@ -1,0 +1,28 @@
+@{
+    ViewData["Title"] = "Gestión de Usuarios";
+}
+<section class="container">
+    <div class="text-left">
+        <h1>Gestión de Usuarios</h1>
+        <ul class="list-group">
+            <li class="list-group-item"><a asp-controller="Tablero" asp-action="GetAll">Ver lista completa de
+                    tableros</a>
+            </li>
+            @* <li class="list-group-item">
+                <form asp-controller="Tablero" asp-action="GetById" method="get">
+                    <label for="idUsuario">Ver Usuario por ID:</label>
+                    <input type="text" id="idUsuario" name="idUsuario" required />
+                    <button type="submit">Ver Usuario</button>
+                </form>
+            </li>
+            <li class="list-group-item">
+                <a asp-controller="Tablero" asp-action="Create">Crear un nuevo usuario</a>
+            </li>
+            <li class="list-group-item">
+                <a asp-controller="Tablero" asp-action="ListToEdit">Editar usuarios</a>
+            </li> *@
+        </ul>
+        <button type="button" class="btn btn-secondary mt-4">
+            <a href="@Url.Action("Index", "Home")" class="text-white text-decoration-none">Volver</a>
+        </button>
+</section>

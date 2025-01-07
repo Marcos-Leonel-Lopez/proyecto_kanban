@@ -5,7 +5,7 @@ namespace ITableroRepo
         Tablero Update(Tablero tablero, int id_tablero);
         Tablero GetById(int id_tablero);
         List<Tablero> GetAll();
-        List<Tablero> GetForUsuario(int id_usuario);
+        List<Tablero> GetByUsuario(int id_usuario);
         bool Remove(int id_tablero);
     }
 }

@@ -27,7 +27,12 @@ public class UsuarioController : Controller
         try
         {
             var usuarios = _usuarioRepository.GetAll();
-            var viewModel = usuarios.Select(usuario => new DataUsuario(usuario)).ToList();
+            var viewModel = usuarios.Select(usuario => new UsuarioViewModel
+            {
+                Id = usuario.Id_usuario,
+                Nombre = usuario.Nombre_de_usuario,
+                Rol = usuario.Rol_usuario.ToString()
+            }).ToList();
             return View(viewModel);
         }
         catch (Exception ex)
@@ -48,7 +53,11 @@ public class UsuarioController : Controller
                 ViewData["ErrorMessage"] = "El usuario con el ID proporcionado no existe.";
                 return View("Error");
             }
-            var viewModel = new DataUsuario(usuario);
+            var viewModel = new UsuarioViewModel{
+                Id = usuario.Id_usuario,
+                Nombre = usuario.Nombre_de_usuario,
+                Rol = usuario.Rol_usuario.ToString()
+            };
             return View(viewModel);
         }
         catch (Exception ex)
@@ -90,7 +99,12 @@ public class UsuarioController : Controller
         try
         {
             var usuarios = _usuarioRepository.GetAll();
-            var viewModel = usuarios.Select(usuario => new DataUsuario(usuario)).ToList();
+            var viewModel = usuarios.Select(usuario => new UsuarioViewModel
+            {
+                Id = usuario.Id_usuario,
+                Nombre = usuario.Nombre_de_usuario,
+                Rol = usuario.Rol_usuario.ToString()
+            }).ToList();
             return View(viewModel);
         }
         catch (Exception ex)
@@ -111,7 +125,11 @@ public class UsuarioController : Controller
                 ViewData["ErrorMessage"] = "El usuario con el ID proporcionado no existe.";
                 return View("Error");
             }
-            var viewModel = new DataUsuario(usuario);
+            var viewModel = new UsuarioViewModel{
+                Id = usuario.Id_usuario,
+                Nombre = usuario.Nombre_de_usuario,
+                Rol = usuario.Rol_usuario.ToString()
+            };
             return View(viewModel);
         }
         catch (Exception ex)
@@ -154,7 +172,11 @@ public class UsuarioController : Controller
                 ViewData["ErrorMessage"] = "Hubo un problema al intentar actualizar el usuario.";
                 return View("Error");
             }
-            var viewModel = new DataUsuario(usuario);
+            var viewModel = new UsuarioViewModel{
+                Id = usuario.Id_usuario,
+                Nombre = usuario.Nombre_de_usuario,
+                Rol = usuario.Rol_usuario.ToString()
+            };
             return View(viewModel);
         }
         catch (Exception ex)
@@ -165,7 +187,7 @@ public class UsuarioController : Controller
         }
     }
     [HttpPost]
-    public IActionResult EditPerfil(DataUsuario usuarioModif)
+    public IActionResult EditPerfil(UsuarioViewModel usuarioModif)
     {
         if (ModelState.IsValid)
         {
@@ -195,7 +217,7 @@ public class UsuarioController : Controller
 
         return View(usuarioModif);
     }
-    
+
     [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
     public IActionResult Error()
     {

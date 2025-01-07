@@ -1,0 +1,26 @@
+@{
+    ViewData["Title"] = "Gestión de Tareas";
+}
+<section class="container">
+    <div class="text-left">
+        <h1>Gestión de Usuarios</h1>
+        <ul class="list-group">
+            <li class="list-group-item">
+                <form asp-controller="Tarea" asp-action="GetByUsuario" method="get">
+                    <label for="idUsuario">Ver tareas del usuario:</label>
+                    <input type="text" id="idUsuario" name="idUsuario" required />
+                    <button type="submit">Ver Tareas</button>
+                </form>
+            </li>
+            <li class="list-group-item">
+                <form asp-controller="Tarea" asp-action="GetByTablero" method="get">
+                    <label for="idTablero">Ver tareas del tablero:</label>
+                    <input type="text" id="idTablero" name="idTablero" required />
+                    <button type="submit">Ver Tareas</button>
+                </form>
+            </li>
+        </ul>
+        <button type="button" class="btn btn-secondary mt-4">
+            <a href="@Url.Action("Index", "Home")" class="text-white text-decoration-none">Volver</a>
+        </button>
+</section>

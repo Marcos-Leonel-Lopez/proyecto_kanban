@@ -20,3 +20,11 @@ html {
 body {
   margin-bottom: 60px;
 }
+
+.tabla_tableros {
+  border-collapse: collapse;
+  /* border-radius: 5px !important; */
+  overflow: hidden;
+  border-top-left-radius: 10px !important;
+  border-top-right-radius: 10px !important;
+}

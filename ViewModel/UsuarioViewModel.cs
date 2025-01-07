@@ -1,14 +1,14 @@
 using System.ComponentModel.DataAnnotations;
-public class DataUsuario
+public class UsuarioViewModel
 {
     private int id;
     private string nombre;
     private string rol;
-    public DataUsuario(){}
-    public DataUsuario(Usuario usuario){
-        this.id = usuario.Id_usuario;
-        this.nombre = usuario.Nombre_de_usuario;
-        this.rol = usuario.Rol_usuario.ToString();
+    public UsuarioViewModel(){}
+    public UsuarioViewModel(int id, string nombre, string rol){
+        this.id = id;
+        this.nombre = nombre;
+        this.rol = rol;
     }
     [Required]
     public int Id { get => id; set => id = value; }

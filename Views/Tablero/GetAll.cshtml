@@ -1,0 +1,32 @@
+@{
+    ViewData["Title"] = "Todods los Tableros";
+}
+@model List<TableroViewModel>
+
+<section class="container">
+    <table class="table table-bordered table-hover tabla_tableros">
+        <thead>
+            <tr class="table-dark">
+                <th scope="col" class="col-1">Id</th>
+                <th scope="col" class="col-2">Nombre Tablero</th>
+                <th scope="col" class="col-6">Descripcion</th>
+                <th scope="col" class="col-3">Id - Propietario</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var tablero in Model)
+            {
+                <tr>
+                    <td>@tablero.Id</td>
+                    <td>@tablero.Nombre</td>
+                    <td class="overflow-auto">@tablero.Descripcion</td>
+                    <td>@tablero.Id_propietario- @tablero.NombrePropietario</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+    </table>
+
+
+
+</section>

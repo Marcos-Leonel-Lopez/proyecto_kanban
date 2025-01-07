@@ -1,19 +1,19 @@
 @{
     ViewData["Title"] = "Todos los Usuarios";
 }
-@model List<DataUsuario>;
+@model List<UsuarioViewModel>;
 
 <section class="container">
-    <table class="table table-hover" id="tabla-productos">
+    <table class="table table-bordered table-hover tabla_tableros">
         <thead>
-            <tr>
+            <tr class="table-dark">
                 <th scope="col" class="col-1">Id</th>
                 <th scope="col" class="col-3">Nombre</th>
                 <th scope="col" class="col-3">Rol</th>
             </tr>
         </thead>
         <tbody>
-            @foreach (DataUsuario usuario in Model)
+            @foreach (UsuarioViewModel usuario in Model)
             {
                 <tr>
                     <td scope="col" class="col-1">@usuario.Id</td>
