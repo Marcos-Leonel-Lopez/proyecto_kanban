@@ -1,9 +1,11 @@
+using IColorRepo;
 using ITableroRepo;
 using ITareaRepo;
 using IUsuarioRepo;
 using TableroRepo;
 using TareaRepo;
 using UsuarioRepo;
+using ColorRepo;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -16,12 +18,13 @@ builder.Services.AddSingleton<string>(CadenaDeConexion);
 builder.Services.AddScoped<ITableroRepository,TableroRepository>();
 builder.Services.AddScoped<ITareaRepository,TareaRepository>();
 builder.Services.AddScoped<IUsuarioRepository,UsuarioRepository>();
+builder.Services.AddScoped<IColorRepository,ColorRepository>();
 
 
 // Config de Session y Cookies
 builder.Services.AddDistributedMemoryCache();
 builder.Services.AddSession(options =>{
-    options.IdleTimeout = TimeSpan.FromMinutes(1);
+    options.IdleTimeout = TimeSpan.FromMinutes(30);
     options.Cookie.HttpOnly = true;
     options.Cookie.IsEssential = true;
 });

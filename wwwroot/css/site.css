@@ -28,3 +28,71 @@ body {
   border-top-left-radius: 10px !important;
   border-top-right-radius: 10px !important;
 }
+
+/*    */
+
+.estado_Ideas {
+  background-color: #d3d3d3; /* Gris claro */
+  color: #000; /* Texto negro para contraste */
+}
+
+.estado_ToDo {
+  background-color: #add8e6; /* Azul claro */
+  color: #000; /* Texto negro para contraste */
+}
+
+.estado_Doing {
+  background-color: #fffacd; /* Amarillo pálido */
+  color: #000; /* Texto negro para contraste */
+}
+
+.estado_Review {
+  background-color: #ffa07a; /* Naranja claro */
+  color: #000; /* Texto negro para contraste */
+}
+
+.estado_Done {
+  background-color: #90ee90; /* Verde claro */
+  color: #000; /* Texto negro para contraste */
+}
+#formulario_login{
+  display: flex;
+  justify-content: end;
+  align-items: center;
+}
+
+#formulario_login form{
+  height: 50vh;
+  width: 30vw;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  margin-top: 10vh;
+}
+#formulario_login fieldset{
+  border: dashed 1px black;
+  border-radius: 5px;
+  padding: 0.5rem 1rem;
+}
+#formulario_login form #primer_sec{
+  display: flex;
+  flex-direction: column;
+}
+button a{
+  text-decoration: none;
+  color: inherit;
+}
+
+#formulario_login .form-control {
+  margin-bottom: 0.5rem; /* Reduce el espacio entre inputs */
+}
+
+#formulario_login .text-danger {
+  min-height: 1rem; /* Espacio más compacto reservado para mensajes */
+  display: block; /* Ocupa espacio aunque esté vacío */
+  font-size: 0.8rem; /* Tamaño más pequeño para los mensajes */
+  line-height: 1rem; /* Consistencia con el espacio reservado */
+  margin-top: 0.2rem; /* Espaciado pequeño entre el input y el mensaje */
+  color: red; /* Color de los mensajes */
+}
+

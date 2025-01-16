@@ -23,6 +23,10 @@ public class TableroController : Controller
     [HttpGet]
     public IActionResult Index()
     {
+        if (HttpContext.Session.GetString("idUsuario") == null)
+        {
+            return RedirectToAction("Index", "Home");
+        }
         return View();
     }
     [HttpGet]

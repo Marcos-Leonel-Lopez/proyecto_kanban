@@ -1,0 +1,34 @@
+@{
+    ViewData["Title"] = "Tareas del Tablero";
+}
+@model List<Tarea>;
+
+<section>
+    <table class="table table-bordered table-hover tabla_tableros">
+        <thead>
+            <tr>
+                <th>Id tarea</th>
+                <th>Id tablero</th>
+                <th>Nombre</th>
+                <th>Descripcion</th>
+                <th>Color</th>
+                <th>Estado</th>
+                <th>Id usuario</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (Tarea tarea in Model)
+            {
+                <tr class="estado_@tarea.Id_estado">
+                    <td>@tarea.Id_tarea</td>
+                    <td>@tarea.Id_tablero</td>
+                    <td>@tarea.Nombre</td>
+                    <td>@tarea.Descripcion</td>
+                    <td>@tarea.Id_color</td>
+                    <td>@tarea.Id_estado</td>
+                    <td>@tarea.Id_usuario_asignado</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</section>

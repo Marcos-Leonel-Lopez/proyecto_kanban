@@ -4,6 +4,7 @@ using trabajo_final.Models;
 using Microsoft.AspNetCore.Session; //Agregado
 using ITareaRepo; 
 using ITableroRepo;
+using IColorRepo;
 
 namespace trabajo_final.Controllers;
 
@@ -12,15 +13,22 @@ public class TareaController : Controller
     private readonly ILogger<TareaController> _logger;
     private readonly ITareaRepository _tareaRepository;
     private readonly ITableroRepository _tableroRepository;
-    public TareaController(ILogger<TareaController> logger, ITareaRepository tareaRepository, ITableroRepository tableroRepository)
+    private readonly IColorRepository _colorRepository;
+    public TareaController(ILogger<TareaController> logger, ITareaRepository tareaRepository, ITableroRepository tableroRepository, IColorRepository colorRepository)
     {
         _logger = logger;
         _tareaRepository = tareaRepository;
         _tableroRepository = tableroRepository;
+        _colorRepository = colorRepository;
     }
     [HttpGet]
     public IActionResult Index()
     {
+        
+        if (HttpContext.Session.GetString("idUsuario") == null)
+        {
+            return RedirectToAction("Index", "Home");
+        }
         return View();
     }
     [HttpGet]
@@ -28,7 +36,8 @@ public class TareaController : Controller
     {
         try
         {
-            var tareas = _tareaRepository.GetByTablero(idTablero);
+            List<Tarea> tareas = _tareaRepository.GetByTablero(idTablero);
+            List<Color> colores = _colorRepository.GetAll();
             return View(tareas);
         }
         catch (Exception ex)

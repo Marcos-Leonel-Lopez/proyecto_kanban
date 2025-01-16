@@ -1,4 +1,4 @@
-public class MisEnums
+ static public class MisEnums
 {
     public enum RolUsuario{
         Administrador = 1,

@@ -1,46 +1,35 @@
 ﻿@{
     ViewData["Title"] = "Home Page";
+    var Loggeado = (bool)ViewData["Loggeado"];
+    var rolUsuario = ViewData["rolUsuario"]?.ToString();
 }
+
 
 <div class="text-center">
     <h1 class="display-4">Welcome</h1>
 </div>
 <section class="conteiner">
     <ul>
-        <li class="list-group-item">
-            <a asp-controller="Usuario" asp-action="Index">Usuarios</a>
-        </li>
-        <li class="list-group-item">
-            <a asp-controller="Tablero" asp-action="Index">Tableros</a>
-        </li>
-        <li class="list-group-item">
-            <a asp-controller="Tarea" asp-action="Index">Tareas</a>
-        </li>
-    </ul>
-    @* <ul class="list-group">
         @if (Loggeado)
         {
             <li class="list-group-item">
-                <a asp-controller="Producto" asp-action="Index">Productos</a>
+                <a asp-controller="Usuario" asp-action="Index">Usuarios</a>
             </li>
             <li class="list-group-item">
-                <a asp-controller="Presupuesto" asp-action="Index">Presupuestos</a>
+                <a asp-controller="Tablero" asp-action="Index">Tableros</a>
             </li>
-            @if (role == "admin"){
-                <li class="list-group-item">
-                <a asp-controller="Cliente" asp-action="Index">Clientes</a>
-            </li>
-            }
-
             <li class="list-group-item">
-                <a asp-controller="Usuario" asp-action="Logout">Salir</a>
+                <a asp-controller="Tarea" asp-action="Index">Tareas</a>
+            </li>
+            <li class="list-group-item">
+                <a asp-controller="Sesion" asp-action="Logout">Cerrar Sesion</a>
             </li>
         }
         else
         {
             <li class="list-group-item">
-                <a asp-controller="Usuario" asp-action="Index">Ingresar</a>
+                <a asp-controller="Sesion" asp-action="Index">Ingresar</a>
             </li>
         }
-    </ul> *@
+    </ul>
 </section>

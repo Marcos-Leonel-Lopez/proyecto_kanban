@@ -19,6 +19,10 @@ public class UsuarioController : Controller
     [HttpGet]
     public IActionResult Index() // Igual al nombre de los archivos en carpeta "Views"
     {
+        if (HttpContext.Session.GetString("idUsuario") == null)
+        {
+            return RedirectToAction("Index", "Home");
+        }
         return View();
     }
     [HttpGet]
@@ -53,7 +57,8 @@ public class UsuarioController : Controller
                 ViewData["ErrorMessage"] = "El usuario con el ID proporcionado no existe.";
                 return View("Error");
             }
-            var viewModel = new UsuarioViewModel{
+            var viewModel = new UsuarioViewModel
+            {
                 Id = usuario.Id_usuario,
                 Nombre = usuario.Nombre_de_usuario,
                 Rol = usuario.Rol_usuario.ToString()
@@ -125,7 +130,8 @@ public class UsuarioController : Controller
                 ViewData["ErrorMessage"] = "El usuario con el ID proporcionado no existe.";
                 return View("Error");
             }
-            var viewModel = new UsuarioViewModel{
+            var viewModel = new UsuarioViewModel
+            {
                 Id = usuario.Id_usuario,
                 Nombre = usuario.Nombre_de_usuario,
                 Rol = usuario.Rol_usuario.ToString()
@@ -172,7 +178,8 @@ public class UsuarioController : Controller
                 ViewData["ErrorMessage"] = "Hubo un problema al intentar actualizar el usuario.";
                 return View("Error");
             }
-            var viewModel = new UsuarioViewModel{
+            var viewModel = new UsuarioViewModel
+            {
                 Id = usuario.Id_usuario,
                 Nombre = usuario.Nombre_de_usuario,
                 Rol = usuario.Rol_usuario.ToString()

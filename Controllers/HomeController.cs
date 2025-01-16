@@ -15,6 +15,9 @@ public class HomeController : Controller
 
     public IActionResult Index()
     {
+        var role = HttpContext.Session.GetString("rolUsuario");
+        ViewData["Loggeado"] = !string.IsNullOrEmpty(role);
+        ViewData["rolUsuario"] = role;
         return View();
     }
 

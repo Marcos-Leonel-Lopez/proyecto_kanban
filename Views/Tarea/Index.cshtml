@@ -6,6 +6,9 @@
         <h1>Gestión de Usuarios</h1>
         <ul class="list-group">
             <li class="list-group-item">
+                <a asp-controller="Tarea" asp-action="Create">Crear tareas</a>
+            </li>
+            <li class="list-group-item">
                 <form asp-controller="Tarea" asp-action="GetByUsuario" method="get">
                     <label for="idUsuario">Ver tareas del usuario:</label>
                     <input type="text" id="idUsuario" name="idUsuario" required />

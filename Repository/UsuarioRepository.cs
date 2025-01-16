@@ -185,5 +185,41 @@ namespace UsuarioRepo
                 throw;
             }
         }
+        public Usuario GetUsuario(string username, string password){
+            try
+            {
+                Usuario usuario = null;
+                string query = "SELECT * FROM Usuario WHERE nombre_de_usuario = @nombre AND password = @pass";
+                using (var connection = new SqliteConnection(_ConnectionString))
+                {
+                    connection.Open();
+                    using (var command = new SqliteCommand(query, connection))
+                    {
+                        command.Parameters.AddWithValue("@nombre", username);
+                        command.Parameters.AddWithValue("@pass", password);
+                        using (var reader = command.ExecuteReader())
+                        {
+                            if (reader.Read())
+                            {
+                                usuario = new Usuario
+                                {
+                                    Id_usuario = reader.GetInt32(0),
+                                    Nombre_de_usuario = reader.GetString(1),
+                                    Password = reader.GetString(2),
+                                    Rol_usuario = (MisEnums.RolUsuario)reader.GetInt32(3)
+                                };
+                            }
+                        }
+                    }
+                    connection.Close();
+                }
+                return usuario;
+            }
+            catch (Exception ex)
+            {
+                Console.Error.WriteLine($"Error en GetUsuario: {ex.Message}");
+                throw;
+            }
+        }
     }
 }

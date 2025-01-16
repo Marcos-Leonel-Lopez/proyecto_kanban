@@ -7,5 +7,6 @@ namespace IUsuarioRepo
         Usuario GetById(int id);
         bool Remove(int id);
         Usuario UpdatePass(Usuario usuario, int id);
+        Usuario GetUsuario(string username, string password);
     }
 }
