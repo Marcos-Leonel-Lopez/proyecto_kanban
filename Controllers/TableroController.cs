@@ -4,6 +4,7 @@ using trabajo_final.Models;
 using Microsoft.AspNetCore.Session; //Agregado
 using IUsuarioRepo;
 using ITableroRepo;
+using ITareaRepo;
 // using System.Security.Cryptography.X509Certificates;
 
 namespace trabajo_final.Controllers;
@@ -13,11 +14,13 @@ public class TableroController : Controller
     private readonly ILogger<TableroController> _logger;
     private readonly IUsuarioRepository _usuarioRepository;
     private readonly ITableroRepository _tableroRepository;
-    public TableroController(ILogger<TableroController> logger, IUsuarioRepository usuarioRepository, ITableroRepository tableroRepository)
+    private readonly ITareaRepository _tareasRepository;
+    public TableroController(ILogger<TableroController> logger, IUsuarioRepository usuarioRepository, ITableroRepository tableroRepository,ITareaRepository tareasRepository)
     {
         _logger = logger;
         _usuarioRepository = usuarioRepository;
         _tableroRepository = tableroRepository;
+        _tareasRepository = tareasRepository;
     }
 
     [HttpGet]
@@ -142,7 +145,8 @@ public class TableroController : Controller
             return RedirectToAction("Index", "Home");
         }
         var propietario = HttpContext.Session.GetInt32("idUsuario").Value;
-        var nuevoTablero = new CrearTableroViewModel{
+        var nuevoTablero = new CrearTableroViewModel
+        {
             Id_usuario_propietario = HttpContext.Session.GetInt32("idUsuario").Value
         };
         return View(nuevoTablero);
@@ -158,25 +162,50 @@ public class TableroController : Controller
         {
             return View(nuevoTablero);
         }
-            try
+        try
+        {
+            var tablero = new Tablero
             {
-                var tablero = new Tablero
-                {
-                    Id_usuario_propietario = HttpContext.Session.GetInt32("idUsuario").Value,
-                    Nombre = nuevoTablero.Nombre,
-                    Descripcion = nuevoTablero.Descripcion
-                };
-                _tableroRepository.Create(tablero);
-                return RedirectToAction("GetAll");
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError($"Error en Create: {ex.Message}");
-                ViewData["ErrorMessage"] = "Hubo un problema al crear el tablero.";
-                return View("Error");
-            }
+                Id_usuario_propietario = HttpContext.Session.GetInt32("idUsuario").Value,
+                Nombre = nuevoTablero.Nombre,
+                Descripcion = nuevoTablero.Descripcion
+            };
+            _tableroRepository.Create(tablero);
+            return RedirectToAction("GetAll");
         }
-        
+        catch (Exception ex)
+        {
+            _logger.LogError($"Error en Create: {ex.Message}");
+            ViewData["ErrorMessage"] = "Hubo un problema al crear el tablero.";
+            return View("Error");
+        }
+    }
+
+    public IActionResult Kanban(int id_tablero)
+    {
+        if (HttpContext.Session.GetString("idUsuario") == null)
+        {
+            return RedirectToAction("Index", "Home");
+        }
+        try{
+            var tareasViewModel = _tareasRepository.GetByTablero(id_tablero)
+            .Select(tarea => new TareaEnTableroViewModel{
+                Id_tarea = tarea.Id_tarea,
+                Nombre = tarea.Nombre,
+                Descripcion = tarea.Descripcion,
+                Id_estado = tarea.Id_estado,
+                Id_usuario_asignado = tarea.Id_usuario_asignado
+            }).ToList();
+            ViewData["idUsuarioLogueado"] = (int)HttpContext.Session.GetInt32("idUsuario");
+            return View(tareasViewModel);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError($"Error en Kanban: {ex.Message}");
+            ViewData["ErrorMessage"] = "Hubo un problema al mostrar el tablero.";
+            return View("Error");
+        }
+    }
 
 
 

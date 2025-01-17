@@ -1,0 +1,37 @@
+@model List<TareaEnTableroViewModel>
+@{
+    ViewData["Title"] = "Kanban";
+    int idUsuarioLogueado = (int)ViewData["idUsuarioLogueado"];
+}
+
+<div class="container-fluid">
+    <div class="d-flex overflow-auto" style="white-space: nowrap;"> <!-- Scroll horizontal -->
+        @foreach (var estado in Enum.GetValues(typeof(MisEnums.EstadoTarea)))
+        {
+            <div class="me-3" style="width: 300px;"> <!-- Columna de cada estado -->
+                <h4 class="text-center">@estado</h4>
+                <div class="border rounded bg-light p-2">
+                    @foreach (var tarea in Model.Where(t => t.Id_estado == (MisEnums.EstadoTarea)estado))
+                    {
+                        <div class="card mb-3" style="width: 100%;">
+                            <div class="card-body">
+                                <h5 class="card-title">@tarea.Nombre</h5>
+                                <p class="card-text">@tarea.Descripcion</p>
+                                @if (tarea.Id_usuario_asignado == idUsuarioLogueado)
+                                {
+                                    <form asp-action="EditarTarea" method="post" class="d-flex justify-content-center">
+                                        <input type="hidden" name="idTarea" value="@tarea.Id_tarea" />
+                                        <button type="submit" class="btn btn-primary btn-sm ms-2 d-flex align-items-center px-md-4 px-lg-1">
+                                            <i class="bi bi-pencil"></i>
+                                            <span class="d-none d-lg-inline">Editar</span>
+                                        </button>
+                                    </form>
+                                }
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+        }
+    </div>
+</div>

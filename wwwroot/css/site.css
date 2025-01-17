@@ -116,4 +116,16 @@ button a, li a{
   align-self: start; /* Alinea el botón al inicio horizontalmente */
 }
 
-
+/* tablero */
+.kanban-column {
+  min-width: 300px;
+  margin-right: 10px;
+}
+.kanban-card {
+  margin-bottom: 15px;
+}
+.kanban-container {
+  display: flex;
+  overflow-x: auto;
+  padding-bottom: 15px;
+}
