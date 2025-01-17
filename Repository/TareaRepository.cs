@@ -15,7 +15,7 @@ namespace TareaRepo
             try
             {
                 Tarea tarea = newTarea;
-                string query = "INSERT INTO Tarea(id_tablero,nombre,id_estado,descripcion,id_color,id_usuario_asignado) VALUES (@id_tablero,@nombre,@id_estado,@descripc,@id_color,@id_usuario_asign)";
+                string query = "INSERT INTO Tarea(id_tablero,nombre,id_estado,descripcion,id_color,id_usuario_asignado) VALUES (@id_tablero,@nombre,@id_estado,@descripcion,@id_color,@id_usuario_asignado)";
                 using (var connection = new SqliteConnection(_ConnectionString))
                 {
                     connection.Open();

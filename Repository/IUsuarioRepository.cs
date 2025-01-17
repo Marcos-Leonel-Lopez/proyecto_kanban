@@ -8,5 +8,6 @@ namespace IUsuarioRepo
         bool Remove(int id);
         Usuario UpdatePass(Usuario usuario, int id);
         Usuario GetUsuario(string username, string password);
+        bool UserBusy(int id_usuario);
     }
 }

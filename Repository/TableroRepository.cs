@@ -61,7 +61,7 @@ namespace TableroRepo
                 }
                 return tablero;
             }
-                        catch (Exception ex)
+            catch (Exception ex)
             {
                 Console.Error.WriteLine($"Error en Updete: {ex.Message}");
                 throw;
@@ -169,6 +169,46 @@ namespace TableroRepo
             catch (Exception ex)
             {
                 Console.Error.WriteLine($"Error en GetByUsuario: {ex.Message}");
+                throw;
+            }
+        }
+        public List<Tablero> GetByParticipante(int id_usuario)
+        {
+            try
+            {
+                List<Tablero> tableros = new List<Tablero>();
+                string query = @"
+                SELECT DISTINCT Tb.id_tablero, Tb.id_usuario_propietario, Tb.nombre, Tb.descripcion 
+                FROM Tablero Tb
+                JOIN Tarea Tr ON Tb.id_tablero = Tr.id_tablero
+                WHERE Tr.id_usuario_asignado = @id_usuario AND Tb.id_usuario_propietario != @id_usuario;";
+                using (var connection = new SqliteConnection(_ConnectionString))
+                {
+                    connection.Open();
+                    using (var command = new SqliteCommand(query, connection))
+                    {
+                        command.Parameters.AddWithValue("@id_usuario", id_usuario);
+
+                        using (var reader = command.ExecuteReader())
+                        {
+                            while (reader.Read())
+                            {
+                                tableros.Add(new Tablero
+                                {
+                                    Id_tablero = reader.GetInt32(reader.GetOrdinal("id_tablero")),
+                                    Id_usuario_propietario = reader.GetInt32(reader.GetOrdinal("id_usuario_propietario")),
+                                    Nombre = reader.GetString(reader.GetOrdinal("nombre")),
+                                    Descripcion = reader.GetString(reader.GetOrdinal("descripcion"))
+                                });
+                            }
+                        }
+                    }
+                }
+                return tableros;
+            }
+            catch (Exception ex)
+            {
+                Console.Error.WriteLine($"Error en GetByParticipante: {ex.Message}");
                 throw;
             }
         }

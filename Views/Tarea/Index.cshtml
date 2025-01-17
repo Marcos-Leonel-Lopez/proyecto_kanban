@@ -3,7 +3,7 @@
 }
 <section class="container">
     <div class="text-left">
-        <h1>Gestión de Usuarios</h1>
+        <h1>Gestión de Tareas</h1>
         <ul class="list-group">
             <li class="list-group-item">
                 <a asp-controller="Tarea" asp-action="Create">Crear tareas</a>
@@ -23,7 +23,10 @@
                 </form>
             </li>
         </ul>
-        <button type="button" class="btn btn-secondary mt-4">
-            <a href="@Url.Action("Index", "Home")" class="text-white text-decoration-none">Volver</a>
-        </button>
+        <a href="@Url.Action("Index", "Home")" class="text-white text-decoration-none">
+            <button type="button" class="btn btn-secondary mt-4">
+                Volver
+            </button>
+        </a>
+
 </section>

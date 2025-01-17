@@ -1,0 +1,24 @@
+@model bool
+
+@if (Model)
+{
+    <li>
+        <a class="nav-link text-dark" asp-area="" asp-controller="Usuario" asp-action="Index">Usuarios</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link text-dark" asp-area="" asp-controller="Tablero" asp-action="Index">Tableros</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link text-dark" asp-area="" asp-controller="Tarea" asp-action="Index">Tareas</a>
+
+    </li>
+    <li class="nav-item">
+        <a class="nav-link text-dark" asp-area="" asp-controller="Sesion" asp-action="Logout">Cerrar sesión</a>
+    </li>
+}
+else
+{
+    <li class="nav-item">
+        <a class="nav-link text-dark" asp-area="" asp-controller="Sesion" asp-action="Index">Iniciar sesión</a>
+    </li>
+}

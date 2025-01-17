@@ -1,13 +1,12 @@
-@model UsuarioViewModel
-
 @{
     ViewData["Title"] = "Editar Perfil de Usuario";
 }
+@model UsuarioViewModel
 
 <section class="container">
     <h3>Editar Perfil de Usuario</h3>
     <form asp-controller="Usuario" asp-action="EditPerfil" method="post" enctype="multipart/form-data">
-        <input type="hidden" asp-for="Id" />
+        <input type="hidden" asp-for="Id_usuario" />
         <section class="d-flex flex-column">
             <section class="d-flex flex-column justify-content-start mb-2 col-6">
                 <label asp-for="Nombre" class="form-label"></label>
@@ -21,9 +20,11 @@
                 </select>
                 <span asp-validation-for="Rol" class="text-danger"></span>
             </section>
-            <section class="d-flex justify-content-start mb-2">
-                <button type="submit" class="btn btn-primary">Guardar</button>
-                <a asp-action="GetAll" class="btn btn-secondary">Cancelar</a>
+            <section class="d-flex justify-content-start mb-2 ">
+                <button type="submit" class="btn btn-primary me-1">Guardar</button>
+                <a asp-controller="Usuario" asp-action="ListToEdit">
+                    <button type="button"class="btn btn-secondary ms-1">Volver</button>
+                </a>
             </section>
         </section>
     </form>

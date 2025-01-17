@@ -12,9 +12,19 @@
     <ul>
         @if (Loggeado)
         {
-            <li class="list-group-item">
-                <a asp-controller="Usuario" asp-action="Index">Usuarios</a>
-            </li>
+            @if (rolUsuario == MisEnums.RolUsuario.Administrador.ToString())
+            {
+                <li class="list-group-item">
+                    <a asp-controller="Usuario" asp-action="Index">Usuarios</a>
+                </li>
+            }
+            else
+            {
+                <li class="list-group-item">
+                    <a asp-controller="Usuario" asp-action="Index">Usuario</a>
+                </li>
+            }
+
             <li class="list-group-item">
                 <a asp-controller="Tablero" asp-action="Index">Tableros</a>
             </li>

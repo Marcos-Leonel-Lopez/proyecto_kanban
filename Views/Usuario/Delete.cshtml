@@ -1,5 +1,6 @@
 @{
     ViewData["Title"] = "Eliminar un Usuario";
+    var ocupado = (bool)ViewData["conTareas"];
 }
 @model UsuarioViewModel;
 
@@ -15,7 +16,7 @@
         </thead>
         <tbody>
             <tr>
-                <td>@Model.Id</td>
+                <td>@Model.Id_usuario</td>
                 <td>@Model.Nombre</td>
                 <td>@Model.Rol</td>
             </tr>
@@ -23,8 +24,13 @@
     </table>
 
     <form asp-action="DeleteConfirmed" method="post">
-        <input type="hidden" name="idUsuario" value="@Model.Id" />
+        <input type="hidden" name="idUsuario" value="@Model.Id_usuario" />
+        @if(ocupado){
+        <button type="submit" class="btn btn-danger" disabled>ELIMINAR</button>
+        <p>Este usuario no se puede eliminar</p>
+        }else{
         <button type="submit" class="btn btn-danger">ELIMINAR</button>
+        }
         <a asp-controller="Usuario" asp-action="ListToEdit" class="btn btn-secondary">CANCELAR</a>
     </form>
 </section>

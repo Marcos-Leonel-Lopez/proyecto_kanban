@@ -3,29 +3,24 @@
 }
 @model List<TableroViewModel>
 
-<section class="container">
-    <table class="table table-bordered table-hover tabla_tableros">
-        <thead>
-            <tr class="table-dark">
-                <th scope="col" class="col-1">Id</th>
-                <th scope="col" class="col-2">Nombre Tablero</th>
-                <th scope="col" class="col-6">Descripcion</th>
-                <th scope="col" class="col-3">Id - Propietario</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var tablero in Model)
-            {
-                <tr>
-                    <td>@tablero.Id</td>
-                    <td>@tablero.Nombre</td>
-                    <td class="overflow-auto">@tablero.Descripcion</td>
-                    <td>@tablero.Id_propietario- @tablero.NombrePropietario</td>
-                </tr>
-            }
-        </tbody>
-    </table>
-    </table>
+<div class="container">
+    <div class="row">
+        @foreach (var tablero in Model)
+        {
+            <div class="col-md-4 mb-3"> <!-- Cada tarjeta ocupa 6 columnas en pantallas medianas o mayores -->
+                <section class="card h-100" > <!-- Tarjeta más alta -->
+                    <h5 class="card-header">#@tablero.Id_tablero - @tablero.Nombre</h5>
+                    <section class="card-body d-flex flex-column">
+                        <p class="card-text overflow-auto" style="max-height: 150px;">
+                            @tablero.Descripcion
+                        </p>
+                        <a href="#" class="btn btn-primary mt-auto align-self-start">Go somewhere</a>
+                    </section>
+                </section>
+            </div>
+        }
+    </div>
+</div>
 
 
 

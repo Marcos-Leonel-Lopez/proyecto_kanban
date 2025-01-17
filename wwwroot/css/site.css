@@ -78,8 +78,9 @@ body {
   display: flex;
   flex-direction: column;
 }
-button a{
+button a, li a{
   text-decoration: none;
+  list-style: none;
   color: inherit;
 }
 
@@ -95,4 +96,24 @@ button a{
   margin-top: 0.2rem; /* Espaciado pequeño entre el input y el mensaje */
   color: red; /* Color de los mensajes */
 }
+
+.card {
+  height: 150px; /* Altura mínima de la tarjeta */
+}
+
+.card-text {
+  height: 100px; /* Altura máxima del texto con overflow */
+  overflow-y: auto;  /* Habilita desplazamiento vertical */
+}
+
+.card-body {
+  display: flex;
+  flex-direction: column; /* Organiza los elementos en columna */
+}
+
+.card-body .btn {
+  margin-top: auto; /* Empuja el botón hacia abajo */
+  align-self: start; /* Alinea el botón al inicio horizontalmente */
+}
+
 

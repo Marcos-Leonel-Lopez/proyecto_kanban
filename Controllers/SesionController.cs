@@ -39,7 +39,7 @@ public class SesionController : Controller
             }
             HttpContext.Session.SetString("nombreUsuario", usuario.Nombre_de_usuario);
             HttpContext.Session.SetInt32("idUsuario", usuario.Id_usuario);
-            HttpContext.Session.SetInt32("rolUsuario", (int)usuario.Rol_usuario);
+            HttpContext.Session.SetString("rolUsuario", usuario.Rol_usuario.ToString());
             return RedirectToAction("Index", "Home");
         }
         catch (Exception ex)

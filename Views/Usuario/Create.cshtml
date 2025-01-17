@@ -29,9 +29,12 @@
                 <span class="text-danger" asp-validation-for="Rol_usuario"></span>
             </section>
             <section class="d-flex justify-content-start mb-2">
-                <button type="button" class="btn btn-secondary me-1">
-                    <a asp-controller="Usuario" asp-action="Index" class="text-white text-decoration-none">Volver</a>
-                </button>
+
+                <a asp-controller="Usuario" asp-action="Index" class="text-white text-decoration-none">
+                    <button type="button" class="btn btn-secondary me-1">
+                        Volver
+                    </button>
+                </a>
                 <button type="submit" class="btn btn-primary ms-1">CREAR</button>
             </section>
         </section>

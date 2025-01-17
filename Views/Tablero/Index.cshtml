@@ -1,28 +1,23 @@
 @{
-    ViewData["Title"] = "Gestión de Usuarios";
+    ViewData["Title"] = "Gestión de Tableros";
 }
 <section class="container">
     <div class="text-left">
-        <h1>Gestión de Usuarios</h1>
+        <h1>Gestión de Tableros</h1>
         <ul class="list-group">
-            <li class="list-group-item"><a asp-controller="Tablero" asp-action="GetAll">Ver lista completa de
-                    tableros</a>
-            </li>
-            @* <li class="list-group-item">
-                <form asp-controller="Tablero" asp-action="GetById" method="get">
-                    <label for="idUsuario">Ver Usuario por ID:</label>
-                    <input type="text" id="idUsuario" name="idUsuario" required />
-                    <button type="submit">Ver Usuario</button>
-                </form>
+            <li class="list-group-item">
+                <a asp-controller="Tablero" asp-action="GetByUsuario">Ver mis tableros</a>
             </li>
             <li class="list-group-item">
-                <a asp-controller="Tablero" asp-action="Create">Crear un nuevo usuario</a>
+                <a asp-controller="Tablero" asp-action="GetAll">Ver todos los tableros</a>
             </li>
             <li class="list-group-item">
-                <a asp-controller="Tablero" asp-action="ListToEdit">Editar usuarios</a>
-            </li> *@
+                <a asp-controller="Tablero" asp-action="Create">Crear un nuevo tablero</a>
+            </li>
         </ul>
-        <button type="button" class="btn btn-secondary mt-4">
-            <a href="@Url.Action("Index", "Home")" class="text-white text-decoration-none">Volver</a>
-        </button>
+        <a href="@Url.Action("Index", "Home")" class="text-white text-decoration-none">
+            <button type="button" class="btn btn-secondary mt-4">
+                Volver
+            </button>
+        </a>
 </section>

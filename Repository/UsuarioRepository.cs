@@ -185,7 +185,8 @@ namespace UsuarioRepo
                 throw;
             }
         }
-        public Usuario GetUsuario(string username, string password){
+        public Usuario GetUsuario(string username, string password)
+        {
             try
             {
                 Usuario usuario = null;
@@ -218,6 +219,47 @@ namespace UsuarioRepo
             catch (Exception ex)
             {
                 Console.Error.WriteLine($"Error en GetUsuario: {ex.Message}");
+                throw;
+            }
+        }
+        public bool UserBusy(int id_usuario)
+        {
+            try
+            {
+                bool busy = false;
+                string query = @"
+            SELECT 
+                U.id_usuario,
+                (SELECT COUNT(*) FROM Tarea Tr WHERE Tr.id_usuario_asignado = U.id_usuario) AS TotalTareas,
+                (SELECT COUNT(*) FROM Tablero Tb WHERE Tb.id_usuario_propietario = U.id_usuario) AS TotalTableros,
+                (
+                    (SELECT COUNT(*) FROM Tarea Tr WHERE Tr.id_usuario_asignado = U.id_usuario) +
+                    (SELECT COUNT(*) FROM Tablero Tb WHERE Tb.id_usuario_propietario = U.id_usuario)
+                ) AS Total
+            FROM usuario U
+            WHERE U.id_usuario = @id;";
+
+                using (var connection = new SqliteConnection(_ConnectionString))
+                {
+                    connection.Open();
+                    using (var command = new SqliteCommand(query, connection))
+                    {
+                        command.Parameters.AddWithValue("@id", id_usuario);
+                        using (var reader = command.ExecuteReader())
+                        {
+                            if (reader.Read())
+                            {
+                                // Asegúrate de que el índice 3 corresponde a la columna 'Total'
+                                busy = reader.GetInt32(reader.GetOrdinal("Total")) > 0;
+                            }
+                        }
+                    }
+                }
+                return busy;
+            }
+            catch (Exception ex)
+            {
+                Console.Error.WriteLine($"Error en UserBusy: {ex.Message}");
                 throw;
             }
         }

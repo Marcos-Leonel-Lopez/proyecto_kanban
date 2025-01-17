@@ -1,0 +1,33 @@
+@{
+    ViewData["Title"] = "Crear un Tablero";
+}
+
+@model CrearTableroViewModel
+
+<section class="container">
+    <h3>Crear un Tablero</h3>
+    <form asp-controller="Tablero" asp-action="Create" method="post" enctype="multipart/form-data">
+        <section class="d-flex flex-column">
+            <section class="d-flex flex-column justify-content-start mb-2 col-6">
+                <label for="nombre">Nombre</label>
+                <input type="text" id="nombre" class="form-control" asp-for="Nombre" />
+                <span class="text-danger" asp-validation-for="Nombre"></span>
+            </section>
+            <section class="d-flex flex-column justify-content-start mb-2 col-6">
+                <label for="descripcion">Descripción</label>
+                <textarea id="descripcion" class="form-control" asp-for="Descripcion"></textarea>
+                <span class="text-danger" asp-validation-for="Descripcion"></span>
+            </section>
+                        <!-- Botones -->
+            <section class="d-flex justify-content-start mb-2">
+                <a asp-controller="Tablero" asp-action="Index" class="text-white text-decoration-none">
+                    <button type="button" class="btn btn-secondary me-1">
+                        Volver
+                    </button>
+                </a>
+                <button type="submit" class="btn btn-primary ms-1">CREAR</button>
+            </section>
+        </section>
+    </form>
+
+</section>

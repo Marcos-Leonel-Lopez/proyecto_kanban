@@ -23,17 +23,23 @@ public class UsuarioController : Controller
         {
             return RedirectToAction("Index", "Home");
         }
+        ViewData["rolUsuario"] = HttpContext.Session.GetString("rolUsuario");
         return View();
     }
     [HttpGet]
     public IActionResult GetAll()
     {
+        var rol = HttpContext.Session.GetInt32("rolUsuario");
+        if (HttpContext.Session.GetString("idUsuario") == null || HttpContext.Session.GetString("rolUsuario") != MisEnums.RolUsuario.Administrador.ToString())
+        {
+            return RedirectToAction("Index", "Home");
+        }
         try
         {
             var usuarios = _usuarioRepository.GetAll();
             var viewModel = usuarios.Select(usuario => new UsuarioViewModel
             {
-                Id = usuario.Id_usuario,
+                Id_usuario = usuario.Id_usuario,
                 Nombre = usuario.Nombre_de_usuario,
                 Rol = usuario.Rol_usuario.ToString()
             }).ToList();
@@ -49,6 +55,10 @@ public class UsuarioController : Controller
     [HttpGet]
     public IActionResult GetById(int idUsuario)
     {
+        if (HttpContext.Session.GetString("idUsuario") == null)
+        {
+            return RedirectToAction("Index", "Home");
+        }
         try
         {
             var usuario = _usuarioRepository.GetById(idUsuario);
@@ -59,7 +69,7 @@ public class UsuarioController : Controller
             }
             var viewModel = new UsuarioViewModel
             {
-                Id = usuario.Id_usuario,
+                Id_usuario = usuario.Id_usuario,
                 Nombre = usuario.Nombre_de_usuario,
                 Rol = usuario.Rol_usuario.ToString()
             };
@@ -75,12 +85,20 @@ public class UsuarioController : Controller
     [HttpGet]
     public IActionResult Create()
     {
+        if (HttpContext.Session.GetString("idUsuario") == null)
+        {
+            return RedirectToAction("Index", "Home");
+        }
         return View(new Usuario());
     }
 
     [HttpPost]
     public IActionResult Create(Usuario usuario)
     {
+        if (HttpContext.Session.GetString("idUsuario") == null)
+        {
+            return RedirectToAction("Index", "Home");
+        }
         if (ModelState.IsValid)
         {
             try
@@ -101,12 +119,16 @@ public class UsuarioController : Controller
     // solo podria acceder un admin
     public IActionResult ListToEdit()
     {
+        if (HttpContext.Session.GetString("idUsuario") == null)
+        {
+            return RedirectToAction("Index", "Home");
+        }
         try
         {
             var usuarios = _usuarioRepository.GetAll();
             var viewModel = usuarios.Select(usuario => new UsuarioViewModel
             {
-                Id = usuario.Id_usuario,
+                Id_usuario = usuario.Id_usuario,
                 Nombre = usuario.Nombre_de_usuario,
                 Rol = usuario.Rol_usuario.ToString()
             }).ToList();
@@ -122,6 +144,10 @@ public class UsuarioController : Controller
     [HttpGet]
     public IActionResult Delete(int idUsuario)
     {
+        if (HttpContext.Session.GetString("idUsuario") == null)
+        {
+            return RedirectToAction("Index", "Home");
+        }
         try
         {
             var usuario = _usuarioRepository.GetById(idUsuario);
@@ -132,10 +158,11 @@ public class UsuarioController : Controller
             }
             var viewModel = new UsuarioViewModel
             {
-                Id = usuario.Id_usuario,
+                Id_usuario = usuario.Id_usuario,
                 Nombre = usuario.Nombre_de_usuario,
                 Rol = usuario.Rol_usuario.ToString()
             };
+            ViewData["conTareas"] = _usuarioRepository.UserBusy(idUsuario);
             return View(viewModel);
         }
         catch (Exception ex)
@@ -148,6 +175,10 @@ public class UsuarioController : Controller
     [HttpPost]
     public IActionResult DeleteConfirmed(int idUsuario)
     {
+        if (HttpContext.Session.GetString("idUsuario") == null)
+        {
+            return RedirectToAction("Index", "Home");
+        }
         try
         {
             var usuario = _usuarioRepository.GetById(idUsuario);
@@ -170,6 +201,10 @@ public class UsuarioController : Controller
     // Verificar que el usuario sea admin o que el id de las ession coincida con el 'idUsuario'
     public IActionResult EditarPerfil(int idUsuario)
     {
+        if (HttpContext.Session.GetString("idUsuario") == null)
+        {
+            return RedirectToAction("Index", "Home");
+        }
         try
         {
             var usuario = _usuarioRepository.GetById(idUsuario);
@@ -180,7 +215,7 @@ public class UsuarioController : Controller
             }
             var viewModel = new UsuarioViewModel
             {
-                Id = usuario.Id_usuario,
+                Id_usuario = usuario.Id_usuario,
                 Nombre = usuario.Nombre_de_usuario,
                 Rol = usuario.Rol_usuario.ToString()
             };
@@ -196,17 +231,21 @@ public class UsuarioController : Controller
     [HttpPost]
     public IActionResult EditPerfil(UsuarioViewModel usuarioModif)
     {
+        if (HttpContext.Session.GetString("idUsuario") == null)
+        {
+            return RedirectToAction("Index", "Home");
+        }
         if (ModelState.IsValid)
         {
             try
             {
-                var usuarioExistente = _usuarioRepository.GetById(usuarioModif.Id);
+                var usuarioExistente = _usuarioRepository.GetById(usuarioModif.Id_usuario);
                 if (usuarioExistente == null)
                 {
                     ViewData["ErrorMessage"] = "Hubo un problema al intentar actualizar el usuario.";
                     return View("Error");
                 }
-                var modif = _usuarioRepository.EditarPerfil(usuarioModif, usuarioModif.Id);
+                var modif = _usuarioRepository.EditarPerfil(usuarioModif, usuarioModif.Id_usuario);
                 if (!modif)
                 {
                     ViewData["ErrorMessage"] = "Hubo un problema al intentar actualizar el usuario.";
@@ -224,6 +263,76 @@ public class UsuarioController : Controller
 
         return View(usuarioModif);
     }
+    [HttpGet]
+    public IActionResult UpdatePass()
+    {
+        if (HttpContext.Session.GetString("idUsuario") == null)
+        {
+            return RedirectToAction("Index", "Home");
+        }
+        try
+        {
+            return View(new UsuarioPasswordViewModel());
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError($"Error en UpdatePass: {ex.Message}");
+            ViewData["ErrorMessage"] = "Hubo un problema al cargar el perfil del usuario.";
+            return View("Error");
+        }
+    }
+    [HttpPost]
+    public IActionResult UpdatePass(UsuarioPasswordViewModel passModif)
+    {
+        if (HttpContext.Session.GetString("idUsuario") == null)
+        {
+            return RedirectToAction("Index", "Home");
+        }
+        if (!ModelState.IsValid)
+        {
+            return View(passModif);
+        }
+        try
+        {
+            int idUsuario = (int)HttpContext.Session.GetInt32("idUsuario");
+            var usuarioExistente = _usuarioRepository.GetById(idUsuario);
+            if (usuarioExistente == null)
+            {
+                ViewData["ErrorMessage"] = "Hubo un problema al intentar actualizar el usuario.";
+                return View(passModif);  // No redirigir, solo retornar la vista
+            }
+            if (usuarioExistente.Password != passModif.Password)
+            {
+                ViewData["ErrorMessage"] = "La contraseña actual no coincide.";
+                return View(passModif);  // No redirigir, solo retornar la vista
+            }
+            if (passModif.NewPassword != passModif.PasswordConfirm)
+            {
+                ViewData["ErrorMessage"] = "Las contraseñas no coinciden.";
+                return View(passModif);  // No redirigir, solo retornar la vista
+            }
+            Usuario usuarioModif = new Usuario
+            {
+                Id_usuario = idUsuario,
+                Nombre_de_usuario = usuarioExistente.Nombre_de_usuario,
+                Password = passModif.NewPassword,
+                Rol_usuario = usuarioExistente.Rol_usuario
+            };
+            _usuarioRepository.UpdatePass(usuarioModif, idUsuario);
+            return RedirectToAction("Index", "Home");
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError($"Error en UpdatePass: {ex.Message}");
+            ViewData["ErrorMessage"] = "Hubo un problema al actualizar el perfil del usuario.";
+            return View(passModif);  // No redirigir, solo retornar la vista
+        }
+    }
+
+
+
+
+
 
     [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
     public IActionResult Error()

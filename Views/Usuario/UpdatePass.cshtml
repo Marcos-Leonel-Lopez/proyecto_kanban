@@ -1,0 +1,69 @@
+@{
+    ViewData["Title"] = "Cambiar contraseña";
+}
+@model UsuarioPasswordViewModel
+<section class="container">
+    <h3>Cambiar contraseña</h3>
+    <form asp-controller="Usuario" asp-action="UpdatePass" method="post" enctype="multipart/form-data">
+        <section class="d-flex flex-column">
+            <section class="d-flex flex-column justify-content-start mb-2 col-6">
+                <label for="password">Contraseña</label>
+                <input type="password" id="password" name="Password" class="form-control" asp-for="Password" />
+                <span class="text-danger" asp-validation-for="Password"></span>
+            </section>
+            <section class="d-flex flex-column justify-content-start mb-2 col-6">
+                <label for="newPassword">Nueva Contraseña</label>
+                <input type="password" id="newPassword" name="NewPassword" class="form-control" asp-for="NewPassword" />
+                <span class="text-danger" asp-validation-for="NewPassword"></span>
+            </section>
+            <section class="d-flex flex-column justify-content-start mb-2 col-6">
+                <label for="passwordConfirm">Repetir la Nueva Contraseña</label>
+                <input type="password" id="passwordConfirm" name="PasswordConfirm" class="form-control"
+                    asp-for="PasswordConfirm" />
+                <span class="text-danger" asp-validation-for="PasswordConfirm"></span>
+            </section>
+            <section class="d-flex justify-content-start mb-2">
+                <a asp-controller="Usuario" asp-action="Index" class="text-white text-decoration-none">
+                    <button type="button" class="btn btn-secondary me-1">
+                        Volver
+                    </button>
+                </a>
+                <button type="submit" class="btn btn-primary ms-1">Cambiar</button>
+            </section>
+        </section>
+    </form>
+</section>
+
+@if (ViewData["ErrorMessage"] != null)
+{
+    <div class="modal fade show" tabindex="-1" style="display: block; background-color: rgba(0, 0, 0, 0.5);"
+        id="errorModal">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Error</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p>@ViewData["ErrorMessage"]</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" id="closeModal">Aceptar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+
+        // Cerrar el modal al hacer clic en el botón "Aceptar"
+        document.getElementById("closeModal").addEventListener("click", function () {
+            window.location.href = '@Url.Action("UpdatePass", "Usuario")';
+        });
+
+        // Auto-cerrar después de 3 segundos
+        setTimeout(function () {
+            window.location.href = '@Url.Action("UpdatePass", "Usuario")';
+        }, 3000);
+    </script>
+}
