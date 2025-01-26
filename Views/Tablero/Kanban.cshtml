@@ -1,37 +1,167 @@
-@model List<TareaEnTableroViewModel>
+@* @{
+    ViewData["Title"] = "Kanban";
+    int idUsuarioLogueado = (int)ViewData["idUsuarioLogueado"];
+}
+@model KanbanViewModel
+
+<section class="container-fluid tablero-kanban">
+    <section class="d-flex overflow-auto" style="white-space: nowrap;"> <!-- Scroll horizontal -->
+        @foreach (var estado in Enum.GetValues(typeof(MisEnums.EstadoTarea)))
+        {
+            <section class="me-3 col-md-4 columnas">
+                <h4 class="text-center">@estado</h4>
+                <section class="rounded p-2 d-flex flex-wrap justify-content-center">
+                    @foreach (var tarea in Model.Tareas.Where(t => t.Id_estado == (MisEnums.EstadoTarea)estado))
+                    {
+                        <section class="card mb-3 mx-3">
+                            <section class="card-body" style="background-color: @tarea.Codigo_color">
+                                <h5 class="card-title">@tarea.Nombre</h5>
+                                <p class="card-text overflow-auto">@tarea.Descripcion</p>
+                                @if (tarea.Id_usuario_asignado == idUsuarioLogueado)
+                                {
+                                    <button type="button" class="btn btn-primary d-flex align-items-center" data-bs-toggle="modal"
+                                        data-bs-target="#editTareaModal_@tarea.Id_tarea">
+                                        <i class="bi bi-pencil"></i>
+                                        <span class="d-none d-lg-inline">Editar</span>
+                                    </button>
+
+                                    <!-- Modal -->
+                                    <div class="modal fade" id="editTareaModal_@tarea.Id_tarea" tabindex="-1"
+                                        aria-labelledby="editTareaModalLabel_@tarea.Id_tarea" aria-hidden="true">
+                                        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h5 class="modal-title" id="editTareaModalLabel_@tarea.Id_tarea">Editar Tarea
+                                                    </h5>
+                                                    <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                        aria-label="Close"></button>
+                                                </div>
+                                                <div class="modal-body">
+<form asp-controller="Tarea" asp-action="ActualizarTarea" method="post">
+    <input type="hidden" name="TareaModificada.Id_tarea" value="@tarea.Id_tarea" />
+    <input type="hidden" name="TareaModificada.Id_usuario_asignado" value="@tarea.Id_usuario_asignado" />
+    <div class="mb-3">
+        <label for="nombreTarea_@tarea.Id_tarea" class="form-label">Nombre</label>
+        <input type="text" class="form-control" id="nombreTarea_@tarea.Id_tarea" 
+               name="TareaModificada.Nombre" value="@tarea.Nombre" readonly />
+    </div>
+    <div class="mb-3">
+        <label for="descripcionTarea_@tarea.Id_tarea" class="form-label">Descripción</label>
+        <textarea class="form-control" id="descripcionTarea_@tarea.Id_tarea" 
+                  name="TareaModificada.Descripcion" rows="3" readonly>@tarea.Descripcion</textarea>
+    </div>
+                                                        <div class="mb-3">
+                                                            <label for="estadoTarea_@tarea.Id_tarea"
+                                                                class="form-label">Estado</label>
+                                                            <select class="form-select" id="estadoTarea_@tarea.Id_tarea" name="nuevoEstado">
+    @foreach (var est in Enum.GetValues(typeof(MisEnums.EstadoTarea)))
+    {
+        int enumValue = (int)est; <!-- Obtén el valor numérico del enum -->
+        <option value="@enumValue">
+            @est <!-- Nombre del enum como texto -->
+        </option>
+    }
+</select>
+                                                        </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+        <button type="submit" class="btn btn-primary">Guardar</button>
+    </div>
+</form>
+
+
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                }
+                            </section>
+                        </section>
+                    }
+                </section>
+            </section>
+        }
+    </section>
+</section> *@
+
 @{
     ViewData["Title"] = "Kanban";
     int idUsuarioLogueado = (int)ViewData["idUsuarioLogueado"];
 }
+@model KanbanViewModel
 
-<div class="container-fluid">
-    <div class="d-flex overflow-auto" style="white-space: nowrap;"> <!-- Scroll horizontal -->
+<section class="container-fluid tablero-kanban">
+    <section class="d-flex overflow-auto" style="white-space: nowrap;"> <!-- Scroll horizontal -->
         @foreach (var estado in Enum.GetValues(typeof(MisEnums.EstadoTarea)))
         {
-            <div class="me-3" style="width: 300px;"> <!-- Columna de cada estado -->
+            <section class="me-3 col-md-4 columnas">
                 <h4 class="text-center">@estado</h4>
-                <div class="border rounded bg-light p-2">
-                    @foreach (var tarea in Model.Where(t => t.Id_estado == (MisEnums.EstadoTarea)estado))
+                <section class="rounded p-2 d-flex flex-wrap justify-content-center">
+                    @foreach (var tarea in Model.Tareas.Where(t => t.Id_estado == (MisEnums.EstadoTarea)estado))
                     {
-                        <div class="card mb-3" style="width: 100%;">
-                            <div class="card-body">
+                        <section class="card mb-3 mx-3">
+                            <section class="card-body" style="background-color: @tarea.Codigo_color">  @* color a la tarea *@
                                 <h5 class="card-title">@tarea.Nombre</h5>
-                                <p class="card-text">@tarea.Descripcion</p>
+                                <p class="card-text overflow-auto">@tarea.Descripcion</p>
                                 @if (tarea.Id_usuario_asignado == idUsuarioLogueado)
                                 {
-                                    <form asp-action="EditarTarea" method="post" class="d-flex justify-content-center">
-                                        <input type="hidden" name="idTarea" value="@tarea.Id_tarea" />
-                                        <button type="submit" class="btn btn-primary btn-sm ms-2 d-flex align-items-center px-md-4 px-lg-1">
-                                            <i class="bi bi-pencil"></i>
-                                            <span class="d-none d-lg-inline">Editar</span>
-                                        </button>
-                                    </form>
+                                    <button type="button" class="btn btn-primary d-flex align-items-center" data-bs-toggle="modal"
+                                        data-bs-target="#editTareaModal_@tarea.Id_tarea">
+                                        <i class="bi bi-pencil"></i>
+                                        <span class="d-none d-lg-inline">Editar</span>
+                                    </button>
+
+                                    <!-- Modal -->
+                                    <div class="modal fade" id="editTareaModal_@tarea.Id_tarea" tabindex="-1"
+                                        aria-labelledby="editTareaModalLabel_@tarea.Id_tarea" aria-hidden="true">
+                                        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h5 class="modal-title" id="editTareaModalLabel_@tarea.Id_tarea">Editar Tarea</h5>
+                                                    <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                        aria-label="Close"></button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    <form asp-controller="Tarea" asp-action="ActualizarTarea" method="post">
+                                                        <input type="hidden" name="TareaModificada.Id_tarea" value="@tarea.Id_tarea" />
+                                                        <input type="hidden" name="TareaModificada.Id_usuario_asignado" value="@tarea.Id_usuario_asignado" />
+                                                        <div class="mb-3">
+                                                            <label for="nombreTarea_@tarea.Id_tarea" class="form-label">Nombre</label>
+                                                            <input type="text" class="form-control" id="nombreTarea_@tarea.Id_tarea" 
+                                                                   name="TareaModificada.Nombre" value="@tarea.Nombre" readonly />
+                                                        </div>
+                                                        <div class="mb-3">
+                                                            <label for="descripcionTarea_@tarea.Id_tarea" class="form-label">Descripción</label>
+                                                            <textarea class="form-control" id="descripcionTarea_@tarea.Id_tarea" 
+                                                                      name="TareaModificada.Descripcion" rows="3" readonly>@tarea.Descripcion</textarea>
+                                                        </div>
+                                                        <div class="mb-3">
+                                                            <label for="estadoTarea_@tarea.Id_tarea" class="form-label">Estado</label>
+                                                            <select class="form-select" id="estadoTarea_@tarea.Id_tarea" name="TareaModificada.Id_estado">
+                                                                @foreach (var est in Enum.GetValues(typeof(MisEnums.EstadoTarea)))
+                                                                {
+                                                                    int enumValue = (int)est;
+                                                                    <option value="@enumValue">@est</option>
+                                                                }
+                                                            </select>
+                                                        </div>
+                                                        <div class="modal-footer">
+                                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                                                            <button type="submit" class="btn btn-primary">Guardar</button>
+                                                        </div>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
                                 }
-                            </div>
-                        </div>
+                            </section>
+                        </section>
                     }
-                </div>
-            </div>
+                </section>
+            </section>
         }
-    </div>
-</div>
+    </section>
+</section>
+

@@ -52,33 +52,19 @@ namespace TareaRepo
             }
 
         }
-        public Tarea Update(Tarea tarea, int id_tarea)
+// ser mas especifico con el nombre
+        public Tarea Update(Tarea tarea, int id_estado)
         {
             try
             {
-                string query = "UPDATE Tarea SET id_tablero=@id_tablero, nombre=@nombre, id_estado=@id_estado, " +
-               "descripcion=@descripcion, id_color=@id_color, id_usuario_asignado=@id_usuario_asignado " +
-               "WHERE id_tarea=@id_tarea";
+                string query = @"UPDATE Tarea SET id_estado=@id_estado WHERE id_tarea=@id_tarea";
                 using (var connection = new SqliteConnection(_ConnectionString))
                 {
                     connection.Open();
                     using (var command = new SqliteCommand(query, connection))
                     {
-                        command.Parameters.AddWithValue("@id_tablero", tarea.Id_tablero);
-                        command.Parameters.AddWithValue("@nombre", tarea.Nombre);
-                        command.Parameters.AddWithValue("@id_estado", Convert.ToInt32(tarea.Id_estado)); // Convertir enum a int
-                        command.Parameters.AddWithValue("@descripcion", tarea.Descripcion ?? "Sin descripción"); // Valor por defecto si es null
-                        command.Parameters.AddWithValue("@id_color", tarea.Id_color);
-                        if (tarea.Id_usuario_asignado.HasValue)
-                        {
-                            command.Parameters.AddWithValue("@id_usuario_asignado", tarea.Id_usuario_asignado.Value);
-                        }
-                        else
-                        {
-                            command.Parameters.AddWithValue("@id_usuario_asignado", DBNull.Value);
-                        }
-
-                        command.Parameters.AddWithValue("@id_tarea", id_tarea);
+                        command.Parameters.AddWithValue("@id_estado", id_estado); // Convertir enum a int
+                        command.Parameters.AddWithValue("@id_tarea", tarea.Id_tarea);
                         command.ExecuteNonQuery();
                     }
                     connection.Close();

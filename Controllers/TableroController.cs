@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Session; //Agregado
 using IUsuarioRepo;
 using ITableroRepo;
 using ITareaRepo;
+using IColorRepo;
 // using System.Security.Cryptography.X509Certificates;
 
 namespace trabajo_final.Controllers;
@@ -15,12 +16,14 @@ public class TableroController : Controller
     private readonly IUsuarioRepository _usuarioRepository;
     private readonly ITableroRepository _tableroRepository;
     private readonly ITareaRepository _tareasRepository;
-    public TableroController(ILogger<TableroController> logger, IUsuarioRepository usuarioRepository, ITableroRepository tableroRepository,ITareaRepository tareasRepository)
+    private readonly IColorRepository _colorRepository;
+    public TableroController(ILogger<TableroController> logger, IUsuarioRepository usuarioRepository, ITableroRepository tableroRepository, ITareaRepository tareasRepository, IColorRepository colorRepository)
     {
         _logger = logger;
         _usuarioRepository = usuarioRepository;
         _tableroRepository = tableroRepository;
         _tareasRepository = tareasRepository;
+        _colorRepository = colorRepository;
     }
 
     [HttpGet]
@@ -187,17 +190,35 @@ public class TableroController : Controller
         {
             return RedirectToAction("Index", "Home");
         }
-        try{
+        try
+        {
+            // Obtener los colores disponibles.
+            var colores = _colorRepository.GetAll();
+
+            // Mapear las tareas a TareaEnTableroViewModel.
             var tareasViewModel = _tareasRepository.GetByTablero(id_tablero)
-            .Select(tarea => new TareaEnTableroViewModel{
-                Id_tarea = tarea.Id_tarea,
-                Nombre = tarea.Nombre,
-                Descripcion = tarea.Descripcion,
-                Id_estado = tarea.Id_estado,
-                Id_usuario_asignado = tarea.Id_usuario_asignado
-            }).ToList();
+                .Select(tarea => new TareaEnTableroViewModel
+                {
+                    Id_tarea = tarea.Id_tarea,
+                    Nombre = tarea.Nombre,
+                    Descripcion = tarea.Descripcion,
+                    Id_estado = tarea.Id_estado,
+                    Id_usuario_asignado = tarea.Id_usuario_asignado,
+                    Codigo_color = colores.FirstOrDefault(c => c.Id_color == tarea.Id_color)?.Hex ?? "#FFFFFF"
+                }).ToList();
+
+            // Crear el ViewModel del Kanban.
+            var kanbanViewModel = new KanbanViewModel
+            {
+                Tareas = tareasViewModel,
+                TareaModificada = new TareaEnTableroViewModel() // Inicializamos una tarea vacía.
+            };
+
+            // Pasar el ID del usuario logueado a la vista.
             ViewData["idUsuarioLogueado"] = (int)HttpContext.Session.GetInt32("idUsuario");
-            return View(tareasViewModel);
+
+            // Devolver la vista con el ViewModel.
+            return View(kanbanViewModel);
         }
         catch (Exception ex)
         {
@@ -206,6 +227,8 @@ public class TableroController : Controller
             return View("Error");
         }
     }
+
+
 
 
 

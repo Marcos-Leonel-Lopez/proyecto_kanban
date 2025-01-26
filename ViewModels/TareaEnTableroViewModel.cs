@@ -5,8 +5,9 @@ public class TareaEnTableroViewModel
     private string descripcion;
     private MisEnums.EstadoTarea id_estado;
     private int? id_usuario_asignado;
+    private string codigo_color;
     public TareaEnTableroViewModel() { }
-    public TareaEnTableroViewModel(int id_tarea, string nombre, string descripcion, MisEnums.EstadoTarea id_estado, int? id_usuario_asignado)
+    public TareaEnTableroViewModel(int id_tarea, string nombre, string descripcion, MisEnums.EstadoTarea id_estado, int? id_usuario_asignado,string codigo_color)
     {
         this.id_tarea = id_tarea;
         this.nombre = nombre;
@@ -20,4 +21,5 @@ public class TareaEnTableroViewModel
     public string Descripcion { get => descripcion; set => descripcion = value; }
     public MisEnums.EstadoTarea Id_estado { get => id_estado; set => id_estado = value; }
     public int? Id_usuario_asignado { get => id_usuario_asignado; set => id_usuario_asignado = value; }
+    public string Codigo_color { get => codigo_color; set => codigo_color = value; }
 }

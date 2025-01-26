@@ -62,7 +62,7 @@ public class TareaController : Controller
             return RedirectToAction("Index", "Home");
         }
         var tableros = _tableroRepository.GetAll()
-            .Select(tablero => new TableroViewModel(tablero,_usuarioRepository.GetById(tablero.Id_usuario_propietario).Nombre_de_usuario))
+            .Select(tablero => new TableroViewModel(tablero, _usuarioRepository.GetById(tablero.Id_usuario_propietario).Nombre_de_usuario))
             .ToList();
 
         var colores = _colorRepository.GetAll();
@@ -83,7 +83,7 @@ public class TareaController : Controller
         {
             // Si hay errores de validación, recarga la vista con los datos actuales
             model.Tableros = _tableroRepository.GetAll()
-            .Select(tablero => new TableroViewModel(tablero,_usuarioRepository.GetById(tablero.Id_usuario_propietario).Nombre_de_usuario))
+            .Select(tablero => new TableroViewModel(tablero, _usuarioRepository.GetById(tablero.Id_usuario_propietario).Nombre_de_usuario))
             .ToList(); // Vuelve a cargar los datos necesarios
             model.Colores = _colorRepository.GetAll();
             model.Usuarios = _usuarioRepository.GetAll()
@@ -94,14 +94,15 @@ public class TareaController : Controller
 
         try
         {
-            var nuevaTarea = new Tarea{
+            var nuevaTarea = new Tarea
+            {
                 Nombre = model.NuevaTarea.Nombre,
                 Descripcion = model.NuevaTarea.Descripcion,
                 Id_color = model.NuevaTarea.Id_color,
-                Id_estado = MisEnums.EstadoTarea.Ideas, //por defecto las tareas se crean pendientes
+                Id_estado = MisEnums.EstadoTarea.Ideas, //por defecto las tareas se crean "ideas"
                 Id_usuario_asignado = model.NuevaTarea.Id_usuario_asignado
             };
-            _tareaRepository.Create(nuevaTarea,model.NuevaTarea.Id_tablero);
+            _tareaRepository.Create(nuevaTarea, model.NuevaTarea.Id_tablero);
             return RedirectToAction("Create");
         }
         catch (Exception ex)
@@ -112,5 +113,29 @@ public class TareaController : Controller
         }
 
     }
+    [HttpPost]
+    public IActionResult ActualizarTarea(KanbanViewModel model)
+    {
+        if (HttpContext.Session.GetString("idUsuario") == null
+            || HttpContext.Session.GetInt32("idUsuario") != model.TareaModificada.Id_usuario_asignado
+            )
+        {
+            return RedirectToAction("Index", "Home");
+        }
+        try
+        {
+            var tareaAnterior = _tareaRepository.GetById(model.TareaModificada.Id_tarea);
+            var nuevoEstado = (int)model.TareaModificada.Id_estado;
+            _tareaRepository.Update(tareaAnterior, nuevoEstado);
+            return RedirectToAction("Kanban", "Tablero", new { id_tablero = tareaAnterior.Id_tablero });
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError($"Error en Kanban: {ex.Message}");
+            ViewData["ErrorMessage"] = "Hubo un problema al actualizar tarea.";
+            return View("Error");
+        }
+    }
+
 
 }

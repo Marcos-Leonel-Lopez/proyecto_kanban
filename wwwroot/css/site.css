@@ -20,6 +20,9 @@ html {
 body {
   margin-bottom: 60px;
 }
+#main-container{
+  max-width: 100vw;
+}
 
 .tabla_tableros {
   border-collapse: collapse;
@@ -29,32 +32,6 @@ body {
   border-top-right-radius: 10px !important;
 }
 
-/*    */
-
-.estado_Ideas {
-  background-color: #d3d3d3; /* Gris claro */
-  color: #000; /* Texto negro para contraste */
-}
-
-.estado_ToDo {
-  background-color: #add8e6; /* Azul claro */
-  color: #000; /* Texto negro para contraste */
-}
-
-.estado_Doing {
-  background-color: #fffacd; /* Amarillo pálido */
-  color: #000; /* Texto negro para contraste */
-}
-
-.estado_Review {
-  background-color: #ffa07a; /* Naranja claro */
-  color: #000; /* Texto negro para contraste */
-}
-
-.estado_Done {
-  background-color: #90ee90; /* Verde claro */
-  color: #000; /* Texto negro para contraste */
-}
 #formulario_login{
   display: flex;
   justify-content: end;
@@ -97,35 +74,60 @@ button a, li a{
   color: red; /* Color de los mensajes */
 }
 
-.card {
+.seccion-tableros .card {
   height: 150px; /* Altura mínima de la tarjeta */
 }
 
-.card-text {
+.seccion-tableros .card-text {
   height: 100px; /* Altura máxima del texto con overflow */
   overflow-y: auto;  /* Habilita desplazamiento vertical */
 }
 
-.card-body {
+.seccion-tableros .card-body {
   display: flex;
   flex-direction: column; /* Organiza los elementos en columna */
 }
 
-.card-body .btn {
+.seccion-tableros .card-body .btn {
   margin-top: auto; /* Empuja el botón hacia abajo */
   align-self: start; /* Alinea el botón al inicio horizontalmente */
 }
 
+.seccion-tableros {
+  min-height: 50vh;
+  /* Ocupa al menos la mitad de la pantalla */
+  padding: 20px;
+  border-radius: 10px;
+  /* Bordes redondeados */
+}
+
+.mis-tableros {
+  background-color: #A8D5E2;
+  /* Pastel Azul */
+}
+
+.tableros-participante {
+  background-color: #F9C0C0;
+  /* Pastel Rosa */
+}
+
 /* tablero */
-.kanban-column {
-  min-width: 300px;
-  margin-right: 10px;
+.tablero-kanban .card{
+  height: 200px;
+  width: 300px;
 }
-.kanban-card {
-  margin-bottom: 15px;
+.tablero-kanban .columnas{
+  min-height: 80vh;
+  border-right: 0.5px solid black;
 }
-.kanban-container {
-  display: flex;
-  overflow-x: auto;
-  padding-bottom: 15px;
+
+.tablero-kanban .card-text{
+  height: 75px;
+}
+
+.tablero-kanban .card-text {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: normal;
+  word-wrap: break-word;
 }

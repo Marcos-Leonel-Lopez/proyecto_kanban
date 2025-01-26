@@ -1,0 +1,35 @@
+@model MenuViewModel
+
+<ul class="list-group">
+    @if (Model.Loggeado)
+    {
+        @if (Model.RolUsuario == MisEnums.RolUsuario.Administrador.ToString())
+        {
+            <li class="list-group-item">
+                <a asp-controller="Usuario" asp-action="Index">Usuarios</a>
+            </li>
+        }
+        else
+        {
+            <li class="list-group-item">
+                <a asp-controller="Usuario" asp-action="Index">Usuario</a>
+            </li>
+        }
+
+        <li class="list-group-item">
+            <a asp-controller="Tablero" asp-action="Index">Tableros</a>
+        </li>
+        <li class="list-group-item">
+            <a asp-controller="Tarea" asp-action="Index">Tareas</a>
+        </li>
+        <li class="list-group-item">
+            <a asp-controller="Sesion" asp-action="Logout">Cerrar Sesión</a>
+        </li>
+    }
+    else
+    {
+        <li class="list-group-item">
+            <a asp-controller="Sesion" asp-action="Index">Ingresar</a>
+        </li>
+    }
+</ul>
