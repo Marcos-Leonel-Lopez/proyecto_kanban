@@ -8,5 +8,5 @@
     <h1 class="display-4">Welcome</h1>
 </div>
 <section class="conteiner">
-    @await Component.InvokeAsync("Menu", new { loggeado, rolUsuario })
+    @await Component.InvokeAsync("Menu", new { loggeado = (bool)ViewData["Loggeado"], rolUsuario = ViewData["rolUsuario"] })
 </section>

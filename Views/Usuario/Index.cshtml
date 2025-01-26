@@ -2,34 +2,10 @@
     ViewData["Title"] = "Gestión de Usuarios";
     var rolUsuario = ViewData["rolUsuario"]?.ToString();
 }
-<section class="container">
-    <div class="text-left">
-        <h1>Gestión de Usuarios</h1>
-        <ul class="list-group">
-            @if (rolUsuario == MisEnums.RolUsuario.Administrador.ToString())
-            {
-                <li class="list-group-item">
-                    <a asp-controller="Usuario" asp-action="GetAll">Ver lista completa de usuarios</a>
-                </li>
-                <li class="list-group-item">
-                    <form asp-controller="Usuario" asp-action="GetById" method="get">
-                        <label for="idUsuario">Ver Usuario por ID:</label>
-                        <input type="text" id="idUsuario" name="idUsuario" required />
-                        <button type="submit">Ver Usuario</button>
-                    </form>
-                </li>
-                <li class="list-group-item">
-                    <a asp-controller="Usuario" asp-action="Create">Crear un nuevo usuario</a>
-                </li>
-                <li class="list-group-item">
-                    <a asp-controller="Usuario" asp-action="ListToEdit">Editar usuarios</a>
-                </li>
-            }
-            <li class="list-group-item">
-                <a asp-controller="Usuario" asp-action="UpdatePass">Cambiar contraseña</a>
-            </li>
-        </ul>
-        <a href="@Url.Action("Index", "Home")" class="text-white text-decoration-none">
-            <button type="button" class="btn btn-secondary mt-4">Volver</button>
-        </a>
+
+<section class="container mt-5">
+    <div class="card shadow p-4">
+        @await Component.InvokeAsync("MenuUsuario", new { rolUsuario = rolUsuario })
+        <a asp-controller="Home" asp-action="Index" class="btn btn-secondary w-100">Volver</a>
+    </div>
 </section>

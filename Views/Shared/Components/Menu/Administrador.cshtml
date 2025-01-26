@@ -1,0 +1,35 @@
+<div class="container mt-5">
+    <div class="card shadow-lg border-0">
+        <div class="card-header bg-primary text-white">
+            <h4 class="mb-0">Menú Principal</h4>
+        </div>
+        <div class="card-body">
+            <ul class="list-group list-group-flush">
+                <li class="list-group-item d-flex align-items-center">
+                    <i class="bi bi-person-fill me-3 text-primary"></i>
+                    <a asp-controller="Usuario" asp-action="Index" class="text-decoration-none text-dark">
+                        Usuarios
+                    </a>
+                </li>
+                <li class="list-group-item d-flex align-items-center">
+                    <i class="bi bi-kanban-fill me-3 text-success"></i>
+                    <a asp-controller="Tablero" asp-action="Index" class="text-decoration-none text-dark">
+                        Tableros
+                    </a>
+                </li>
+                <li class="list-group-item d-flex align-items-center">
+                    <i class="bi bi-card-checklist me-3 text-warning"></i>
+                    <a asp-controller="Tarea" asp-action="Index" class="text-decoration-none text-dark">
+                        Tareas
+                    </a>
+                </li>
+                <li class="list-group-item d-flex align-items-center">
+                    <i class="bi bi-box-arrow-right me-3 text-danger"></i>
+                    <a asp-controller="Sesion" asp-action="Logout" class="text-decoration-none text-dark">
+                        Cerrar Sesión
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>

@@ -1,10 +1,10 @@
 @{
     ViewData["Title"] = "Gestión de Tableros";
 }
-<section class="container">
-    <div class="text-left">
-        <h1>Gestión de Tableros</h1>
-        <ul class="list-group">
+<section class="container mt-5">
+    <div class="card shadow p-4">
+        <h2 class="text-center mb-4">Gestión de Tableros</h2>
+        <ul class="list-group mb-4">
             <li class="list-group-item">
                 <a asp-controller="Tablero" asp-action="GetByUsuario">Ver mis tableros</a>
             </li>
@@ -15,9 +15,7 @@
                 <a asp-controller="Tablero" asp-action="Create">Crear un nuevo tablero</a>
             </li>
         </ul>
-        <a href="@Url.Action("Index", "Home")" class="text-white text-decoration-none">
-            <button type="button" class="btn btn-secondary mt-4">
-                Volver
-            </button>
-        </a>
+        <a asp-controller="Home" asp-action="Index" class="btn btn-secondary w-100">Volver</a>
+    </div>
 </section>
+
