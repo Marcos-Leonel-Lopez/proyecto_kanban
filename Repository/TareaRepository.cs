@@ -1,4 +1,4 @@
-    using ITareaRepo;
+using ITareaRepo;
 using Microsoft.Data.Sqlite;
 
 namespace TareaRepo
@@ -52,8 +52,8 @@ namespace TareaRepo
             }
 
         }
-// ser mas especifico con el nombre
-        public Tarea Update(Tarea tarea, int id_estado)
+        // ser mas especifico con el nombre
+        public Tarea UpdateEstado(Tarea tarea, int id_estado)
         {
             try
             {
@@ -77,6 +77,37 @@ namespace TareaRepo
                 throw;
             }
 
+        }
+        public Tarea UpdateUsuario(Tarea tarea, int? id_usuario)
+        {
+            try
+            {
+                string query = @"UPDATE Tarea SET id_usuario_asignado=@id_usuario WHERE id_tarea=@id_tarea";
+                using (var connection = new SqliteConnection(_ConnectionString))
+                {
+                    connection.Open();
+                    using (var command = new SqliteCommand(query, connection))
+                    {
+                        if (id_usuario.HasValue)
+                        {
+                            command.Parameters.AddWithValue("@id_usuario", id_usuario);
+                        }
+                        else
+                        {
+                            command.Parameters.AddWithValue("@id_usuario", DBNull.Value);
+                        }
+                        command.Parameters.AddWithValue("@id_tarea", tarea.Id_tarea);
+                        command.ExecuteNonQuery();
+                    }
+                    connection.Close();
+                }
+                return tarea;
+            }
+            catch (Exception ex)
+            {
+                Console.Error.WriteLine($"Error en Update: {ex.Message}");
+                throw;
+            }
         }
         public Tarea GetById(int id_tarea)
         {

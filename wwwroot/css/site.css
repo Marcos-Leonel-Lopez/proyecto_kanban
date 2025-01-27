@@ -94,7 +94,7 @@ button a, li a{
 
 /* tablero */
 .tablero-kanban .card{
-  height: 200px;
+  height: 250px;
   width: 300px;
 }
 .tablero-kanban .columnas{
@@ -103,7 +103,7 @@ button a, li a{
 }
 
 .tablero-kanban .card-text{
-  height: 75px;
+  height: 80px;
 }
 
 .tablero-kanban .card-text {

@@ -1,0 +1,12 @@
+@model CabeceraViewModel
+@if (Model.EsPropietario == true)
+{
+    @if (Model.IdUsuarioAsignado != null)
+    {
+        <h6 class="card-subtitle mb-2 text-muted"> Asignado a: @Model.Usuarios.FirstOrDefault(u => u.Id_usuario == Model.IdUsuarioAsignado)?.Nombre </h6>
+    }
+    else
+    {
+        <span class="badge bg-warning text-dark">Sin asignar</span>
+    }
+}

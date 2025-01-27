@@ -192,9 +192,10 @@ public class TableroController : Controller
         }
         try
         {
+            // Obtener el ID del usuario logueado.
+            var idUsuarioLogueado = (int)HttpContext.Session.GetInt32("idUsuario");
             // Obtener los colores disponibles.
             var colores = _colorRepository.GetAll();
-
             // Mapear las tareas a TareaEnTableroViewModel.
             var tareasViewModel = _tareasRepository.GetByTablero(id_tablero)
                 .Select(tarea => new TareaEnTableroViewModel
@@ -206,17 +207,26 @@ public class TableroController : Controller
                     Id_usuario_asignado = tarea.Id_usuario_asignado,
                     Codigo_color = colores.FirstOrDefault(c => c.Id_color == tarea.Id_color)?.Hex ?? "#FFFFFF"
                 }).ToList();
-
+            // Determinar si el usuario logueado es propietario del tablero.
+            var esPropietario = _tableroRepository.GetById(id_tablero).Id_usuario_propietario == idUsuarioLogueado;
+            // Obtengo los usuarios para asignar tareas.
+            var usuarios = _usuarioRepository.GetAll()
+                .Select(u => new UsuarioViewModel
+                { 
+                    Id_usuario = u.Id_usuario,
+                    Nombre = u.Nombre_de_usuario
+                 }).ToList();
             // Crear el ViewModel del Kanban.
             var kanbanViewModel = new KanbanViewModel
             {
                 Tareas = tareasViewModel,
-                TareaModificada = new TareaEnTableroViewModel() // Inicializamos una tarea vacía.
+                TareaModificada = new TareaEnTableroViewModel(), // Inicializamos una tarea vacía.
+                EsPropietario = esPropietario,
+                Usuarios = usuarios
             };
 
             // Pasar el ID del usuario logueado a la vista.
-            ViewData["idUsuarioLogueado"] = (int)HttpContext.Session.GetInt32("idUsuario");
-
+            ViewData["idUsuarioLogueado"] = idUsuarioLogueado;
             // Devolver la vista con el ViewModel.
             return View(kanbanViewModel);
         }

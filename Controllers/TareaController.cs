@@ -114,7 +114,7 @@ public class TareaController : Controller
 
     }
     [HttpPost]
-    public IActionResult ActualizarTarea(KanbanViewModel model)
+    public IActionResult ActualizarEstado(KanbanViewModel model)
     {
         if (HttpContext.Session.GetString("idUsuario") == null
             || HttpContext.Session.GetInt32("idUsuario") != model.TareaModificada.Id_usuario_asignado
@@ -126,7 +126,28 @@ public class TareaController : Controller
         {
             var tareaAnterior = _tareaRepository.GetById(model.TareaModificada.Id_tarea);
             var nuevoEstado = (int)model.TareaModificada.Id_estado;
-            _tareaRepository.Update(tareaAnterior, nuevoEstado);
+            _tareaRepository.UpdateEstado(tareaAnterior, nuevoEstado);
+            return RedirectToAction("Kanban", "Tablero", new { id_tablero = tareaAnterior.Id_tablero });
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError($"Error en Kanban: {ex.Message}");
+            ViewData["ErrorMessage"] = "Hubo un problema al actualizar tarea.";
+            return View("Error");
+        }
+    }
+        [HttpPost]
+    public IActionResult ActualizarUsuario(KanbanViewModel model)
+    {
+        if (HttpContext.Session.GetString("idUsuario") == null)
+        {
+            return RedirectToAction("Index", "Home");
+        }
+        try
+        {
+            var tareaAnterior = _tareaRepository.GetById(model.TareaModificada.Id_tarea);
+            int? nuevoUsuario = model.TareaModificada.Id_usuario_asignado;
+            _tareaRepository.UpdateUsuario(tareaAnterior, nuevoUsuario);
             return RedirectToAction("Kanban", "Tablero", new { id_tablero = tareaAnterior.Id_tablero });
         }
         catch (Exception ex)
