@@ -129,6 +129,10 @@ namespace UsuarioRepo
                     }
                     connection.Close();
                 }
+                if (usuario == null)
+                {
+                    throw new NoEncontradoException("Usuario", id_usuario);
+                }
                 return usuario;
             }
             catch (Exception ex)
@@ -213,6 +217,10 @@ namespace UsuarioRepo
                         }
                     }
                     connection.Close();
+                }
+                if (usuario == null)
+                {
+                    throw new NoEncontradoException("Usuario", -99);
                 }
                 return usuario;
             }

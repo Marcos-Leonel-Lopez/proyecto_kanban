@@ -6,6 +6,7 @@ using ITareaRepo;
 using ITableroRepo;
 using IColorRepo;
 using IUsuarioRepo;
+using Microsoft.Data.Sqlite;
 
 namespace trabajo_final.Controllers;
 
@@ -43,8 +44,12 @@ public class TareaController : Controller
         try
         {
             List<Tarea> tareas = _tareaRepository.GetByTablero(idTablero);
-            List<Color> colores = _colorRepository.GetAll();
             return View(tareas);
+        }
+        catch (SqliteException ex){
+            _logger.LogError($"Error en base de datos en GetByTablero: {ex.ToString()}");
+            ViewData["ErrorMessage"] = "Hubo un problema con la base de datos. Intente más tarde.";
+            return View("Error");
         }
         catch (Exception ex)
         {
@@ -106,6 +111,11 @@ public class TareaController : Controller
             _tareaRepository.Create(nuevaTarea, model.NuevaTarea.Id_tablero);
             return RedirectToAction("Create");
         }
+        catch (SqliteException ex){
+            _logger.LogError($"Error en base de datos en Create: {ex.ToString()}");
+            ViewData["ErrorMessage"] = "Hubo un problema con la base de datos. Intente más tarde.";
+            return View("Error");
+        }
         catch (Exception ex)
         {
             _logger.LogError($"Error en Create: {ex.ToString()}");
@@ -130,6 +140,17 @@ public class TareaController : Controller
             _tareaRepository.UpdateEstado(tareaAnterior, nuevoEstado);
             return RedirectToAction("Kanban", "Tablero", new { id_tablero = tareaAnterior.Id_tablero });
         }
+        catch (NoEncontradoException ex)
+        {
+            _logger.LogWarning(ex.ToString());
+            ViewData["ErrorMessage"] = ex.Message;
+            return View("Error");
+        }
+        catch (SqliteException ex){
+            _logger.LogError($"Error en base de datos en ActualizarEstado: {ex.ToString()}");
+            ViewData["ErrorMessage"] = "Hubo un problema con la base de datos. Intente más tarde.";
+            return View("Error");
+        }
         catch (Exception ex)
         {
             _logger.LogError($"Error en Kanban: {ex.ToString()}");
@@ -150,6 +171,17 @@ public class TareaController : Controller
             int? nuevoUsuario = model.TareaModificada.Id_usuario_asignado;
             _tareaRepository.UpdateUsuario(tareaAnterior, nuevoUsuario);
             return RedirectToAction("Kanban", "Tablero", new { id_tablero = tareaAnterior.Id_tablero });
+        }
+        catch (NoEncontradoException ex)
+        {
+            _logger.LogWarning(ex.ToString());
+            ViewData["ErrorMessage"] = ex.Message;
+            return View("Error");
+        }
+        catch (SqliteException ex){
+            _logger.LogError($"Error en base de datos en ActualizarUsuario: {ex.ToString()}");
+            ViewData["ErrorMessage"] = "Hubo un problema con la base de datos. Intente más tarde.";
+            return View("Error");
         }
         catch (Exception ex)
         {

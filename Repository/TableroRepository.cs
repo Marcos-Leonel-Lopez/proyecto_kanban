@@ -95,7 +95,12 @@ namespace TableroRepo
                     }
                     connection.Close();
                 }
+                if (tablero == null)
+                {
+                    throw new NoEncontradoException("Tablero", id_tablero);
+                }
                 return tablero;
+            
             }
             catch (Exception ex)
             {

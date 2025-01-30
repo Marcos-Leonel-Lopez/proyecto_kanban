@@ -140,8 +140,13 @@ namespace TareaRepo
                     }
                     connection.Close();
                 }
+                if (tarea == null)
+                {
+                    throw new NoEncontradoException("Tarea", id_tarea);
+                }
                 return tarea;
             }
+            
             catch (Exception ex)
             {
                 Console.Error.WriteLine($"Error en GetById: {ex.ToString()}");
@@ -253,30 +258,30 @@ namespace TareaRepo
                 throw;
             }
         }
-        public bool AssignUserToTask(int id_usuario, int id_tarea)
-        {
-            try
-            {
-                bool success = false;
-                string query = "UPDATE Tarea SET id_usuario_asignado=@id_usuario WHERE id_tarea=@id_tarea";
-                using (var connection = new SqliteConnection(_ConnectionString))
-                {
-                    connection.Open();
-                    using (var command = new SqliteCommand(query, connection))
-                    {
-                        command.Parameters.AddWithValue("@id_usuario", id_usuario);
-                        command.Parameters.AddWithValue("@id_tarea", id_tarea);
-                        success = command.ExecuteNonQuery() > 0;
-                    }
-                    connection.Close();
-                }
-                return success;
-            }
-            catch (Exception ex)
-            {
-                Console.Error.WriteLine($"Error en AssignUserToTask: {ex.ToString()}");
-                throw;
-            }
-        }
+        // public bool AssignUserToTask(int id_usuario, int id_tarea)
+        // {
+        //     try
+        //     {
+        //         bool success = false;
+        //         string query = "UPDATE Tarea SET id_usuario_asignado=@id_usuario WHERE id_tarea=@id_tarea";
+        //         using (var connection = new SqliteConnection(_ConnectionString))
+        //         {
+        //             connection.Open();
+        //             using (var command = new SqliteCommand(query, connection))
+        //             {
+        //                 command.Parameters.AddWithValue("@id_usuario", id_usuario);
+        //                 command.Parameters.AddWithValue("@id_tarea", id_tarea);
+        //                 success = command.ExecuteNonQuery() > 0;
+        //             }
+        //             connection.Close();
+        //         }
+        //         return success;
+        //     }
+        //     catch (Exception ex)
+        //     {
+        //         Console.Error.WriteLine($"Error en AssignUserToTask: {ex.ToString()}");
+        //         throw;
+        //     }
+        // }
     }
 }

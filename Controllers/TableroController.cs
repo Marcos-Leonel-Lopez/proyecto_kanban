@@ -6,6 +6,7 @@ using IUsuarioRepo;
 using ITableroRepo;
 using ITareaRepo;
 using IColorRepo;
+using Microsoft.Data.Sqlite;
 // using System.Security.Cryptography.X509Certificates;
 
 namespace trabajo_final.Controllers;
@@ -66,6 +67,12 @@ public class TableroController : Controller
             var viewModel = new ParticipacionTablerosViewModel(tablerosPropio, tablerosParticipante);
             return View(viewModel);
         }
+        catch (SqliteException ex)
+        {
+            _logger.LogError($"Error en base de datos en GetByUser: {ex.ToString()}");
+            ViewData["ErrorMessage"] = "Hubo un problema con la base de datos. Intente más tarde.";
+            return View("Error");
+        }
         catch (Exception ex)
         {
             _logger.LogError($"Error en GetByUser: {ex.ToString()}");
@@ -99,6 +106,12 @@ public class TableroController : Controller
             }).ToList();
             return View(viewModel);
         }
+        catch (SqliteException ex)
+        {
+            _logger.LogError($"Error en base de datos en GetAll: {ex.ToString()}");
+            ViewData["ErrorMessage"] = "Hubo un problema con la base de datos. Intente más tarde.";
+            return View("Error");
+        }
         catch (Exception ex)
         {
             _logger.LogError($"Error en GetAll: {ex.ToString()}");
@@ -116,11 +129,6 @@ public class TableroController : Controller
         try
         {
             var tablero = _tableroRepository.GetById(idTablero);
-            if (tablero == null)
-            {
-                ViewData["ErrorMessage"] = "El tablero con el ID proporcionado no existe.";
-                return View("Error");
-            }
             var viewModel = new TableroViewModel
             {
                 Id_tablero = tablero.Id_tablero,
@@ -131,12 +139,23 @@ public class TableroController : Controller
             };
             return View(viewModel);
         }
+        catch (NoEncontradoException ex)
+        {
+            _logger.LogWarning(ex.ToString());
+            ViewData["ErrorMessage"] = ex.Message;
+            return View("Error");
+        }
+        catch (SqliteException ex)
+        {
+            _logger.LogError($"Error en base de datos en GetById: {ex.ToString()}");
+            ViewData["ErrorMessage"] = "Hubo un problema con la base de datos. Intente más tarde.";
+            return View("Error");
+        }
         catch (Exception ex)
         {
-            _logger.LogError($"Error en GetAll: {ex.ToString()}");
+            _logger.LogError($"Error en GetById: {ex.ToString()}");
             ViewData["ErrorMessage"] = "Hubo un problema al obtener los tableros.";
             return View("Error");
-
         }
 
     }
@@ -175,6 +194,12 @@ public class TableroController : Controller
             _tableroRepository.Create(tablero);
             return RedirectToAction("GetAll");
         }
+        catch (SqliteException ex)
+        {
+            _logger.LogError($"Error en base de datos en Create: {ex.ToString()}");
+            ViewData["ErrorMessage"] = "Hubo un problema con la base de datos. Intente más tarde.";
+            return View("Error");
+        }
         catch (Exception ex)
         {
             _logger.LogError($"Error en Create: {ex.ToString()}");
@@ -211,10 +236,10 @@ public class TableroController : Controller
             // Obtengo los usuarios para asignar tareas.
             var usuarios = _usuarioRepository.GetAll()
                 .Select(u => new UsuarioViewModel
-                { 
+                {
                     Id_usuario = u.Id_usuario,
                     Nombre = u.Nombre_de_usuario
-                 }).ToList();
+                }).ToList();
             // Crear el ViewModel del Kanban.
             var kanbanViewModel = new KanbanViewModel
             {
@@ -223,11 +248,22 @@ public class TableroController : Controller
                 EsPropietario = esPropietario,
                 Usuarios = usuarios
             };
-
             // Pasar el ID del usuario logueado a la vista.
             ViewData["idUsuarioLogueado"] = idUsuarioLogueado;
             // Devolver la vista con el ViewModel.
             return View(kanbanViewModel);
+        }
+        catch (NoEncontradoException ex)
+        {
+            _logger.LogWarning(ex.ToString());
+            ViewData["ErrorMessage"] = ex.Message;
+            return View("Error");
+        }
+        catch (SqliteException ex)
+        {
+            _logger.LogError($"Error en base de datos en Kanban: {ex.ToString()}");
+            ViewData["ErrorMessage"] = "Hubo un problema con la base de datos. Intente más tarde.";
+            return View("Error");
         }
         catch (Exception ex)
         {
