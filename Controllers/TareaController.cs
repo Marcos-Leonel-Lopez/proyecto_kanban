@@ -32,6 +32,10 @@ public class TareaController : Controller
         {
             return RedirectToAction("Index", "Home");
         }
+        int idUsuario = HttpContext.Session.GetInt32("idUsuario").Value;
+        var rol = HttpContext.Session.GetString("rolUsuario");
+        ViewData["idUsuarioLogueado"] = idUsuario;
+        ViewData["rolUsuario"] = rol;
         return View();
     }
     [HttpGet]
@@ -43,8 +47,25 @@ public class TareaController : Controller
         }
         try
         {
-            List<Tarea> tareas = _tareaRepository.GetByTablero(idTablero);
-            return View(tareas);
+            // List<Tarea> tareas = _tareaRepository.GetByTablero(idTablero);
+            // return View(tareas);
+            Tablero tablero = _tableroRepository.GetById(idTablero);
+            ListarTablerosUsuarioViewModel viewModel = new ListarTablerosUsuarioViewModel{
+                Id_tablero = tablero.Id_tablero,
+                Nombre = tablero.Nombre,
+                Tareas = _tareaRepository.GetByTablero(idTablero)
+                .Select(tarea => new TareaListaViewModel{
+                    Nombre = tarea.Nombre,
+                    Descripcion = tarea.Descripcion,
+                    Estado = tarea.Id_estado.ToString()
+                }).ToList()
+            };
+            return View(viewModel);
+        }
+        catch(NoEncontradoException ex){
+            _logger.LogWarning(ex.ToString());
+            ViewData["ErrorMessage"] = ex.Message;
+            return View("Error");
         }
         catch (SqliteException ex){
             _logger.LogError($"Error en base de datos en GetByTablero: {ex.ToString()}");
@@ -158,7 +179,7 @@ public class TareaController : Controller
             return View("Error");
         }
     }
-        [HttpPost]
+    [HttpPost]
     public IActionResult ActualizarUsuario(KanbanViewModel model)
     {
         if (HttpContext.Session.GetString("idUsuario") == null)
@@ -190,6 +211,65 @@ public class TareaController : Controller
             return View("Error");
         }
     }
+    [HttpGet]
+public IActionResult GetByUsuario(int idUsuario)
+{
+    if (HttpContext.Session.GetString("idUsuario") == null)
+    {
+        return RedirectToAction("Index", "Home");
+    }
+    try
+    {
+        _usuarioRepository.GetById(idUsuario);
+        List<ListarTablerosUsuarioViewModel> viewModel = new List<ListarTablerosUsuarioViewModel>();
+        // Obtener solo las tareas donde el usuario está asignado
+        var tareasUsuario = _tareaRepository.GetByUsuario(idUsuario);
 
+        // Agrupar las tareas por tablero
+        var tareasAgrupadasPorTablero = tareasUsuario
+            .GroupBy(t => t.Id_tablero)
+            .ToDictionary(g => g.Key, g => g.ToList());
+
+        foreach (var diccionario in tareasAgrupadasPorTablero)
+        {
+            int idTablero = diccionario.Key;
+            var tareas = diccionario.Value;
+
+            var tablero = _tableroRepository.GetById(idTablero);
+            
+            viewModel.Add(new ListarTablerosUsuarioViewModel
+            {
+                Id_tablero = tablero.Id_tablero,
+                Nombre = tablero.Nombre,
+                Tareas = tareas.Select(tarea => new TareaListaViewModel
+                {
+                    Nombre = tarea.Nombre,
+                    Descripcion = tarea.Descripcion,
+                    Estado = tarea.Id_estado.ToString()
+                }).ToList()
+            });
+        }
+
+        return View(viewModel);
+    }
+    catch (NoEncontradoException ex)
+    {
+        _logger.LogWarning(ex.ToString());
+        ViewData["ErrorMessage"] = ex.Message;
+        return View("Error");
+    }
+    catch (SqliteException ex)
+    {
+        _logger.LogError($"Error en base de datos en GetByUsuario: {ex}");
+        ViewData["ErrorMessage"] = "Hubo un problema con la base de datos. Intente más tarde.";
+        return View("Error");
+    }
+    catch (Exception ex)
+    {
+        _logger.LogError($"Error en GetByUsuario: {ex}");
+        ViewData["ErrorMessage"] = "Hubo un problema al obtener las tareas.";
+        return View("Error");
+    }
+}
 
 }

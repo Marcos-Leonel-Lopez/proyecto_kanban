@@ -1,0 +1,46 @@
+@model ListarTablerosUsuarioViewModel
+
+            <div class="card shadow mb-4">
+                <div class="card-header d-flex justify-content-between align-items-center bg-primary text-white">
+                    <h4 class="mb-0">@Model.Nombre</h4>
+                    <a asp-controller="Tablero" asp-action="Kanban" asp-route-id_tablero="@Model.Id_tablero" class="text-white text-decoration-none">
+                        <button type="button" class="btn btn-light btn-sm">
+                            Ver
+                        </button>
+                    </a>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-bordered table-hover">
+                            <thead class="table-secondary">
+                                <tr>
+                                    <th scope="col">Nombre</th>
+                                    <th scope="col">Descripción</th>
+                                    <th scope="col">Estado</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @if (Model.Tareas.Any())
+                                {
+                                    @foreach (var tarea in Model.Tareas)
+                                    {
+                                        <tr class="estado-@tarea.Estado">
+                                            <td>@tarea.Nombre</td>
+                                            <td>@tarea.Descripcion</td>
+                                            <td>
+                                                <span class="badge bg-success">@tarea.Estado</span>
+                                            </td>
+                                        </tr>
+                                    }
+                                }
+                                else
+                                {
+                                    <tr>
+                                        <td colspan="3" class="text-center text-muted">No hay tareas en este tablero.</td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>

@@ -1,42 +1,10 @@
 @{
-    ViewData["Title"] = "Tareas del Tablero";
+    ViewData["Title"] = "Tableros y Tareas";
 }
-@model List<Tarea>
+@model ListarTablerosUsuarioViewModel
 
 <section class="container mt-5">
-    <div class="card shadow p-4">
-        <h2 class="text-center mb-4">Tareas del Tablero</h2>
-        <div class="table-responsive">
-            <table class="table table-bordered table-hover">
-                <thead class="table-primary">
-                    <tr>
-                        <th scope="col">ID Tarea</th>
-                        <th scope="col">ID Tablero</th>
-                        <th scope="col">Nombre</th>
-                        <th scope="col">Descripción</th>
-                        <th scope="col">Estado</th>
-                        <th scope="col">ID Usuario</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach (var tarea in Model)
-                    {
-                        <tr class="estado-@tarea.Id_estado">
-                            <td class="text-center">@tarea.Id_tarea</td>
-                            <td class="text-center">@tarea.Id_tablero</td>
-                            <td>@tarea.Nombre</td>
-                            <td>@tarea.Descripcion</td>
-                            <td>
-                                <span class="badge bg-primary">
-                                    @tarea.Id_estado
-                                </span>
-                            </td>
-                            <td>@tarea.Id_usuario_asignado</td>
-                        </tr>
-                    }
-                </tbody>
-            </table>
-        </div>
-        <a asp-controller="Tarea" asp-action="Index" class="btn btn-secondary mt-4 w-100">Volver</a>
-    </div>
+    <h2 class="text-center mb-4">Tareas del tablero: @Model.Nombre</h2>
+    @await Component.InvokeAsync("TareaListado", new { tareas = Model })
+    <a asp-controller="Tarea" asp-action="Index" class="btn btn-secondary mt-4 w-100">Volver</a>
 </section>

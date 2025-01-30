@@ -1,5 +1,7 @@
 @{
     ViewData["Title"] = "Gestión de Tareas";
+    int idUsuarioLogueado = (int)ViewData["idUsuarioLogueado"];
+    var rolUsuario = ViewData["rolUsuario"].ToString();
 }
 <section class="container mt-5">
     <div class="card shadow p-4">
@@ -9,7 +11,8 @@
                 <a asp-controller="Tarea" asp-action="Create">Crear tareas</a>
             </li>
             <li class="list-group-item">
-                <a asp-controller="Tarea" asp-action="GetByUsuario">Ver mis tareas</a>
+                
+                <a asp-controller="Tarea" asp-action="GetByUsuario" asp-route-idUsuario="@idUsuarioLogueado"  >Ver mis tareas</a>
             </li>
             <li class="list-group-item">
                 <form asp-controller="Tarea" asp-action="GetByUsuario" method="get" class="d-flex align-items-center">
