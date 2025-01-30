@@ -4,7 +4,16 @@
 @model List<TableroViewModel>
 
 <div class="container">
-    <div class="row">
+        @await Component.InvokeAsync("TableroLista", new{
+        tableros = Model,
+        titulo = "Todos los tableros",
+        claseCss = "mis-tableros mb-4"
+    })
+
+
+
+
+    @* <div class="row">
         @foreach (var tablero in Model)
         {
             <div class="col-md-4 mb-3"> <!-- Cada tarjeta ocupa 6 columnas en pantallas medianas o mayores -->
@@ -23,9 +32,8 @@
                 </section>
             </div>
         }
-    </div>
+    </div> *@
 </div>
 
 
 
-</section>

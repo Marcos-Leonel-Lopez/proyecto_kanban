@@ -48,7 +48,7 @@ public class TareaController : Controller
         }
         catch (Exception ex)
         {
-            _logger.LogError($"Error en GetByTablero: {ex.Message}");
+            _logger.LogError($"Error en GetByTablero: {ex.ToString()}");
             ViewData["ErrorMessage"] = "Hubo un problema al obtener las tareas.";
             return View("Error");
         }
@@ -62,6 +62,7 @@ public class TareaController : Controller
             return RedirectToAction("Index", "Home");
         }
         var tableros = _tableroRepository.GetAll()
+            .Where(tablero => tablero.Id_usuario_propietario == HttpContext.Session.GetInt32("idUsuario").Value)
             .Select(tablero => new TableroViewModel(tablero, _usuarioRepository.GetById(tablero.Id_usuario_propietario).Nombre_de_usuario))
             .ToList();
 
@@ -107,7 +108,7 @@ public class TareaController : Controller
         }
         catch (Exception ex)
         {
-            _logger.LogError($"Error en Create: {ex.Message}");
+            _logger.LogError($"Error en Create: {ex.ToString()}");
             ViewData["ErrorMessage"] = "Hubo un problema al crear la tarea.";
             return View("Error");
         }
@@ -131,7 +132,7 @@ public class TareaController : Controller
         }
         catch (Exception ex)
         {
-            _logger.LogError($"Error en Kanban: {ex.Message}");
+            _logger.LogError($"Error en Kanban: {ex.ToString()}");
             ViewData["ErrorMessage"] = "Hubo un problema al actualizar tarea.";
             return View("Error");
         }
@@ -152,7 +153,7 @@ public class TareaController : Controller
         }
         catch (Exception ex)
         {
-            _logger.LogError($"Error en Kanban: {ex.Message}");
+            _logger.LogError($"Error en Kanban: {ex.ToString()}");
             ViewData["ErrorMessage"] = "Hubo un problema al actualizar tarea.";
             return View("Error");
         }

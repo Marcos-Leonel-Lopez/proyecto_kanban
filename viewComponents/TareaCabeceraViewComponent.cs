@@ -1,11 +1,9 @@
 using Microsoft.AspNetCore.Mvc;
-
-namespace trabajo_final.Components.Tarea.Cabecera;
-public class CabeceraViewComponent : ViewComponent
+public class TareaCabeceraViewComponent : ViewComponent
 {
     public IViewComponentResult Invoke(bool propietario, int? id_usuario_asignado, List<UsuarioViewModel> usuarios)
     {
-        var cabecera = new CabeceraViewModel
+        var cabecera = new TareaCabeceraViewModel
         {
             EsPropietario = propietario,
             IdUsuarioAsignado = id_usuario_asignado,

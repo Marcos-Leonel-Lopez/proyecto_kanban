@@ -68,7 +68,7 @@ public class TableroController : Controller
         }
         catch (Exception ex)
         {
-            _logger.LogError($"Error en GetByUser: {ex.Message}");
+            _logger.LogError($"Error en GetByUser: {ex.ToString()}");
             ViewData["ErrorMessage"] = "Hubo un problema al obtener los tableros.";
             return View("Error");
         }
@@ -101,7 +101,7 @@ public class TableroController : Controller
         }
         catch (Exception ex)
         {
-            _logger.LogError($"Error en GetAll: {ex.Message}");
+            _logger.LogError($"Error en GetAll: {ex.ToString()}");
             ViewData["ErrorMessage"] = "Hubo un problema al obtener los tableros.";
             return View("Error");
         }
@@ -133,7 +133,7 @@ public class TableroController : Controller
         }
         catch (Exception ex)
         {
-            _logger.LogError($"Error en GetAll: {ex.Message}");
+            _logger.LogError($"Error en GetAll: {ex.ToString()}");
             ViewData["ErrorMessage"] = "Hubo un problema al obtener los tableros.";
             return View("Error");
 
@@ -147,7 +147,6 @@ public class TableroController : Controller
         {
             return RedirectToAction("Index", "Home");
         }
-        var propietario = HttpContext.Session.GetInt32("idUsuario").Value;
         var nuevoTablero = new CrearTableroViewModel
         {
             Id_usuario_propietario = HttpContext.Session.GetInt32("idUsuario").Value
@@ -178,7 +177,7 @@ public class TableroController : Controller
         }
         catch (Exception ex)
         {
-            _logger.LogError($"Error en Create: {ex.Message}");
+            _logger.LogError($"Error en Create: {ex.ToString()}");
             ViewData["ErrorMessage"] = "Hubo un problema al crear el tablero.";
             return View("Error");
         }
@@ -232,7 +231,7 @@ public class TableroController : Controller
         }
         catch (Exception ex)
         {
-            _logger.LogError($"Error en Kanban: {ex.Message}");
+            _logger.LogError($"Error en Kanban: {ex.ToString()}");
             ViewData["ErrorMessage"] = "Hubo un problema al mostrar el tablero.";
             return View("Error");
         }

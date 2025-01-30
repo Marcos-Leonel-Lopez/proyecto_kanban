@@ -36,7 +36,7 @@ namespace UsuarioRepo
             }
             catch (Exception ex)
             {
-                Console.Error.WriteLine($"Error en Create: {ex.Message}");
+                Console.Error.WriteLine($"Error en Create: {ex.ToString()}");
                 throw;
             }
         }
@@ -61,7 +61,7 @@ namespace UsuarioRepo
             }
             catch (Exception ex)
             {
-                Console.Error.WriteLine($"Error en EditarPerfil: {ex.Message}");
+                Console.Error.WriteLine($"Error en EditarPerfil: {ex.ToString()}");
                 return false;
             }
         }
@@ -97,7 +97,7 @@ namespace UsuarioRepo
             }
             catch (Exception ex)
             {
-                Console.Error.WriteLine($"Error en GetAll: {ex.Message}");
+                Console.Error.WriteLine($"Error en GetAll: {ex.ToString()}");
                 throw;
             }
         }
@@ -133,7 +133,7 @@ namespace UsuarioRepo
             }
             catch (Exception ex)
             {
-                Console.Error.WriteLine($"Error en GetById: {ex.Message}");
+                Console.Error.WriteLine($"Error en GetById: {ex.ToString()}");
                 throw;
             }
         }
@@ -157,7 +157,7 @@ namespace UsuarioRepo
             }
             catch (Exception ex)
             {
-                Console.Error.WriteLine($"Error en Remove: {ex.Message}");
+                Console.Error.WriteLine($"Error en Remove: {ex.ToString()}");
                 return false;
             }
         }
@@ -181,7 +181,7 @@ namespace UsuarioRepo
             }
             catch (Exception ex)
             {
-                Console.Error.WriteLine($"Error en UpdatePass: {ex.Message}");
+                Console.Error.WriteLine($"Error en UpdatePass: {ex.ToString()}");
                 throw;
             }
         }
@@ -218,7 +218,7 @@ namespace UsuarioRepo
             }
             catch (Exception ex)
             {
-                Console.Error.WriteLine($"Error en GetUsuario: {ex.Message}");
+                Console.Error.WriteLine($"Error en GetUsuario: {ex.ToString()}");
                 throw;
             }
         }
@@ -259,7 +259,7 @@ namespace UsuarioRepo
             }
             catch (Exception ex)
             {
-                Console.Error.WriteLine($"Error en UserBusy: {ex.Message}");
+                Console.Error.WriteLine($"Error en UserBusy: {ex.ToString()}");
                 throw;
             }
         }

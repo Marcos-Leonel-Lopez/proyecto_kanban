@@ -1,141 +1,19 @@
-@* @{
-    ViewData["Title"] = "Tableros";
-}
-@model ParticipacionTablerosViewModel
-
-<div class="container">
-    <!-- Sección de Tableros Propios -->
-    <h3>Mis Tableros</h3>
-    <div class="row">
-        @if (Model.Tablero_propio != null && Model.Tablero_propio.Any())
-        {
-            @foreach (var tablero in Model.Tablero_propio)
-            {
-                <div class="col-md-4 mb-3"> <!-- Cada tarjeta ocupa 4 columnas en pantallas medianas o mayores -->
-                    <section class="card h-100"> <!-- Tarjeta más alta -->
-                        <h5 class="card-header">#@tablero.Id_tablero - @tablero.Nombre</h5>
-                        <section class="card-body d-flex flex-column">
-                            <p class="card-text overflow-auto" style="max-height: 150px;">
-                                @tablero.Descripcion
-                            </p>
-                            <a href="#" class="btn btn-primary mt-auto align-self-start">Ir al Tablero</a>
-                        </section>
-                    </section>
-                </div>
-            }
-        }
-        else
-        {
-            <div class="col-12">
-                <p>No tienes tableros propios.</p>
-            </div>
-        }
-    </div>
-
-    <!-- Sección de Tableros en los que Participa -->
-    <h3>Tableros en los que Participas</h3>
-    <div class="row">
-        @if (Model.Tablero_participante != null && Model.Tablero_participante.Any())
-        {
-            @foreach (var tablero in Model.Tablero_participante)
-            {
-                <div class="col-md-4 mb-3"> <!-- Cada tarjeta ocupa 4 columnas en pantallas medianas o mayores -->
-                    <section class="card h-100"> <!-- Tarjeta más alta -->
-                        <h5 class="card-header">#@tablero.Id_tablero - @tablero.Nombre</h5>
-                        <section class="card-body d-flex flex-column">
-                            <p class="card-text overflow-auto" style="max-height: 150px;">
-                                @tablero.Descripcion
-                            </p>
-                            <a href="#" class="btn btn-primary mt-auto align-self-start">Ir al Tablero</a>
-                        </section>
-                    </section>
-                </div>
-            }
-        }
-        else
-        {
-            <div class="col-12">
-                <p>No participas en ningún tablero.</p>
-            </div>
-        }
-    </div>
-</div> *@
 @{
     ViewData["Title"] = "Tableros";
 }
 @model ParticipacionTablerosViewModel
 
-<style>
-
-</style>
 <div class="container">
     <!-- Sección de Tableros Propios -->
-    <section class="seccion-tableros mis-tableros mb-4">
-        <h3>Mis Tableros</h3>
-        <div class="row">
-            @if (Model.Tablero_propio != null && Model.Tablero_propio.Any())
-            {
-                @foreach (var tablero in Model.Tablero_propio)
-                {
-                    <div class="col-md-4 mb-3"> <!-- Cada tarjeta ocupa 4 columnas en pantallas medianas o mayores -->
-                        <section class="card h-100"> <!-- Tarjeta más alta -->
-                            <h5 class="card-header">#@tablero.Id_tablero - @tablero.Nombre</h5>
-                            <section class="card-body d-flex flex-column">
-                                <p class="card-text overflow-auto" style="max-height: 150px;">
-                                    @tablero.Descripcion
-                                </p>
-                                <a asp-controller="Tablero" asp-action="Kanban" asp-route-id_tablero="@tablero.Id_tablero"
-                                    class="text-white text-decoration-none">
-                                    <button type="button" class="btn btn-secondary me-1">
-                                        Ver
-                                    </button>
-                                </a>
-                            </section>
-                        </section>
-                    </div>
-                }
-            }
-            else
-            {
-                <div class="col-12">
-                    <p>No tienes tableros propios.</p>
-                </div>
-            }
-        </div>
-    </section>
-
+    @await Component.InvokeAsync("TableroLista", new{
+        tableros = Model.Tablero_propio,
+        titulo = "Mis Tableros",
+        claseCss = "mis-tableros mb-4"
+    })
     <!-- Sección de Tableros en los que Participa -->
-    <section class="seccion-tableros tableros-participante">
-        <h3>Tableros en los que Participas</h3>
-        <div class="row">
-            @if (Model.Tablero_participante != null && Model.Tablero_participante.Any())
-            {
-                @foreach (var tablero in Model.Tablero_participante)
-                {
-                    <div class="col-md-4 mb-3"> <!-- Cada tarjeta ocupa 4 columnas en pantallas medianas o mayores -->
-                        <section class="card h-100"> <!-- Tarjeta más alta -->
-                            <h5 class="card-header">#@tablero.Id_tablero - @tablero.Nombre</h5>
-                            <section class="card-body d-flex flex-column">
-                                <p class="card-text overflow-auto" style="max-height: 150px;">
-                                    @tablero.Descripcion
-                                </p>
-                                <a asp-controller="Tablero" asp-action="Kanban" asp-route-id_tablero="@tablero.Id_tablero"
-                                    class="text-white text-decoration-none">
-                                    <button type="button" class="btn btn-secondary me-1">
-                                        Ver
-                                    </button>
-                                </a>
-                            </section>
-                        </section>
-                    </div>
-                }
-            }
-            else
-            {
-                <div class="col-12">
-                    <p>No participas en ningún tablero.</p>
-                </div>
-            }
-        </div>
-    </section>
+    @await Component.InvokeAsync("TableroLista", new{
+        tableros = Model.Tablero_participante,
+        titulo = "Tableros en los que Participas",
+        claseCss = "tableros-participante"
+    })
 </div>

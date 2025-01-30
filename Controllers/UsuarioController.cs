@@ -47,7 +47,7 @@ public class UsuarioController : Controller
         }
         catch (Exception ex)
         {
-            _logger.LogError($"Error en GetAll: {ex.Message}");
+            _logger.LogError($"Error en GetAll: {ex.ToString()}");
             ViewData["ErrorMessage"] = "Hubo un problema al obtener los usuarios.";
             return View("Error");
         }
@@ -77,7 +77,7 @@ public class UsuarioController : Controller
         }
         catch (Exception ex)
         {
-            _logger.LogError($"Error en GetById: {ex.Message}");
+            _logger.LogError($"Error en GetById: {ex.ToString()}");
             ViewData["ErrorMessage"] = "Hubo un problema al obtener el usuario.";
             return View("Error");
         }
@@ -108,7 +108,7 @@ public class UsuarioController : Controller
             }
             catch (Exception ex)
             {
-                _logger.LogError($"Error en Create: {ex.Message}");
+                _logger.LogError($"Error en Create: {ex.ToString()}");
                 ViewData["ErrorMessage"] = "Hubo un problema al crear el usuario.";
                 return View("Error");
             }
@@ -136,7 +136,7 @@ public class UsuarioController : Controller
         }
         catch (Exception ex)
         {
-            _logger.LogError($"Error en ListToEdit: {ex.Message}");
+            _logger.LogError($"Error en ListToEdit: {ex.ToString()}");
             ViewData["ErrorMessage"] = "Hubo un problema al obtener la lista de usuarios para editar.";
             return View("Error");
         }
@@ -167,7 +167,7 @@ public class UsuarioController : Controller
         }
         catch (Exception ex)
         {
-            _logger.LogError($"Error en Delete: {ex.Message}");
+            _logger.LogError($"Error en Delete: {ex.ToString()}");
             ViewData["ErrorMessage"] = "Hubo un problema al obtener el usuario para eliminar.";
             return View("Error");
         }
@@ -192,7 +192,7 @@ public class UsuarioController : Controller
         }
         catch (Exception ex)
         {
-            _logger.LogError($"Error en DeleteConfirmed: {ex.Message}");
+            _logger.LogError($"Error en DeleteConfirmed: {ex.ToString()}");
             ViewData["ErrorMessage"] = "Hubo un problema al eliminar el usuario.";
             return View("Error");
         }
@@ -223,7 +223,7 @@ public class UsuarioController : Controller
         }
         catch (Exception ex)
         {
-            _logger.LogError($"Error en EditarPerfil: {ex.Message}");
+            _logger.LogError($"Error en EditarPerfil: {ex.ToString()}");
             ViewData["ErrorMessage"] = "Hubo un problema al cargar el perfil del usuario.";
             return View("Error");
         }
@@ -255,7 +255,7 @@ public class UsuarioController : Controller
             }
             catch (Exception ex)
             {
-                _logger.LogError($"Error en EditPerfil: {ex.Message}");
+                _logger.LogError($"Error en EditPerfil: {ex.ToString()}");
                 ViewData["ErrorMessage"] = "Hubo un problema al actualizar el perfil del usuario.";
                 return View("Error");
             }
@@ -276,7 +276,7 @@ public class UsuarioController : Controller
         }
         catch (Exception ex)
         {
-            _logger.LogError($"Error en UpdatePass: {ex.Message}");
+            _logger.LogError($"Error en UpdatePass: {ex.ToString()}");
             ViewData["ErrorMessage"] = "Hubo un problema al cargar el perfil del usuario.";
             return View("Error");
         }
@@ -323,7 +323,7 @@ public class UsuarioController : Controller
         }
         catch (Exception ex)
         {
-            _logger.LogError($"Error en UpdatePass: {ex.Message}");
+            _logger.LogError($"Error en UpdatePass: {ex.ToString()}");
             ViewData["ErrorMessage"] = "Hubo un problema al actualizar el perfil del usuario.";
             return View(passModif);  // No redirigir, solo retornar la vista
         }

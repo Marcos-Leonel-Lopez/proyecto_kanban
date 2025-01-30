@@ -40,7 +40,7 @@ namespace ColorRepo
             }
             catch (Exception ex)
             {
-                Console.Error.WriteLine($"Error en GetAll: {ex.Message}");
+                Console.Error.WriteLine($"Error en GetAll: {ex.ToString()}");
                 throw;
             }
         }

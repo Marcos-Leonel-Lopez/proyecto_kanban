@@ -36,7 +36,7 @@ namespace TableroRepo
             }
             catch (Exception ex)
             {
-                Console.Error.WriteLine($"Error en Create: {ex.Message}");
+                Console.Error.WriteLine($"Error en Create: {ex.ToString()}");
                 throw;
             }
         }
@@ -63,7 +63,7 @@ namespace TableroRepo
             }
             catch (Exception ex)
             {
-                Console.Error.WriteLine($"Error en Updete: {ex.Message}");
+                Console.Error.WriteLine($"Error en Updete: {ex.ToString()}");
                 throw;
             }
         }
@@ -99,7 +99,7 @@ namespace TableroRepo
             }
             catch (Exception ex)
             {
-                Console.Error.WriteLine($"Error en GetById: {ex.Message}");
+                Console.Error.WriteLine($"Error en GetById: {ex.ToString()}");
                 throw;
             }
         }
@@ -132,7 +132,7 @@ namespace TableroRepo
             }
             catch (Exception ex)
             {
-                Console.Error.WriteLine($"Error en GetAll: {ex.Message}");
+                Console.Error.WriteLine($"Error en GetAll: {ex.ToString()}");
                 throw;
             }
         }
@@ -168,7 +168,7 @@ namespace TableroRepo
             }
             catch (Exception ex)
             {
-                Console.Error.WriteLine($"Error en GetByUsuario: {ex.Message}");
+                Console.Error.WriteLine($"Error en GetByUsuario: {ex.ToString()}");
                 throw;
             }
         }
@@ -208,7 +208,7 @@ namespace TableroRepo
             }
             catch (Exception ex)
             {
-                Console.Error.WriteLine($"Error en GetByParticipante: {ex.Message}");
+                Console.Error.WriteLine($"Error en GetByParticipante: {ex.ToString()}");
                 throw;
             }
         }
@@ -232,7 +232,7 @@ namespace TableroRepo
             }
             catch (Exception ex)
             {
-                Console.Error.WriteLine($"Error en Remove: {ex.Message}");
+                Console.Error.WriteLine($"Error en Remove: {ex.ToString()}");
                 return false;
             }
         }

@@ -1,0 +1,42 @@
+@model TareaReasignarViewModel
+@if (Model.EsPropietario == true)
+{
+    <button type="button" class="btn btn-danger d-flex align-items-center" data-bs-toggle="modal"
+        data-bs-target="#reasignarTareaModal_@Model.Tarea.Id_tarea">
+        <i class="bi bi-person"></i><i class="bi bi-arrow-left-right"></i>
+        <span class="d-none d-lg-inline">Reasignar</span>
+    </button>
+
+    <!-- Modal para reasignar usuario -->
+    <div class="modal fade" id="reasignarTareaModal_@Model.Tarea.Id_tarea" tabindex="-1"
+        aria-labelledby="reasignarTareaModalLabel_@Model.Tarea.Id_tarea" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="reasignarTareaModalLabel_@Model.Tarea.Id_tarea">Reasignar Usuario</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form asp-controller="Tarea" asp-action="ActualizarUsuario" method="post">
+                        <input type="hidden" name="TareaModificada.Id_tarea" value="@Model.Tarea.Id_tarea" />
+                        <div class="mb-3">
+                            <label for="usuarioAsignado_@Model.Tarea.Id_tarea" class="form-label">Seleccionar Usuario</label>
+                            <select class="form-select" id="usuarioAsignado_@Model.Tarea.Id_tarea"
+                                name="TareaModificada.Id_usuario_asignado">
+                                <option value="">Sin asignar</option> <!-- Opción para desasignar -->
+                                @foreach (var usuario in Model.Usuarios)
+                                {
+                                    <option value="@usuario.Id_usuario">@usuario.Nombre</option>
+                                }
+                            </select>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                            <button type="submit" class="btn btn-primary">Guardar</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+}

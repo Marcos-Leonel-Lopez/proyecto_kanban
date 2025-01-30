@@ -47,7 +47,7 @@ namespace TareaRepo
             }
             catch (Exception ex)
             {
-                Console.Error.WriteLine($"Error en Create: {ex.Message}");
+                Console.Error.WriteLine($"Error en Create: {ex.ToString()}");
                 throw;
             }
 
@@ -73,7 +73,7 @@ namespace TareaRepo
             }
             catch (Exception ex)
             {
-                Console.Error.WriteLine($"Error en Update: {ex.Message}");
+                Console.Error.WriteLine($"Error en Update: {ex.ToString()}");
                 throw;
             }
 
@@ -105,7 +105,7 @@ namespace TareaRepo
             }
             catch (Exception ex)
             {
-                Console.Error.WriteLine($"Error en Update: {ex.Message}");
+                Console.Error.WriteLine($"Error en Update: {ex.ToString()}");
                 throw;
             }
         }
@@ -144,7 +144,7 @@ namespace TareaRepo
             }
             catch (Exception ex)
             {
-                Console.Error.WriteLine($"Error en GetById: {ex.Message}");
+                Console.Error.WriteLine($"Error en GetById: {ex.ToString()}");
                 throw;
             }
         }
@@ -184,7 +184,7 @@ namespace TareaRepo
             }
             catch (Exception ex)
             {
-                Console.Error.WriteLine($"Error en GetByUsuario: {ex.Message}");
+                Console.Error.WriteLine($"Error en GetByUsuario: {ex.ToString()}");
                 throw;
             }
 
@@ -225,7 +225,7 @@ namespace TareaRepo
             }
             catch (Exception ex)
             {
-                Console.Error.WriteLine($"Error en GetByTablero: {ex.Message}");
+                Console.Error.WriteLine($"Error en GetByTablero: {ex.ToString()}");
                 throw;
             }
         }
@@ -249,7 +249,7 @@ namespace TareaRepo
             }
             catch (Exception ex)
             {
-                Console.Error.WriteLine($"Error en Remove: {ex.Message}");
+                Console.Error.WriteLine($"Error en Remove: {ex.ToString()}");
                 throw;
             }
         }
@@ -274,7 +274,7 @@ namespace TareaRepo
             }
             catch (Exception ex)
             {
-                Console.Error.WriteLine($"Error en AssignUserToTask: {ex.Message}");
+                Console.Error.WriteLine($"Error en AssignUserToTask: {ex.ToString()}");
                 throw;
             }
         }

@@ -1,0 +1,56 @@
+@model TareaEditarEstadoViewModel
+
+@if (Model.Tarea.Id_usuario_asignado == Model.IdUsuarioLogueado)
+{
+    <button type="button" class="btn btn-primary d-flex align-items-center" data-bs-toggle="modal"
+        data-bs-target="#editTareaModal_@Model.Tarea.Id_tarea">
+        <i class="bi bi-pencil"></i>
+        <span class="d-none d-lg-inline">Editar</span>
+    </button>
+
+    <!-- Modal para editar Estado -->
+    <div class="modal fade" id="editTareaModal_@Model.Tarea.Id_tarea" tabindex="-1"
+        aria-labelledby="editTareaModalLabel_@Model.Tarea.Id_tarea" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="editTareaModalLabel_@Model.Tarea.Id_tarea">Editar Tarea
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form asp-controller="Tarea" asp-action="ActualizarEstado" method="post">
+                        <input type="hidden" name="TareaModificada.Id_tarea" value="@Model.Tarea.Id_tarea" />
+                        <input type="hidden" name="TareaModificada.Id_usuario_asignado"
+                            value="@Model.Tarea.Id_usuario_asignado" />
+                        <div class="mb-3">
+                            <label for="nombreTarea_@Model.Tarea.Id_tarea" class="form-label">Nombre</label>
+                            <input type="text" class="form-control" id="nombreTarea_@Model.Tarea.Id_tarea"
+                                name="TareaModificada.Nombre" value="@Model.Tarea.Nombre" readonly />
+                        </div>
+                        <div class="mb-3">
+                            <label for="descripcionTarea_@Model.Tarea.Id_tarea" class="form-label">Descripción</label>
+                            <textarea class="form-control" id="descripcionTarea_@Model.Tarea.Id_tarea"
+                                name="TareaModificada.Descripcion" rows="3" readonly>@Model.Tarea.Descripcion</textarea>
+                        </div>
+                        <div class="mb-3">
+                            <label for="estadoTarea_@Model.Tarea.Id_tarea" class="form-label">Estado</label>
+                            <select class="form-select" id="estadoTarea_@Model.Tarea.Id_tarea"
+                                name="TareaModificada.Id_estado">
+                                @foreach (var est in Enum.GetValues(typeof(MisEnums.EstadoTarea)))
+                                {
+                                    int enumValue = (int)est;
+                                    <option value="@enumValue">@est</option>
+                                }
+                            </select>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                            <button type="submit" class="btn btn-primary">Guardar</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+}

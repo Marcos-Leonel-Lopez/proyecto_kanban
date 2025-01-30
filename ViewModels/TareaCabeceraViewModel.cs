@@ -1,4 +1,4 @@
-    public class CabeceraViewModel
+    public class TareaCabeceraViewModel
     {
         public int? IdUsuarioAsignado { get; set; }
         public bool EsPropietario { get; set; }

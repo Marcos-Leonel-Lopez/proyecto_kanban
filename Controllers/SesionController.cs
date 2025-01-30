@@ -34,18 +34,23 @@ public class SesionController : Controller
             if (usuario == null)
             {
                 // Si el usuario no existe o las credenciales son incorrectas, envía un mensaje de error.
+                _logger.LogWarning($"Intento de acceso inválido - Usuario: {model.Username} Clave ingresada: {model.Password}");
                 ViewData["ErrorMessage"] = "El usuario no existe o los datos son incorrectos.";
-                return View("Index", model); // Regresa a la vista Index con el mensaje de error.
+                return View("Index", model);// Regresa a la vista Index con el mensaje de error.
             }
             HttpContext.Session.SetString("nombreUsuario", usuario.Nombre_de_usuario);
             HttpContext.Session.SetInt32("idUsuario", usuario.Id_usuario);
             HttpContext.Session.SetString("rolUsuario", usuario.Rol_usuario.ToString());
+
+             _logger.LogInformation($"El usuario {usuario.Nombre_de_usuario} ingresó correctamente");
+             
             return RedirectToAction("Index", "Home");
         }
         catch (Exception ex)
         {
             // Maneja excepciones y muestra un mensaje de error genérico.
-            _logger.LogError($"Error en Login: {ex.Message}");
+            _logger.LogError($"Error en Login: {ex.ToString()}");
+             _logger.LogError($"Error en Login: {ex.ToString()}");
             ViewData["ErrorMessage"] = "Hubo un problema al iniciar sesión. Intente nuevamente.";
             return View("Index", model); // Regresa a la vista Index con el mensaje de error.
         }
@@ -56,11 +61,12 @@ public class SesionController : Controller
         try
         {
             HttpContext.Session.Clear();
+            _logger.LogInformation("El usuario cerró sesión correctamente.");
             return RedirectToAction("Index");
         }
         catch (Exception ex)
         {
-            _logger.LogError($"Error en Logout: {ex.Message}");
+            _logger.LogError($"Error en Logout: {ex.ToString()}");
             ViewData["ErrorMessage"] = "Hubo un problema al cerrar sesión.";
             return View("Error");
         }
@@ -70,22 +76,6 @@ public class SesionController : Controller
     {
         return View();
     }
-    // [HttpPost]
-    // public IActionResult Register(string nombreUsuario, string password, int rol)
-    // {
-    //     try
-    //     {
-    //         Usuario usuario = new Usuario(0, nombreUsuario, password, (MisEnums.RolUsuario)rol);
-    //         _usuarioRepository.Add(usuario);
-    //         return RedirectToAction("Index");
-    //     }
-    //     catch (Exception ex)
-    //     {
-    //         _logger.LogError($"Error en Register: {ex.Message}");
-    //         ViewData["ErrorMessage"] = "Hubo un problema al registrar el usuario.";
-    //         return View("Error");
-    //     }
-    // }
 
     [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
     public IActionResult Error()
