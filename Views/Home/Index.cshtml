@@ -1,12 +1,12 @@
 ﻿@{
     ViewData["Title"] = "Home Page";
-    var loggeado = (bool)ViewData["Loggeado"];
-    var rolUsuario = ViewData["rolUsuario"]?.ToString();
+    var log = (bool)ViewData["Loggeado"];
+    var rol = ViewData["rolUsuario"]?.ToString();
 }
 
 <div class="text-center">
     <h1 class="display-4">Bienvenido</h1>
 </div>
 <section class="conteiner">
-    @await Component.InvokeAsync("Menu", new { loggeado = (bool)ViewData["Loggeado"], rolUsuario = ViewData["rolUsuario"] })
+    @await Component.InvokeAsync("Menu", new { loggeado = log, rolUsuario = rol })
 </section>

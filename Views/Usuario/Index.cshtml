@@ -4,8 +4,8 @@
 }
 
 <section class="container mt-5">
-    <div class="card shadow p-4">
-        @await Component.InvokeAsync("MenuUsuario", new { rolUsuario = rolUsuario })
-        <a asp-controller="Home" asp-action="Index" class="btn btn-secondary w-100">Volver</a>
+            @await Component.InvokeAsync("MenuUsuario", new { rolUsuario = rolUsuario })
+            <a asp-controller="Home" asp-action="Index" class="btn btn-secondary w-100 mt-2">Volver</a>
+        </div>
     </div>
 </section>

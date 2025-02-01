@@ -3,27 +3,34 @@
 }
 @model List<UsuarioViewModel>;
 
-<section class="container">
-    <table class="table table-bordered table-hover tabla_tableros">
-        <thead>
-            <tr class="table-dark">
-                <th scope="col" class="col-1">Id</th>
-                <th scope="col" class="col-3">Nombre</th>
-                <th scope="col" class="col-3">Rol</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (UsuarioViewModel usuario in Model)
-            {
-                <tr>
-                    <td scope="col" class="col-1">@usuario.Id_usuario</td>
-                    <td scope="col" class="col-3">@usuario.Nombre</td>
-                    <td scope="col" class="col-3">@usuario.Rol</td>
-                </tr>
-            }
-
-        </tbody>
-    </table>
-    <a href="@Url.Action("Index", "Usuario")" class="btn btn-secondary mt-4 text-white">Volver</a>
-
+<section class="container mt-4">
+    <h2 class="text-center mb-4">Todos los Usuarios</h2>
+    <div class="card shadow mb-4">
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-bordered table-hover">
+                    <thead class="table-secondary">
+                        <tr>
+                            <th scope="col" class="col-1">Id</th>
+                            <th scope="col" class="col-3">Nombre</th>
+                            <th scope="col" class="col-3">Rol</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (UsuarioViewModel usuario in Model)
+                        {
+                            <tr>
+                                <td scope="col" class="col-1">@usuario.Id_usuario</td>
+                                <td scope="col" class="col-3">@usuario.Nombre</td>
+                                <td scope="col" class="col-3">@usuario.Rol</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="card-footer text-end">
+            <a href="@Url.Action("Index", "Usuario")" class="btn btn-secondary text-white w-100">Volver</a>
+        </div>
+    </div>
 </section>

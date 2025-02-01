@@ -1,10 +1,13 @@
 @{
     ViewData["Title"] = "Gestión de Tableros";
 }
-<section class="container mt-5">
-    <div class="card shadow p-4">
-        <h2 class="text-center mb-4">Gestión de Tableros</h2>
-        <ul class="list-group mb-4">
+<div class="container mt-5">
+    <div class="card shadow-lg border-0">
+        <div class="card-header bg-success text-white">
+            <h4 class="mb-0">Gestión de Tableros</h4>
+        </div>
+        <div class="card-body">
+            <ul class="list-group list-group-flush">
             <li class="list-group-item">
                 <a asp-controller="Tablero" asp-action="GetByUsuario">Ver mis tableros</a>
             </li>
@@ -15,7 +18,8 @@
                 <a asp-controller="Tablero" asp-action="Create">Crear un nuevo tablero</a>
             </li>
         </ul>
-        <a asp-controller="Home" asp-action="Index" class="btn btn-secondary w-100">Volver</a>
+        <a asp-controller="Home" asp-action="Index" class="btn btn-secondary w-100 mt-2">Volver</a>
+        </div>
     </div>
-</section>
+</div>
 

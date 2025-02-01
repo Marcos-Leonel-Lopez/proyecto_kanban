@@ -2,23 +2,23 @@
     ViewData["Title"] = "Crear un Usuario";
 }
 @model Usuario
-<section class="container">
-    <h3>Crear un Usuario</h3>
-    <form asp-controller="Usuario" asp-action="Create" method="post" enctype="multipart/form-data">
-        <section class="d-flex flex-column">
-            <section class="d-flex flex-column justify-content-start mb-2 col-6">
-                <label for="nombre_de_usuario">Nombre</label>
-                <input type="text" id="nombre_de_usuario" name="Nombre_de_usuario" class="form-control"
-                    asp-for="Nombre_de_usuario" />
+
+<section class="container mt-5">
+    <div class="card shadow p-4">
+        <h3 class="text-center mb-4">Crear un Usuario</h3>
+        <form asp-controller="Usuario" asp-action="Create" method="post" enctype="multipart/form-data">
+            <div class="mb-3">
+                <label for="nombre_de_usuario" class="form-label">Nombre</label>
+                <input type="text" id="nombre_de_usuario" name="Nombre_de_usuario" class="form-control" asp-for="Nombre_de_usuario">
                 <span class="text-danger" asp-validation-for="Nombre_de_usuario"></span>
-            </section>
-            <section class="d-flex flex-column justify-content-start mb-2 col-6">
-                <label for="password">Contraseña</label>
-                <input type="password" id="password" name="Password" class="form-control" asp-for="Password" />
+            </div>
+            <div class="mb-3">
+                <label for="password" class="form-label">Contraseña</label>
+                <input type="password" id="password" name="Password" class="form-control" asp-for="Password">
                 <span class="text-danger" asp-validation-for="Password"></span>
-            </section>
-            <section class="d-flex flex-column justify-content-start mb-2 col-6">
-                <label for="rol_usuario">Rol</label>
+            </div>
+            <div class="mb-3">
+                <label for="rol_usuario" class="form-label">Rol</label>
                 <select id="rol_usuario" name="Rol_usuario" class="form-select" asp-for="Rol_usuario">
                     <option value="">Seleccione un rol</option>
                     @foreach (var rol in Enum.GetValues(typeof(MisEnums.RolUsuario)))
@@ -27,16 +27,11 @@
                     }
                 </select>
                 <span class="text-danger" asp-validation-for="Rol_usuario"></span>
-            </section>
-            <section class="d-flex justify-content-start mb-2">
-
-                <a asp-controller="Usuario" asp-action="Index" class="text-white text-decoration-none">
-                    <button type="button" class="btn btn-secondary me-1">
-                        Volver
-                    </button>
-                </a>
-                <button type="submit" class="btn btn-primary ms-1">CREAR</button>
-            </section>
-        </section>
-    </form>
+            </div>
+            <div class="d-flex justify-content-between">
+                <a asp-controller="Usuario" asp-action="Index" class="btn btn-secondary">Volver</a>
+                <button type="submit" class="btn btn-primary">CREAR</button>
+            </div>
+        </form>
+    </div>
 </section>

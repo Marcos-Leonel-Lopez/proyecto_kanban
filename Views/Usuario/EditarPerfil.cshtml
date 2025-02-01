@@ -3,29 +3,37 @@
 }
 @model UsuarioViewModel
 
-<section class="container">
-    <h3>Editar Perfil de Usuario</h3>
-    <form asp-controller="Usuario" asp-action="EditPerfil" method="post" enctype="multipart/form-data">
-        <input type="hidden" asp-for="Id_usuario" />
-        <section class="d-flex flex-column">
-            <section class="d-flex flex-column justify-content-start mb-2 col-6">
-                <label asp-for="Nombre" class="form-label"></label>
-                <input asp-for="Nombre" class="form-control" />
-                <span asp-validation-for="Nombre" class="text-danger"></span>
-            </section>
-            <section class="d-flex flex-column justify-content-start mb-2 col-6">
-                <label asp-for="Rol" class="form-label"></label>
-                <select asp-for="Rol" class="form-select" asp-items="Html.GetEnumSelectList<MisEnums.RolUsuario>()">
-                    <option value="">Seleccione un rol...</option>
-                </select>
-                <span asp-validation-for="Rol" class="text-danger"></span>
-            </section>
-            <section class="d-flex justify-content-start mb-2 ">
-                <button type="submit" class="btn btn-primary me-1">Guardar</button>
-                <a asp-controller="Usuario" asp-action="ListToEdit">
-                    <button type="button"class="btn btn-secondary ms-1">Volver</button>
-                </a>
-            </section>
-        </section>
-    </form>
+<section class="container mt-4">
+    <h2 class="text-center mb-4">Editar Perfil de Usuario</h2>
+    <div class="card shadow">
+        <div class="card-body">
+            <form asp-controller="Usuario" asp-action="EditPerfil" method="post" enctype="multipart/form-data">
+                <input type="hidden" asp-for="Id_usuario" />
+                
+                <div class="row">
+                    <!-- Nombre -->
+                    <div class="col-md-6 mb-3">
+                        <label asp-for="Nombre" class="form-label fw-bold"></label>
+                        <input asp-for="Nombre" class="form-control" />
+                        <span asp-validation-for="Nombre" class="text-danger"></span>
+                    </div>
+
+                    <!-- Rol -->
+                    <div class="col-md-6 mb-3">
+                        <label asp-for="Rol" class="form-label fw-bold"></label>
+                        <select asp-for="Rol" class="form-select" asp-items="Html.GetEnumSelectList<MisEnums.RolUsuario>()">
+                            <option value="">Seleccione un rol...</option>
+                        </select>
+                        <span asp-validation-for="Rol" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <!-- Botones de acción -->
+                <div class="d-flex gap-2 mt-3">
+                    <button type="submit" class="btn btn-primary">Guardar</button>
+                    <a asp-controller="Usuario" asp-action="ListToEdit" class="btn btn-secondary">Volver</a>
+                </div>
+            </form>
+        </div>
+    </div>
 </section>
