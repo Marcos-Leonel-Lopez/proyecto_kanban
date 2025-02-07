@@ -1,35 +1,47 @@
 @model TableroListaViewModel
 
 <section class="seccion-tableros @Model.ClaseCss mb-4">
-        <h3>@Model.Titulo</h3>
-        <div class="row">
-            @if (Model.Tableros != null && Model.Tableros.Any())
+    <h3>@Model.Titulo</h3>
+    <div class="row">
+        @if (Model.Tableros != null && Model.Tableros.Any())
+        {
+            @foreach (var tablero in Model.Tableros)
             {
-                @foreach (var tablero in Model.Tableros)
-                {
-                    <div class="col-md-4 mb-3"> <!-- Cada tarjeta ocupa 4 columnas en pantallas medianas o mayores -->
-                        <section class="card h-100">
-                            <h5 class="card-header">#@tablero.Id_tablero - @tablero.Nombre</h5>
-                            <section class="card-body d-flex flex-column">
-                                <p class="card-text overflow-auto" style="max-height: 150px;">
-                                    @tablero.Descripcion
-                                </p>
+                <div class="col-md-4 mb-3">
+                    <section class="card h-100">
+                        <h5 class="card-header">#@tablero.Id_tablero - @tablero.Nombre</h5>
+                        <section class="card-body d-flex flex-column">
+                            <p class="card-text overflow-auto" style="max-height: 150px;">
+                                @tablero.Descripcion
+                            </p>
+                            <section class="d-flex flex-row-reverse">
                                 <a asp-controller="Tablero" asp-action="Kanban" asp-route-id_tablero="@tablero.Id_tablero"
                                     class="text-white text-decoration-none">
-                                    <button type="button" class="btn btn-secondary me-1">
-                                        Ver
+                                    <button type="button" class="btn btn-success me-1">
+                                        <i class="bi bi-eye"></i> Ver
                                     </button>
                                 </a>
+                                @if (Model.IdPropietario == tablero.Id_propietario)
+                                {
+                                    <button type="button" class="btn btn-danger me-1" data-bs-toggle="modal"
+                                        data-bs-target="#modalDelete-@tablero.Id_tablero">
+                                        <i class="bi bi-trash3"></i> Eliminar
+                                    </button>
+                                    <!-- Modal de Confirmación -->
+                                    @await Component.InvokeAsync("ModalConfirmacion", new { id_tablero = tablero.Id_tablero, nombre_tablero = tablero.Nombre })
+                                }
                             </section>
                         </section>
-                    </div>
-                }
-            }
-            else
-            {
-                <div class="col-12">
-                    <p>No hay tableros.</p>
+                    </section>
                 </div>
             }
-        </div>
-    </section>
+        }
+        else
+        {
+            <div class="col-12">
+                <p>No hay tableros.</p>
+            </div>
+        }
+    </div>
+</section>
+

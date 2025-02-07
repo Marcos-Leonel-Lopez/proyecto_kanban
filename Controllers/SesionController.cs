@@ -49,8 +49,7 @@ public class SesionController : Controller
         catch (Exception ex)
         {
             // Maneja excepciones y muestra un mensaje de error genérico.
-            _logger.LogError($"Error en Login: {ex.ToString()}");
-             _logger.LogError($"Error en Login: {ex.ToString()}");
+            _logger.LogError($"Error en Login: {ex.Message.ToString()}");
             ViewData["ErrorMessage"] = "Hubo un problema al iniciar sesión. Intente nuevamente.";
             return View("Index", model); // Regresa a la vista Index con el mensaje de error.
         }

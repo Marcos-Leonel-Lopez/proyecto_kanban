@@ -1,0 +1,35 @@
+@model ModalConfirmacionViewModel
+
+<div class="modal fade" id="modalDelete-@Model.IdTablero" data-bs-backdrop="static" data-bs-keyboard="false"
+    tabindex="-1" aria-labelledby="modalDeleteLabel-@Model.IdTablero" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Atención!!!</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>Está a punto de eliminar el tablero "<strong>@Model.NombreTablero</strong>".</p>
+                <p>Escriba <strong>ELIMINAR</strong> para confirmar.</p>
+                <input type="text" class="form-control" id="confirmInput-@Model.IdTablero"
+                    onkeyup="checkConfirm('@Model.IdTablero')">
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <form asp-controller="Tablero" asp-action="Remove" method="post">
+                    <input type="hidden" name="id_tablero" value="@Model.IdTablero">
+                    <button type="submit" id="deleteBtn-@Model.IdTablero" class="btn btn-danger"
+                        disabled>Eliminar</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function checkConfirm(tableroId) {
+        let input = document.getElementById(`confirmInput-${tableroId}`).value;
+        let deleteBtn = document.getElementById(`deleteBtn-${tableroId}`);
+        deleteBtn.disabled = input.trim().toUpperCase() !== "ELIMINAR";
+    }
+</script>

@@ -220,7 +220,7 @@ namespace UsuarioRepo
                 }
                 if (usuario == null)
                 {
-                    throw new NoEncontradoException("Usuario", -99);
+                    throw new AccesoDenegadoException(username, password);
                 }
                 return usuario;
             }

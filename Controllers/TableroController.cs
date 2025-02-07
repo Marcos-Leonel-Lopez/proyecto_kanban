@@ -192,7 +192,7 @@ public class TableroController : Controller
                 Descripcion = nuevoTablero.Descripcion
             };
             _tableroRepository.Create(tablero);
-            return RedirectToAction("GetAll");
+            return RedirectToAction("GetByUsuario");
         }
         catch (SqliteException ex)
         {
@@ -273,7 +273,36 @@ public class TableroController : Controller
         }
     }
 
-
+    [HttpPost]
+    public IActionResult Remove(int id_tablero){
+        if (HttpContext.Session.GetString("idUsuario") == null)
+        {
+            return RedirectToAction("Index", "Home");
+        }
+        try
+        {
+            _tableroRepository.Remove(id_tablero);
+            return RedirectToAction("GetByUsuario");
+        }
+        catch (NoEncontradoException ex)
+        {
+            _logger.LogWarning(ex.ToString());
+            ViewData["ErrorMessage"] = ex.Message;
+            return View("Error");
+        }
+        catch (SqliteException ex)
+        {
+            _logger.LogError($"Error en base de datos en Remove: {ex.ToString()}");
+            ViewData["ErrorMessage"] = "Hubo un problema con la base de datos. Intente más tarde.";
+            return View("Error");
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError($"Error en Remove: {ex.ToString()}");
+            ViewData["ErrorMessage"] = "Hubo un problema al eliminar el tablero.";
+            return View("Error");
+        }
+    }
 
 
 
