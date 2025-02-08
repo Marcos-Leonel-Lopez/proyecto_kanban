@@ -26,16 +26,16 @@ public class UsuarioController : Controller
         return View();
     }
     [HttpGet]
-    [VerificarSesion]
+    [VerificarSesion(requireAdmin: true)]
     public IActionResult GetAll()
     {
-        if(HttpContext.Session.GetString("rolUsuario") != MisEnums.RolUsuario.Administrador.ToString())
-        {
-            int idUsuario = HttpContext.Session.GetInt32("idUsuario").Value;
-            string nombre = HttpContext.Session.GetString("nombreUsuario");
-            _logger.LogWarning($"Acceso denegado - Usuario: {nombre} - id {idUsuario} intentó acceder a {HttpContext.Request.Path} sin permisos de administrador.");
-            return View("Forbidden").WithStatusCode(403);
-        }
+        // if(HttpContext.Session.GetString("rolUsuario") != MisEnums.RolUsuario.Administrador.ToString())
+        // {
+        //     int idUsuario = HttpContext.Session.GetInt32("idUsuario").Value;
+        //     string nombre = HttpContext.Session.GetString("nombreUsuario");
+        //     _logger.LogWarning($"Acceso denegado - Usuario: {nombre} - id {idUsuario} intentó acceder a {HttpContext.Request.Path} sin permisos de administrador.");
+        //     return View("Forbidden").WithStatusCode(403);
+        // }
         try
         {
             var usuarios = _usuarioRepository.GetAll();
