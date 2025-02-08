@@ -97,7 +97,7 @@ namespace UsuarioRepo
             }
             catch (Exception ex)
             {
-                Console.Error.WriteLine($"Error en GetAll: {ex.ToString()}");
+                Console.Error.WriteLine($"Error en GetAll REPO: {ex.Message.ToString()}");
                 throw;
             }
         }
@@ -137,7 +137,7 @@ namespace UsuarioRepo
             }
             catch (Exception ex)
             {
-                Console.Error.WriteLine($"Error en GetById: {ex.ToString()}");
+                Console.Error.WriteLine($"Error en GetById: {ex.Message.ToString()}");
                 throw;
             }
         }
@@ -226,7 +226,7 @@ namespace UsuarioRepo
             }
             catch (Exception ex)
             {
-                Console.Error.WriteLine($"Error en GetUsuario: {ex.ToString()}");
+                Console.Error.WriteLine($"Error en GetUsuario: {ex.Message.ToString()}");
                 throw;
             }
         }

@@ -48,13 +48,13 @@ public class UsuarioController : Controller
         }
         catch (SqliteException ex)
         {
-            _logger.LogError($"Error en base de datos en GetAll: {ex.ToString()}");
+            _logger.LogError($"Error en base de datos en GetAll CONTROLADOR: {ex.Message.ToString()}");
             ViewData["ErrorMessage"] = "Hubo un problema con la base de datos. Intente más tarde.";
             return View("Error");
         }
         catch (Exception ex)
         {
-            _logger.LogError($"Error en GetAll: {ex.ToString()}");
+            _logger.LogError($"Error en GetAll: {ex.Message.ToString()}");
             ViewData["ErrorMessage"] = "Hubo un problema al obtener los usuarios.";
             return View("Error");
         }
@@ -79,11 +79,12 @@ public class UsuarioController : Controller
         }
         catch (NoEncontradoException ex)
         {
-            _logger.LogWarning(ex.ToString());
+            _logger.LogWarning(ex.Message.ToString());
             ViewData["ErrorMessage"] = ex.Message;
             return View("Error");
         }
-        catch (SqliteException ex){
+        catch (SqliteException ex)
+        {
             _logger.LogError($"Error en base de datos en GetById: {ex.ToString()}");
             ViewData["ErrorMessage"] = "Hubo un problema con la base de datos. Intente más tarde.";
             return View("Error");
@@ -98,7 +99,7 @@ public class UsuarioController : Controller
     [HttpGet]
     public IActionResult Create()
     {
-        if (HttpContext.Session.GetString("idUsuario") == null)
+        if (HttpContext.Session.GetString("idUsuario") == null || HttpContext.Session.GetString("rolUsuario") != MisEnums.RolUsuario.Administrador.ToString())
         {
             return RedirectToAction("Index", "Home");
         }
@@ -112,26 +113,27 @@ public class UsuarioController : Controller
         {
             return RedirectToAction("Index", "Home");
         }
-        if (ModelState.IsValid)
+        if (!ModelState.IsValid)
         {
-            try
-            {
-                _usuarioRepository.Create(usuario);
-                return RedirectToAction("GetAll");
-            }
-            catch (SqliteException ex){
-                _logger.LogError($"Error en base de datos en Create: {ex.ToString()}");
-                ViewData["ErrorMessage"] = "Hubo un problema con la base de datos. Intente más tarde.";
-                return View("Error");
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError($"Error en Create: {ex.ToString()}");
-                ViewData["ErrorMessage"] = "Hubo un problema al crear el usuario.";
-                return View("Error");
-            }
+            return View(usuario);
         }
-        return View(usuario);
+        try
+        {
+            _usuarioRepository.Create(usuario);
+            return RedirectToAction("GetAll");
+        }
+        catch (SqliteException ex)
+        {
+            _logger.LogError($"Error en base de datos en Create: {ex.ToString()}");
+            ViewData["ErrorMessage"] = "Hubo un problema con la base de datos. Intente más tarde.";
+            return View("Error");
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError($"Error en Create: {ex.ToString()}");
+            ViewData["ErrorMessage"] = "Hubo un problema al crear el usuario.";
+            return View("Error");
+        }
     }
     [HttpGet]
     // solo podria acceder un admin
@@ -152,7 +154,8 @@ public class UsuarioController : Controller
             }).ToList();
             return View(viewModel);
         }
-        catch (SqliteException ex){
+        catch (SqliteException ex)
+        {
             _logger.LogError($"Error en base de datos en ListToEdit: {ex.ToString()}");
             ViewData["ErrorMessage"] = "Hubo un problema con la base de datos. Intente más tarde.";
             return View("Error");
@@ -194,7 +197,8 @@ public class UsuarioController : Controller
             ViewData["ErrorMessage"] = ex.Message;
             return View("Error");
         }
-        catch (SqliteException ex){
+        catch (SqliteException ex)
+        {
             _logger.LogError($"Error en base de datos en Delete: {ex.ToString()}");
             ViewData["ErrorMessage"] = "Hubo un problema con la base de datos. Intente más tarde.";
             return View("Error");
@@ -230,7 +234,8 @@ public class UsuarioController : Controller
             ViewData["ErrorMessage"] = ex.Message;
             return View("Error");
         }
-        catch (SqliteException ex){
+        catch (SqliteException ex)
+        {
             _logger.LogError($"Error en base de datos en DeleteConfirmed: {ex.ToString()}");
             ViewData["ErrorMessage"] = "Hubo un problema con la base de datos. Intente más tarde.";
             return View("Error");
@@ -273,7 +278,8 @@ public class UsuarioController : Controller
             ViewData["ErrorMessage"] = ex.Message;
             return View("Error");
         }
-        catch (SqliteException ex){
+        catch (SqliteException ex)
+        {
             _logger.LogError($"Error en base de datos en EditarPerfil: {ex.ToString()}");
             ViewData["ErrorMessage"] = "Hubo un problema con la base de datos. Intente más tarde.";
             return View("Error");
@@ -316,7 +322,8 @@ public class UsuarioController : Controller
                 ViewData["ErrorMessage"] = ex.Message;
                 return View("Error");
             }
-            catch (SqliteException ex){
+            catch (SqliteException ex)
+            {
                 _logger.LogError($"Error en base de datos en EditPerfil: {ex.ToString()}");
                 ViewData["ErrorMessage"] = "Hubo un problema con la base de datos. Intente más tarde.";
                 return View("Error");
@@ -342,7 +349,8 @@ public class UsuarioController : Controller
         {
             return View(new UsuarioPasswordViewModel());
         }
-        catch (SqliteException ex){
+        catch (SqliteException ex)
+        {
             _logger.LogError($"Error en base de datos en UpdatePass: {ex.ToString()}");
             ViewData["ErrorMessage"] = "Hubo un problema con la base de datos. Intente más tarde.";
             return View("Error");
@@ -400,7 +408,8 @@ public class UsuarioController : Controller
             ViewData["ErrorMessage"] = ex.Message;
             return View("Error");
         }
-        catch (SqliteException ex){
+        catch (SqliteException ex)
+        {
             _logger.LogError($"Error en base de datos en UpdatePass: {ex.ToString()}");
             ViewData["ErrorMessage"] = "Hubo un problema con la base de datos. Intente más tarde.";
             return View(passModif);

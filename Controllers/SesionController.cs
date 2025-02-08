@@ -4,6 +4,8 @@ using Microsoft.AspNetCore.Mvc;
 using trabajo_final.Models;
 using Microsoft.AspNetCore.Session;
 
+using Microsoft.Extensions.Logging;
+
 using IUsuarioRepo;
 public class SesionController : Controller
 {

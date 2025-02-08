@@ -24,13 +24,16 @@
     </table>
 
     <form asp-action="DeleteConfirmed" method="post">
-        <input type="hidden" name="idUsuario" value="@Model.Id_usuario" />
-        @if(ocupado){
-        <button type="submit" class="btn btn-danger" disabled>ELIMINAR</button>
-        <p>Este usuario no se puede eliminar</p>
-        }else{
-        <button type="submit" class="btn btn-danger">ELIMINAR</button>
-        }
         <a asp-controller="Usuario" asp-action="ListToEdit" class="btn btn-secondary">CANCELAR</a>
+        <input type="hidden" name="idUsuario" value="@Model.Id_usuario" />
+        @if (ocupado)
+        {
+            <button type="submit" class="btn btn-danger" disabled>ELIMINAR</button>
+            <spam>Este usuario no se puede eliminar</spam>
+        }
+        else
+        {
+            <button type="submit" class="btn btn-danger">ELIMINAR</button>
+        }
     </form>
 </section>

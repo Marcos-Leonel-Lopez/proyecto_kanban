@@ -5,6 +5,7 @@
                     <h4 class="mb-0">@Model.Nombre</h4>
                     <a asp-controller="Tablero" asp-action="Kanban" asp-route-id_tablero="@Model.Id_tablero" class="text-white text-decoration-none">
                         <button type="button" class="btn btn-light btn-sm">
+                            <i class="bi bi-kanban-fill me-1 text-success"></i>
                             Ver
                         </button>
                     </a>
@@ -14,9 +15,9 @@
                         <table class="table table-bordered table-hover">
                             <thead class="table-secondary">
                                 <tr>
-                                    <th scope="col">Nombre</th>
+                                    <th scope="col-3">Nombre</th>
                                     <th scope="col">Descripción</th>
-                                    <th scope="col">Estado</th>
+                                    <th scope="col-2">Estado</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -25,9 +26,9 @@
                                     @foreach (var tarea in Model.Tareas)
                                     {
                                         <tr class="estado-@tarea.Estado">
-                                            <td>@tarea.Nombre</td>
-                                            <td>@tarea.Descripcion</td>
-                                            <td>
+                                            <td class="col-3">@tarea.Nombre</td>
+                                            <td class="col">@tarea.Descripcion</td>
+                                            <td class="col-2">
                                                 <span class="badge bg-success">@tarea.Estado</span>
                                             </td>
                                         </tr>
