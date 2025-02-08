@@ -44,6 +44,9 @@ public class SesionController : Controller
             HttpContext.Session.SetInt32("idUsuario", usuario.Id_usuario);
             HttpContext.Session.SetString("rolUsuario", usuario.Rol_usuario.ToString());
 
+            HttpContext.Session.SetString("IsAuthenticated", "true");
+            HttpContext.Session.SetString("AccessLevel", usuario.Rol_usuario.ToString());
+
              _logger.LogInformation($"El usuario {usuario.Nombre_de_usuario} ingresó correctamente");
              
             return RedirectToAction("Index", "Home");

@@ -5,7 +5,7 @@
 
 <div class="container text-center mt-5">
     <div class="alert alert-danger p-4 rounded shadow">
-        <h2 class="fw-bold">⚠ Error</h2>
+        <h2 class="fw-bold">⚠ Error @ViewData["StatusCode"]</h2>
         <p class="fs-5">@ViewData["ErrorMessage"]</p>
         <p class="text-muted">Serás redirigido en <span id="contador">5</span> segundos...</p>
         <a href="@Url.Action("Index", "Tablero")" class="btn btn-secondary">Volver ahora</a>

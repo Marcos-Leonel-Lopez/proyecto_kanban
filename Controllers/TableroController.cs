@@ -28,13 +28,13 @@ public class TableroController : Controller
     }
 
     [HttpGet]
-    [VerificarSesion]
+    [AccessAuthorize("Administrador","Operador")]
     public IActionResult Index()
     {
         return View();
     }
     [HttpGet]
-    [VerificarSesion]
+    [AccessAuthorize("Administrador","Operador")]
     public IActionResult GetByUsuario()
     {
         try
@@ -75,7 +75,7 @@ public class TableroController : Controller
         }
     }
     [HttpGet]
-    [VerificarSesion]
+    [AccessAuthorize("Administrador","Operador")]
     public IActionResult GetAll()
     {
         try
@@ -111,7 +111,7 @@ public class TableroController : Controller
         }
     }
     [HttpGet]
-    [VerificarSesion]
+    [AccessAuthorize("Administrador","Operador")]
     public IActionResult GetById(int idTablero)
     {
         try
@@ -148,7 +148,7 @@ public class TableroController : Controller
 
     }
     [HttpGet]
-    [VerificarSesion]
+    [AccessAuthorize("Administrador","Operador")]
     public IActionResult Create()
     {
         var nuevoTablero = new CrearTableroViewModel
@@ -158,7 +158,7 @@ public class TableroController : Controller
         return View(nuevoTablero);
     }
     [HttpPost]
-    [VerificarSesion]
+    [AccessAuthorize("Administrador","Operador")]
     public IActionResult Create(CrearTableroViewModel nuevoTablero)
     {
         if (!ModelState.IsValid)
@@ -190,7 +190,7 @@ public class TableroController : Controller
         }
     }
     [HttpGet]
-    [VerificarSesion]
+    [AccessAuthorize("Administrador","Operador")]
     public IActionResult Kanban(int id_tablero)
     {
         try
@@ -237,9 +237,14 @@ public class TableroController : Controller
         }
         catch (NoEncontradoException ex)
         {
-            _logger.LogWarning(ex.ToString());
-            ViewData["ErrorMessage"] = ex.Message;
-            return View("Error");
+            _logger.LogWarning(ex.Message.ToString());
+            var errorViewModel = new MyErrorViewModel
+            {
+                ErrorMessage = ex.Message,
+                StatusCode = 404,
+                Controller = "Tablero"
+            };
+            return View("Error", errorViewModel).WithStatusCode(404);
         }
         catch (SqliteException ex)
         {
@@ -256,7 +261,7 @@ public class TableroController : Controller
     }
 
     [HttpPost]
-    [VerificarSesion]
+    [AccessAuthorize("Administrador","Operador")]
     public IActionResult Remove(int id_tablero)
     {
         try
