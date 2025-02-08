@@ -1,13 +1,9 @@
-# Pendiente
-
-* revisar anotaciones en codigo
-
-* mensajes de error ,rutas y metodos
+# Consultar
 
 * tomar el error del try-catch en repo o controlador
 
 
-
-** revisrar permisos
-** revisar codigos devueltos
-*check* Usuario
+# Revisar
+* revisrar permisos
+* revisar codigos devueltos
+✅ Usuario
