@@ -38,9 +38,9 @@
                                     @await Component.InvokeAsync("TareaReasignar", new
                                         {
                                             tareaActual = tarea,
-                                            esPropietario =
-                                             Model.EsPropietario,
-                                            usuarios = @Model.Usuarios
+                                            esPropietario = Model.EsPropietario,
+                                            usuarios = Model.Usuarios,
+                                            idPropietario = Model.IdPropietario
                                         })
                                 </section>
                             </section>

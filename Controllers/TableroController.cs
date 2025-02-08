@@ -28,21 +28,15 @@ public class TableroController : Controller
     }
 
     [HttpGet]
+    [VerificarSesion]
     public IActionResult Index()
     {
-        if (HttpContext.Session.GetString("idUsuario") == null)
-        {
-            return RedirectToAction("Index", "Home");
-        }
         return View();
     }
     [HttpGet]
+    [VerificarSesion]
     public IActionResult GetByUsuario()
     {
-        if (HttpContext.Session.GetString("idUsuario") == null)
-        {
-            return RedirectToAction("Index", "Home");
-        }
         try
         {
             var idUsuario = HttpContext.Session.GetInt32("idUsuario").Value;
@@ -81,12 +75,9 @@ public class TableroController : Controller
         }
     }
     [HttpGet]
+    [VerificarSesion]
     public IActionResult GetAll()
     {
-        if (HttpContext.Session.GetString("idUsuario") == null)
-        {
-            return RedirectToAction("Index", "Home");
-        }
         try
         {
             var tableros = _tableroRepository.GetAll();
@@ -120,12 +111,9 @@ public class TableroController : Controller
         }
     }
     [HttpGet]
+    [VerificarSesion]
     public IActionResult GetById(int idTablero)
     {
-        if (HttpContext.Session.GetString("idUsuario") == null)
-        {
-            return RedirectToAction("Index", "Home");
-        }
         try
         {
             var tablero = _tableroRepository.GetById(idTablero);
@@ -160,12 +148,9 @@ public class TableroController : Controller
 
     }
     [HttpGet]
+    [VerificarSesion]
     public IActionResult Create()
     {
-        if (HttpContext.Session.GetString("idUsuario") == null)
-        {
-            return RedirectToAction("Index", "Home");
-        }
         var nuevoTablero = new CrearTableroViewModel
         {
             Id_usuario_propietario = HttpContext.Session.GetInt32("idUsuario").Value
@@ -173,12 +158,9 @@ public class TableroController : Controller
         return View(nuevoTablero);
     }
     [HttpPost]
+    [VerificarSesion]
     public IActionResult Create(CrearTableroViewModel nuevoTablero)
     {
-        if (HttpContext.Session.GetString("idUsuario") == null)
-        {
-            return RedirectToAction("Index", "Home");
-        }
         if (!ModelState.IsValid)
         {
             return View(nuevoTablero);
@@ -207,13 +189,10 @@ public class TableroController : Controller
             return View("Error");
         }
     }
-
+    [HttpGet]
+    [VerificarSesion]
     public IActionResult Kanban(int id_tablero)
     {
-        if (HttpContext.Session.GetString("idUsuario") == null)
-        {
-            return RedirectToAction("Index", "Home");
-        }
         try
         {
             // Obtener el ID del usuario logueado.
@@ -231,8 +210,10 @@ public class TableroController : Controller
                     Id_usuario_asignado = tarea.Id_usuario_asignado,
                     Codigo_color = colores.FirstOrDefault(c => c.Id_color == tarea.Id_color)?.Hex ?? "#FFFFFF"
                 }).ToList();
+            // Propietario
+            var idPropietario = _tableroRepository.GetById(id_tablero).Id_usuario_propietario;
             // Determinar si el usuario logueado es propietario del tablero.
-            var esPropietario = _tableroRepository.GetById(id_tablero).Id_usuario_propietario == idUsuarioLogueado;
+            var esPropietario = idPropietario == idUsuarioLogueado;
             // Obtengo los usuarios para asignar tareas.
             var usuarios = _usuarioRepository.GetAll()
                 .Select(u => new UsuarioViewModel
@@ -246,7 +227,8 @@ public class TableroController : Controller
                 Tareas = tareasViewModel,
                 TareaModificada = new TareaEnTableroViewModel(), // Inicializamos una tarea vacía.
                 EsPropietario = esPropietario,
-                Usuarios = usuarios
+                Usuarios = usuarios,
+                IdPropietario = idPropietario
             };
             // Pasar el ID del usuario logueado a la vista.
             ViewData["idUsuarioLogueado"] = idUsuarioLogueado;
@@ -274,11 +256,9 @@ public class TableroController : Controller
     }
 
     [HttpPost]
-    public IActionResult Remove(int id_tablero){
-        if (HttpContext.Session.GetString("idUsuario") == null)
-        {
-            return RedirectToAction("Index", "Home");
-        }
+    [VerificarSesion]
+    public IActionResult Remove(int id_tablero)
+    {
         try
         {
             _tableroRepository.Remove(id_tablero);

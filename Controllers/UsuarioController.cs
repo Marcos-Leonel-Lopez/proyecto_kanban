@@ -4,6 +4,7 @@ using trabajo_final.Models;
 using Microsoft.AspNetCore.Session; //Agregado
 using IUsuarioRepo;
 using Microsoft.Data.Sqlite;
+using Microsoft.AspNetCore.Mvc.Filters;
 
 namespace trabajo_final.Controllers;
 
@@ -18,22 +19,22 @@ public class UsuarioController : Controller
     }
 
     [HttpGet]
+    [VerificarSesion]
     public IActionResult Index() // Igual al nombre de los archivos en carpeta "Views"
     {
-        if (HttpContext.Session.GetString("idUsuario") == null)
-        {
-            return RedirectToAction("Index", "Home");
-        }
         ViewData["rolUsuario"] = HttpContext.Session.GetString("rolUsuario");
         return View();
     }
     [HttpGet]
+    [VerificarSesion]
     public IActionResult GetAll()
     {
-        var rol = HttpContext.Session.GetInt32("rolUsuario");
-        if (HttpContext.Session.GetString("idUsuario") == null || HttpContext.Session.GetString("rolUsuario") != MisEnums.RolUsuario.Administrador.ToString())
+        if(HttpContext.Session.GetString("rolUsuario") != MisEnums.RolUsuario.Administrador.ToString())
         {
-            return RedirectToAction("Index", "Home");
+            int idUsuario = HttpContext.Session.GetInt32("idUsuario").Value;
+            string nombre = HttpContext.Session.GetString("nombreUsuario");
+            _logger.LogWarning($"Acceso denegado - Usuario: {nombre} - id {idUsuario} intentó acceder a {HttpContext.Request.Path} sin permisos de administrador.");
+            return View("Forbidden").WithStatusCode(403);
         }
         try
         {
@@ -60,12 +61,9 @@ public class UsuarioController : Controller
         }
     }
     [HttpGet]
+    [VerificarSesion]
     public IActionResult GetById(int idUsuario)
     {
-        if (HttpContext.Session.GetString("idUsuario") == null)
-        {
-            return RedirectToAction("Index", "Home");
-        }
         try
         {
             var usuario = _usuarioRepository.GetById(idUsuario);
@@ -97,9 +95,10 @@ public class UsuarioController : Controller
         }
     }
     [HttpGet]
+    [VerificarSesion]
     public IActionResult Create()
     {
-        if (HttpContext.Session.GetString("idUsuario") == null || HttpContext.Session.GetString("rolUsuario") != MisEnums.RolUsuario.Administrador.ToString())
+        if (HttpContext.Session.GetString("rolUsuario") != MisEnums.RolUsuario.Administrador.ToString())
         {
             return RedirectToAction("Index", "Home");
         }
@@ -107,9 +106,10 @@ public class UsuarioController : Controller
     }
 
     [HttpPost]
+    [VerificarSesion]
     public IActionResult Create(Usuario usuario)
     {
-        if (HttpContext.Session.GetString("idUsuario") == null)
+        if (HttpContext.Session.GetString("rolUsuario") != MisEnums.RolUsuario.Administrador.ToString())
         {
             return RedirectToAction("Index", "Home");
         }
@@ -136,10 +136,10 @@ public class UsuarioController : Controller
         }
     }
     [HttpGet]
-    // solo podria acceder un admin
+    [VerificarSesion]
     public IActionResult ListToEdit()
     {
-        if (HttpContext.Session.GetString("idUsuario") == null)
+        if (HttpContext.Session.GetString("rolUsuario") != MisEnums.RolUsuario.Administrador.ToString())
         {
             return RedirectToAction("Index", "Home");
         }
@@ -168,9 +168,10 @@ public class UsuarioController : Controller
         }
     }
     [HttpGet]
+    [VerificarSesion]
     public IActionResult Delete(int idUsuario)
     {
-        if (HttpContext.Session.GetString("idUsuario") == null)
+        if (HttpContext.Session.GetString("rolUsuario") != MisEnums.RolUsuario.Administrador.ToString())
         {
             return RedirectToAction("Index", "Home");
         }
@@ -211,9 +212,10 @@ public class UsuarioController : Controller
         }
     }
     [HttpPost]
+    [VerificarSesion]
     public IActionResult DeleteConfirmed(int idUsuario)
     {
-        if (HttpContext.Session.GetString("idUsuario") == null)
+        if (HttpContext.Session.GetString("rolUsuario") != MisEnums.RolUsuario.Administrador.ToString())
         {
             return RedirectToAction("Index", "Home");
         }
@@ -226,7 +228,7 @@ public class UsuarioController : Controller
                 return View("Error");
             }
             _usuarioRepository.Remove(idUsuario);
-            return RedirectToAction("GetAll");
+            return RedirectToAction("ListToEdit");
         }
         catch (NoEncontradoException ex)
         {
@@ -248,10 +250,11 @@ public class UsuarioController : Controller
         }
     }
     [HttpGet]
+    [VerificarSesion]
     // Verificar que el usuario sea admin o que el id de las ession coincida con el 'idUsuario'
     public IActionResult EditarPerfil(int idUsuario)
     {
-        if (HttpContext.Session.GetString("idUsuario") == null)
+        if (HttpContext.Session.GetString("rolUsuario") != MisEnums.RolUsuario.Administrador.ToString())
         {
             return RedirectToAction("Index", "Home");
         }
@@ -292,9 +295,10 @@ public class UsuarioController : Controller
         }
     }
     [HttpPost]
-    public IActionResult EditPerfil(UsuarioViewModel usuarioModif)
+    [VerificarSesion] //admin
+    public IActionResult EditarPerfil(UsuarioViewModel usuarioModif)
     {
-        if (HttpContext.Session.GetString("idUsuario") == null)
+        if (HttpContext.Session.GetString("rolUsuario") != MisEnums.RolUsuario.Administrador.ToString())
         {
             return RedirectToAction("Index", "Home");
         }
@@ -314,7 +318,7 @@ public class UsuarioController : Controller
                     ViewData["ErrorMessage"] = "Hubo un problema al intentar actualizar el usuario.";
                     return View("Error");
                 }
-                return RedirectToAction("GetAll");
+                return RedirectToAction("ListToEdit");
             }
             catch (NoEncontradoException ex)
             {
@@ -339,14 +343,13 @@ public class UsuarioController : Controller
         return View(usuarioModif);
     }
     [HttpGet]
+    [VerificarSesion]
     public IActionResult UpdatePass()
     {
-        if (HttpContext.Session.GetString("idUsuario") == null)
-        {
-            return RedirectToAction("Index", "Home");
-        }
         try
         {
+            int idUsuario = HttpContext.Session.GetInt32("idUsuario").Value;
+            ViewData["idUsuarioLogueado"] = idUsuario;
             return View(new UsuarioPasswordViewModel());
         }
         catch (SqliteException ex)
@@ -363,12 +366,14 @@ public class UsuarioController : Controller
         }
     }
     [HttpPost]
+    [VerificarSesion]
     public IActionResult UpdatePass(UsuarioPasswordViewModel passModif)
     {
-        if (HttpContext.Session.GetString("idUsuario") == null)
+        if(HttpContext.Session.GetInt32("idUsuario").Value != passModif.IdUsuario)
         {
             return RedirectToAction("Index", "Home");
         }
+
         if (!ModelState.IsValid)
         {
             return View(passModif);

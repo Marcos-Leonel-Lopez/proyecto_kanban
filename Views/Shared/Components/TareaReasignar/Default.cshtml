@@ -7,5 +7,5 @@
         <span class="d-none d-lg-inline">Reasignar</span>
     </button>
     <!-- Modal para reasignar usuario -->
-    @await Component.InvokeAsync("ModalReasignar", new {idTarea = Model.Tarea.Id_tarea , usuarios = Model.Usuarios})
+    @await Component.InvokeAsync("ModalReasignar", new {idTarea = Model.Tarea.Id_tarea , usuarios = Model.Usuarios, idPropietario = Model.IdPropietario})
 }

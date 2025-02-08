@@ -1,0 +1,29 @@
+@{
+    Layout = "_Layout"; 
+    ViewBag.Title = "Acceso Denegado";
+}
+
+
+
+<div class="container text-center mt-5">
+    <div class="alert alert-danger p-4 rounded shadow">
+        <h2 class="fw-bold">⛔ Acceso Denegado - 403</h2>
+        <p class="fs-5">No tienes permisos para acceder a esta página.</p>
+        <p class="text-muted">Serás redirigido en <span id="contador">5</span> segundos...</p>
+        <a href="@Url.Action("Index", "Home")" class="btn btn-secondary">Volver ahora</a>
+    </div>
+</div>
+
+<script>
+    let seconds = 5;
+    const contadorElement = document.getElementById("contador");
+
+    const contador = setInterval(() => {
+        seconds--;
+        contadorElement.textContent = seconds;
+        if (seconds <= 0) {
+            clearInterval(contador);
+            window.location.href = "@Url.Action("Index", "Home")";
+        }
+    }, 1000);
+</script>

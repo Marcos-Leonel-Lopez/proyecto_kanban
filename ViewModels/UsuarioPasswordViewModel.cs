@@ -2,15 +2,19 @@ using System.ComponentModel.DataAnnotations;
 
 public class UsuarioPasswordViewModel
 {
+    private int idUsuario;
     private string password;
     private string newPassword;
     private string passwordConfirm;
     public UsuarioPasswordViewModel() { }
-    public UsuarioPasswordViewModel(string password, string newPassword)
+    public UsuarioPasswordViewModel(int idUsuario, string password, string newPassword, string passwordConfirm)
     {
+        this.idUsuario = idUsuario;
         this.password = password;
         this.newPassword = newPassword;
+        this.passwordConfirm = passwordConfirm;
     }
+    public int IdUsuario { get => idUsuario; set => idUsuario = value; }
     [Required(ErrorMessage = "La contraseña es obligatoria.")]
     public string Password { get => password; set => password = value; }
     [Required(ErrorMessage = "La nueva contraseña es obligatoria.")]

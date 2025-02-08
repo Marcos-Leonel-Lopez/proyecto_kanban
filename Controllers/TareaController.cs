@@ -26,12 +26,9 @@ public class TareaController : Controller
         _usuarioRepository = usuarioRepository;
     }
     [HttpGet]
+    [VerificarSesion]
     public IActionResult Index()
     {
-        if (HttpContext.Session.GetString("idUsuario") == null)
-        {
-            return RedirectToAction("Index", "Home");
-        }
         int idUsuario = HttpContext.Session.GetInt32("idUsuario").Value;
         var rol = HttpContext.Session.GetString("rolUsuario");
         ViewData["idUsuarioLogueado"] = idUsuario;
@@ -39,22 +36,19 @@ public class TareaController : Controller
         return View();
     }
     [HttpGet]
+    [VerificarSesion]
     public IActionResult GetByTablero(int idTablero)
     {
-        if (HttpContext.Session.GetString("idUsuario") == null)
-        {
-            return RedirectToAction("Index", "Home");
-        }
         try
         {
-            // List<Tarea> tareas = _tareaRepository.GetByTablero(idTablero);
-            // return View(tareas);
             Tablero tablero = _tableroRepository.GetById(idTablero);
-            ListarTablerosUsuarioViewModel viewModel = new ListarTablerosUsuarioViewModel{
+            ListarTablerosUsuarioViewModel viewModel = new ListarTablerosUsuarioViewModel
+            {
                 Id_tablero = tablero.Id_tablero,
                 Nombre = tablero.Nombre,
                 Tareas = _tareaRepository.GetByTablero(idTablero)
-                .Select(tarea => new TareaListaViewModel{
+                .Select(tarea => new TareaListaViewModel
+                {
                     Nombre = tarea.Nombre,
                     Descripcion = tarea.Descripcion,
                     Estado = tarea.Id_estado.ToString()
@@ -62,12 +56,14 @@ public class TareaController : Controller
             };
             return View(viewModel);
         }
-        catch(NoEncontradoException ex){
+        catch (NoEncontradoException ex)
+        {
             _logger.LogWarning(ex.ToString());
             ViewData["ErrorMessage"] = ex.Message;
             return View("Error");
         }
-        catch (SqliteException ex){
+        catch (SqliteException ex)
+        {
             _logger.LogError($"Error en base de datos en GetByTablero: {ex.ToString()}");
             ViewData["ErrorMessage"] = "Hubo un problema con la base de datos. Intente más tarde.";
             return View("Error");
@@ -81,12 +77,9 @@ public class TareaController : Controller
     }
 
     [HttpGet]
+    [VerificarSesion]
     public IActionResult Create()
     {
-        if (HttpContext.Session.GetString("idUsuario") == null)
-        {
-            return RedirectToAction("Index", "Home");
-        }
         var tableros = _tableroRepository.GetAll()
             .Where(tablero => tablero.Id_usuario_propietario == HttpContext.Session.GetInt32("idUsuario").Value)
             .Select(tablero => new TableroViewModel(tablero, _usuarioRepository.GetById(tablero.Id_usuario_propietario).Nombre_de_usuario))
@@ -100,12 +93,9 @@ public class TareaController : Controller
         return View(nuevaTarea);
     }
     [HttpPost]
+    [VerificarSesion]
     public IActionResult Create(CrearTareaViewModel model)
     {
-        if (HttpContext.Session.GetString("idUsuario") == null)
-        {
-            return RedirectToAction("Index", "Home");
-        }
         if (!ModelState.IsValid)
         {
             // Si hay errores de validación, recarga la vista con los datos actuales
@@ -132,7 +122,8 @@ public class TareaController : Controller
             _tareaRepository.Create(nuevaTarea, model.NuevaTarea.Id_tablero);
             return RedirectToAction("Create");
         }
-        catch (SqliteException ex){
+        catch (SqliteException ex)
+        {
             _logger.LogError($"Error en base de datos en Create: {ex.ToString()}");
             ViewData["ErrorMessage"] = "Hubo un problema con la base de datos. Intente más tarde.";
             return View("Error");
@@ -146,11 +137,10 @@ public class TareaController : Controller
 
     }
     [HttpPost]
+    [VerificarSesion]
     public IActionResult ActualizarEstado(KanbanViewModel model)
     {
-        if (HttpContext.Session.GetString("idUsuario") == null
-            || HttpContext.Session.GetInt32("idUsuario") != model.TareaModificada.Id_usuario_asignado
-            )
+        if (HttpContext.Session.GetInt32("idUsuario").Value != model.TareaModificada.Id_usuario_asignado)
         {
             return RedirectToAction("Index", "Home");
         }
@@ -167,7 +157,8 @@ public class TareaController : Controller
             ViewData["ErrorMessage"] = ex.Message;
             return View("Error");
         }
-        catch (SqliteException ex){
+        catch (SqliteException ex)
+        {
             _logger.LogError($"Error en base de datos en ActualizarEstado: {ex.ToString()}");
             ViewData["ErrorMessage"] = "Hubo un problema con la base de datos. Intente más tarde.";
             return View("Error");
@@ -180,9 +171,11 @@ public class TareaController : Controller
         }
     }
     [HttpPost]
+    [VerificarSesion]
     public IActionResult ActualizarUsuario(KanbanViewModel model)
     {
-        if (HttpContext.Session.GetString("idUsuario") == null)
+        // verificar que el creador del tablero y el id de quien esta logueado sean iguales
+        if (HttpContext.Session.GetInt32("idUsuario").Value != model.IdPropietario)
         {
             return RedirectToAction("Index", "Home");
         }
@@ -199,7 +192,8 @@ public class TareaController : Controller
             ViewData["ErrorMessage"] = ex.Message;
             return View("Error");
         }
-        catch (SqliteException ex){
+        catch (SqliteException ex)
+        {
             _logger.LogError($"Error en base de datos en ActualizarUsuario: {ex.ToString()}");
             ViewData["ErrorMessage"] = "Hubo un problema con la base de datos. Intente más tarde.";
             return View("Error");
@@ -212,64 +206,61 @@ public class TareaController : Controller
         }
     }
     [HttpGet]
-public IActionResult GetByUsuario(int idUsuario)
-{
-    if (HttpContext.Session.GetString("idUsuario") == null)
+    [VerificarSesion]
+    public IActionResult GetByUsuario(int idUsuario)
     {
-        return RedirectToAction("Index", "Home");
-    }
-    try
-    {
-        _usuarioRepository.GetById(idUsuario);
-        List<ListarTablerosUsuarioViewModel> viewModel = new List<ListarTablerosUsuarioViewModel>();
-        // Obtener solo las tareas donde el usuario está asignado
-        var tareasUsuario = _tareaRepository.GetByUsuario(idUsuario);
-
-        // Agrupar las tareas por tablero
-        var tareasAgrupadasPorTablero = tareasUsuario
-            .GroupBy(t => t.Id_tablero)
-            .ToDictionary(g => g.Key, g => g.ToList());
-
-        foreach (var diccionario in tareasAgrupadasPorTablero)
+        try
         {
-            int idTablero = diccionario.Key;
-            var tareas = diccionario.Value;
+            _usuarioRepository.GetById(idUsuario);
+            List<ListarTablerosUsuarioViewModel> viewModel = new List<ListarTablerosUsuarioViewModel>();
+            // Obtener solo las tareas donde el usuario está asignado
+            var tareasUsuario = _tareaRepository.GetByUsuario(idUsuario);
 
-            var tablero = _tableroRepository.GetById(idTablero);
-            
-            viewModel.Add(new ListarTablerosUsuarioViewModel
+            // Agrupar las tareas por tablero
+            var tareasAgrupadasPorTablero = tareasUsuario
+                .GroupBy(t => t.Id_tablero)
+                .ToDictionary(g => g.Key, g => g.ToList());
+
+            foreach (var diccionario in tareasAgrupadasPorTablero)
             {
-                Id_tablero = tablero.Id_tablero,
-                Nombre = tablero.Nombre,
-                Tareas = tareas.Select(tarea => new TareaListaViewModel
-                {
-                    Nombre = tarea.Nombre,
-                    Descripcion = tarea.Descripcion,
-                    Estado = tarea.Id_estado.ToString()
-                }).ToList()
-            });
-        }
+                int idTablero = diccionario.Key;
+                var tareas = diccionario.Value;
 
-        return View(viewModel);
+                var tablero = _tableroRepository.GetById(idTablero);
+
+                viewModel.Add(new ListarTablerosUsuarioViewModel
+                {
+                    Id_tablero = tablero.Id_tablero,
+                    Nombre = tablero.Nombre,
+                    Tareas = tareas.Select(tarea => new TareaListaViewModel
+                    {
+                        Nombre = tarea.Nombre,
+                        Descripcion = tarea.Descripcion,
+                        Estado = tarea.Id_estado.ToString()
+                    }).ToList()
+                });
+            }
+
+            return View(viewModel);
+        }
+        catch (NoEncontradoException ex)
+        {
+            _logger.LogWarning(ex.ToString());
+            ViewData["ErrorMessage"] = ex.Message;
+            return View("Error");
+        }
+        catch (SqliteException ex)
+        {
+            _logger.LogError($"Error en base de datos en GetByUsuario: {ex}");
+            ViewData["ErrorMessage"] = "Hubo un problema con la base de datos. Intente más tarde.";
+            return View("Error");
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError($"Error en GetByUsuario: {ex}");
+            ViewData["ErrorMessage"] = "Hubo un problema al obtener las tareas.";
+            return View("Error");
+        }
     }
-    catch (NoEncontradoException ex)
-    {
-        _logger.LogWarning(ex.ToString());
-        ViewData["ErrorMessage"] = ex.Message;
-        return View("Error");
-    }
-    catch (SqliteException ex)
-    {
-        _logger.LogError($"Error en base de datos en GetByUsuario: {ex}");
-        ViewData["ErrorMessage"] = "Hubo un problema con la base de datos. Intente más tarde.";
-        return View("Error");
-    }
-    catch (Exception ex)
-    {
-        _logger.LogError($"Error en GetByUsuario: {ex}");
-        ViewData["ErrorMessage"] = "Hubo un problema al obtener las tareas.";
-        return View("Error");
-    }
-}
 
 }

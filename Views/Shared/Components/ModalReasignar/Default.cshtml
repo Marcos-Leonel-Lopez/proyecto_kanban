@@ -11,9 +11,10 @@
             <div class="modal-body">
                 <form asp-controller="Tarea" asp-action="ActualizarUsuario" method="post">
                     <input type="hidden" name="TareaModificada.Id_tarea" value="@Model.Id_Tarea" />
+                    <input type="hidden" name="IdPropietario" value="@Model.IdPropietario" />
+                    <div> @Model.IdPropietario </div>
                     <div class="mb-3">
-                        <label for="usuarioAsignado_@Model.Id_Tarea" class="form-label">Seleccionar
-                            Usuario</label>
+                        <label for="usuarioAsignado_@Model.Id_Tarea" class="form-label">Seleccionar Usuario</label>
                         <select class="form-select" id="usuarioAsignado_@Model.Id_Tarea"
                             name="TareaModificada.Id_usuario_asignado">
                             <option value="">Sin asignar</option> <!-- Opción para desasignar -->

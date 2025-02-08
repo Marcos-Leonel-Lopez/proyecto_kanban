@@ -1,5 +1,6 @@
 @{
     ViewData["Title"] = "Cambiar contraseña";
+    int idUsuario = (int)ViewData["idUsuarioLogueado"];
 }
 @model UsuarioPasswordViewModel
 
@@ -11,6 +12,7 @@
             <form asp-controller="Usuario" asp-action="UpdatePass" method="post" enctype="multipart/form-data">
                 <div class="d-flex flex-column justify-content-start mb-2 col-6">
                     <!-- Contraseña Actual -->
+                    <input type="hidden" name="IdUsuario" asp-for="IdUsuario" value="@idUsuario" />
                     <div class="col-md-6 mb-3">
                         <label for="password" class="form-label fw-bold">Contraseña Actual</label>
                         <input type="password" id="password" name="Password" class="form-control" asp-for="Password" />
