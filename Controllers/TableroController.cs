@@ -14,13 +14,15 @@ namespace trabajo_final.Controllers;
 public class TableroController : Controller
 {
     private readonly ILogger<TableroController> _logger;
+    private readonly ExceptionHandlerService _exceptionHandler;
     private readonly IUsuarioRepository _usuarioRepository;
     private readonly ITableroRepository _tableroRepository;
     private readonly ITareaRepository _tareasRepository;
     private readonly IColorRepository _colorRepository;
-    public TableroController(ILogger<TableroController> logger, IUsuarioRepository usuarioRepository, ITableroRepository tableroRepository, ITareaRepository tareasRepository, IColorRepository colorRepository)
+    public TableroController(ILogger<TableroController> logger, ExceptionHandlerService exceptionHandler, IUsuarioRepository usuarioRepository, ITableroRepository tableroRepository, ITareaRepository tareasRepository, IColorRepository colorRepository)
     {
         _logger = logger;
+        _exceptionHandler = exceptionHandler;
         _usuarioRepository = usuarioRepository;
         _tableroRepository = tableroRepository;
         _tareasRepository = tareasRepository;
@@ -28,13 +30,13 @@ public class TableroController : Controller
     }
 
     [HttpGet]
-    [AccessAuthorize("Administrador","Operador")]
+    [AccessAuthorize("Administrador", "Operador")]
     public IActionResult Index()
     {
         return View();
     }
     [HttpGet]
-    [AccessAuthorize("Administrador","Operador")]
+    [AccessAuthorize("Administrador", "Operador")]
     public IActionResult GetByUsuario()
     {
         try
@@ -61,21 +63,13 @@ public class TableroController : Controller
             var viewModel = new ParticipacionTablerosViewModel(tablerosPropio, tablerosParticipante);
             return View(viewModel);
         }
-        catch (SqliteException ex)
-        {
-            _logger.LogError($"Error en base de datos en GetByUser: {ex.ToString()}");
-            ViewData["ErrorMessage"] = "Hubo un problema con la base de datos. Intente más tarde.";
-            return View("Error");
-        }
         catch (Exception ex)
         {
-            _logger.LogError($"Error en GetByUser: {ex.ToString()}");
-            ViewData["ErrorMessage"] = "Hubo un problema al obtener los tableros.";
-            return View("Error");
+            return _exceptionHandler.HandleException(ex, "Tablero", nameof(GetByUsuario));
         }
     }
     [HttpGet]
-    [AccessAuthorize("Administrador","Operador")]
+    [AccessAuthorize("Administrador", "Operador")]
     public IActionResult GetAll()
     {
         try
@@ -97,21 +91,13 @@ public class TableroController : Controller
             }).ToList();
             return View(viewModel);
         }
-        catch (SqliteException ex)
-        {
-            _logger.LogError($"Error en base de datos en GetAll: {ex.ToString()}");
-            ViewData["ErrorMessage"] = "Hubo un problema con la base de datos. Intente más tarde.";
-            return View("Error");
-        }
         catch (Exception ex)
         {
-            _logger.LogError($"Error en GetAll: {ex.ToString()}");
-            ViewData["ErrorMessage"] = "Hubo un problema al obtener los tableros.";
-            return View("Error");
+            return _exceptionHandler.HandleException(ex, "Tablero", nameof(GetAll));
         }
     }
     [HttpGet]
-    [AccessAuthorize("Administrador","Operador")]
+    [AccessAuthorize("Administrador", "Operador")]
     public IActionResult GetById(int idTablero)
     {
         try
@@ -127,28 +113,13 @@ public class TableroController : Controller
             };
             return View(viewModel);
         }
-        catch (NoEncontradoException ex)
-        {
-            _logger.LogWarning(ex.ToString());
-            ViewData["ErrorMessage"] = ex.Message;
-            return View("Error");
-        }
-        catch (SqliteException ex)
-        {
-            _logger.LogError($"Error en base de datos en GetById: {ex.ToString()}");
-            ViewData["ErrorMessage"] = "Hubo un problema con la base de datos. Intente más tarde.";
-            return View("Error");
-        }
         catch (Exception ex)
         {
-            _logger.LogError($"Error en GetById: {ex.ToString()}");
-            ViewData["ErrorMessage"] = "Hubo un problema al obtener los tableros.";
-            return View("Error");
+            return _exceptionHandler.HandleException(ex, "Tablero", nameof(GetById));
         }
-
     }
     [HttpGet]
-    [AccessAuthorize("Administrador","Operador")]
+    [AccessAuthorize("Administrador", "Operador")]
     public IActionResult Create()
     {
         var nuevoTablero = new CrearTableroViewModel
@@ -158,7 +129,7 @@ public class TableroController : Controller
         return View(nuevoTablero);
     }
     [HttpPost]
-    [AccessAuthorize("Administrador","Operador")]
+    [AccessAuthorize("Administrador", "Operador")]
     public IActionResult Create(CrearTableroViewModel nuevoTablero)
     {
         if (!ModelState.IsValid)
@@ -176,21 +147,13 @@ public class TableroController : Controller
             _tableroRepository.Create(tablero);
             return RedirectToAction("GetByUsuario");
         }
-        catch (SqliteException ex)
-        {
-            _logger.LogError($"Error en base de datos en Create: {ex.ToString()}");
-            ViewData["ErrorMessage"] = "Hubo un problema con la base de datos. Intente más tarde.";
-            return View("Error");
-        }
         catch (Exception ex)
         {
-            _logger.LogError($"Error en Create: {ex.ToString()}");
-            ViewData["ErrorMessage"] = "Hubo un problema al crear el tablero.";
-            return View("Error");
+            return _exceptionHandler.HandleException(ex, "Tablero", nameof(Create));
         }
     }
     [HttpGet]
-    [AccessAuthorize("Administrador","Operador")]
+    [AccessAuthorize("Administrador", "Operador")]
     public IActionResult Kanban(int id_tablero)
     {
         try
@@ -235,33 +198,14 @@ public class TableroController : Controller
             // Devolver la vista con el ViewModel.
             return View(kanbanViewModel);
         }
-        catch (NoEncontradoException ex)
-        {
-            _logger.LogWarning(ex.Message.ToString());
-            var errorViewModel = new MyErrorViewModel
-            {
-                ErrorMessage = ex.Message,
-                StatusCode = 404,
-                Controller = "Tablero"
-            };
-            return View("Error", errorViewModel).WithStatusCode(404);
-        }
-        catch (SqliteException ex)
-        {
-            _logger.LogError($"Error en base de datos en Kanban: {ex.ToString()}");
-            ViewData["ErrorMessage"] = "Hubo un problema con la base de datos. Intente más tarde.";
-            return View("Error");
-        }
         catch (Exception ex)
         {
-            _logger.LogError($"Error en Kanban: {ex.ToString()}");
-            ViewData["ErrorMessage"] = "Hubo un problema al mostrar el tablero.";
-            return View("Error");
+            return _exceptionHandler.HandleException(ex, "Tablero", nameof(Kanban));
         }
     }
 
     [HttpPost]
-    [AccessAuthorize("Administrador","Operador")]
+    [AccessAuthorize("Administrador", "Operador")]
     public IActionResult Remove(int id_tablero)
     {
         try
@@ -269,29 +213,11 @@ public class TableroController : Controller
             _tableroRepository.Remove(id_tablero);
             return RedirectToAction("GetByUsuario");
         }
-        catch (NoEncontradoException ex)
-        {
-            _logger.LogWarning(ex.ToString());
-            ViewData["ErrorMessage"] = ex.Message;
-            return View("Error");
-        }
-        catch (SqliteException ex)
-        {
-            _logger.LogError($"Error en base de datos en Remove: {ex.ToString()}");
-            ViewData["ErrorMessage"] = "Hubo un problema con la base de datos. Intente más tarde.";
-            return View("Error");
-        }
         catch (Exception ex)
         {
-            _logger.LogError($"Error en Remove: {ex.ToString()}");
-            ViewData["ErrorMessage"] = "Hubo un problema al eliminar el tablero.";
-            return View("Error");
+            return _exceptionHandler.HandleException(ex, "Tablero", nameof(Remove));
         }
     }
-
-
-
-
 
 
     [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]

@@ -12,112 +12,113 @@ namespace TableroRepo
         }
         public Tablero Create(Tablero newTablero)
         {
-            try
+            Tablero tablero = newTablero;
+            string query = "INSERT INTO Tablero (id_usuario_propietario,nombre,descripcion) VALUES (@id_propietario,@nombre,@descripcion)";
+            using (var connection = new SqliteConnection(_ConnectionString))
             {
-                Tablero tablero = newTablero;
-                string query = "INSERT INTO Tablero (id_usuario_propietario,nombre,descripcion) VALUES (@id_propietario,@nombre,@descripcion)";
-                using (var connection = new SqliteConnection(_ConnectionString))
+                connection.Open();
+                using (var command = new SqliteCommand(query, connection))
                 {
-                    connection.Open();
-                    using (var command = new SqliteCommand(query, connection))
-                    {
-                        command.Parameters.AddWithValue("@id_propietario", tablero.Id_usuario_propietario);
-                        command.Parameters.AddWithValue("@nombre", tablero.Nombre);
-                        command.Parameters.AddWithValue("@descripcion", tablero.Descripcion ?? "Sin descripción");
-                        command.ExecuteNonQuery();
-                    }
-                    using (var command = new SqliteCommand("SELECT last_insert_rowid();", connection))
-                    {
-                        tablero.Id_tablero = Convert.ToInt32(command.ExecuteScalar());
-                    }
-                    connection.Close();
+                    command.Parameters.AddWithValue("@id_propietario", tablero.Id_usuario_propietario);
+                    command.Parameters.AddWithValue("@nombre", tablero.Nombre);
+                    command.Parameters.AddWithValue("@descripcion", tablero.Descripcion ?? "Sin descripción");
+                    command.ExecuteNonQuery();
                 }
-                return tablero;
+                using (var command = new SqliteCommand("SELECT last_insert_rowid();", connection))
+                {
+                    tablero.Id_tablero = Convert.ToInt32(command.ExecuteScalar());
+                }
+                connection.Close();
             }
-            catch (Exception ex)
-            {
-                Console.Error.WriteLine($"Error en Create: {ex.ToString()}");
-                throw;
-            }
+            return tablero;
+
         }
         public Tablero Update(Tablero newTablero, int id_tablero)
         {
-            try
+            Tablero tablero = newTablero;
+            string query = "UPDATE Tablero SET id_usuario_propietario=@id_propietario, nombre=@nombre, descripcion=@descripcion WHERE id_tablero=@id_tablero";
+            using (var connection = new SqliteConnection(_ConnectionString))
             {
-                Tablero tablero = newTablero;
-                string query = "UPDATE Tablero SET id_usuario_propietario=@id_propietario, nombre=@nombre, descripcion=@descripcion WHERE id_tablero=@id_tablero";
-                using (var connection = new SqliteConnection(_ConnectionString))
+                connection.Open();
+                using (var command = new SqliteCommand(query, connection))
                 {
-                    connection.Open();
-                    using (var command = new SqliteCommand(query, connection))
-                    {
-                        command.Parameters.AddWithValue("@id_propietario", tablero.Id_usuario_propietario);
-                        command.Parameters.AddWithValue("@nombre", tablero.Nombre);
-                        command.Parameters.AddWithValue("@descripcion", tablero.Descripcion);
-                        command.Parameters.AddWithValue("@id_tablero", id_tablero);
-                        command.ExecuteNonQuery();
-                    }
-                    connection.Close();
+                    command.Parameters.AddWithValue("@id_propietario", tablero.Id_usuario_propietario);
+                    command.Parameters.AddWithValue("@nombre", tablero.Nombre);
+                    command.Parameters.AddWithValue("@descripcion", tablero.Descripcion);
+                    command.Parameters.AddWithValue("@id_tablero", id_tablero);
+                    command.ExecuteNonQuery();
                 }
-                return tablero;
+                connection.Close();
             }
-            catch (Exception ex)
-            {
-                Console.Error.WriteLine($"Error en Updete: {ex.ToString()}");
-                throw;
-            }
+            return tablero;
         }
         public Tablero GetById(int id_tablero)
         {
-            try
+            Tablero tablero = null;
+            string query = "SELECT * FROM Tablero WHERE id_tablero=@id_tablero";
+            using (var connection = new SqliteConnection(_ConnectionString))
             {
-                Tablero tablero = null;
-                string query = "SELECT * FROM Tablero WHERE id_tablero=@id_tablero";
-                using (var connection = new SqliteConnection(_ConnectionString))
+                connection.Open();
+                using (var command = new SqliteCommand(query, connection))
                 {
-                    connection.Open();
-                    using (var command = new SqliteCommand(query, connection))
+                    command.Parameters.AddWithValue("@id_tablero", id_tablero);
+                    using (var reader = command.ExecuteReader())
                     {
-                        command.Parameters.AddWithValue("@id_tablero", id_tablero);
-                        using (var reader = command.ExecuteReader())
+                        if (reader.Read())
                         {
-                            if (reader.Read())
+                            tablero = new Tablero
                             {
-                                tablero = new Tablero
-                                {
-                                    Id_tablero = reader.GetInt32(0),
-                                    Id_usuario_propietario = reader.GetInt32(1),
-                                    Nombre = reader.GetString(2),
-                                    Descripcion = reader.GetString(3)
-                                };
-                            }
+                                Id_tablero = reader.GetInt32(0),
+                                Id_usuario_propietario = reader.GetInt32(1),
+                                Nombre = reader.GetString(2),
+                                Descripcion = reader.GetString(3)
+                            };
                         }
                     }
-                    connection.Close();
                 }
-                if (tablero == null)
-                {
-                    throw new NoEncontradoException("Tablero", id_tablero);
-                }
-                return tablero;
-            
+                connection.Close();
             }
-            catch (Exception ex)
+            if (tablero == null)
             {
-                Console.Error.WriteLine($"Error en GetById: {ex.ToString()}");
-                throw;
+                throw new NoEncontradoException("Tablero", id_tablero);
             }
+            return tablero;
         }
         public List<Tablero> GetAll()
         {
-            try
+            List<Tablero> tableros = new List<Tablero>();
+            string query = "SELECT * FROM Tablero";
+            using (var connection = new SqliteConnection(_ConnectionString))
             {
-                List<Tablero> tableros = new List<Tablero>();
-                string query = "SELECT * FROM Tablero";
-                using (var connection = new SqliteConnection(_ConnectionString))
+                connection.Open();
+                using (var command = new SqliteCommand(query, connection))
+                using (var reader = command.ExecuteReader())
                 {
-                    connection.Open();
-                    using (var command = new SqliteCommand(query, connection))
+                    while (reader.Read())
+                    {
+                        tableros.Add(new Tablero
+                        {
+                            Id_tablero = reader.GetInt32(0),
+                            Id_usuario_propietario = reader.GetInt32(1),
+                            Nombre = reader.GetString(2),
+                            Descripcion = reader.GetString(3)
+                        });
+                    }
+                }
+                connection.Close();
+            }
+            return tableros;
+        }
+        public List<Tablero> GetByUsuario(int id_usuario)
+        {
+            List<Tablero> tableros = new List<Tablero>();
+            string query = "SELECT * FROM Tablero WHERE id_usuario_propietario=@id_usuario";
+            using (var connection = new SqliteConnection(_ConnectionString))
+            {
+                connection.Open();
+                using (var command = new SqliteCommand(query, connection))
+                {
+                    command.Parameters.AddWithValue("@id_usuario", id_usuario);
                     using (var reader = command.ExecuteReader())
                     {
                         while (reader.Read())
@@ -131,115 +132,58 @@ namespace TableroRepo
                             });
                         }
                     }
-                    connection.Close();
                 }
-                return tableros;
+                connection.Close();
             }
-            catch (Exception ex)
-            {
-                Console.Error.WriteLine($"Error en GetAll: {ex.ToString()}");
-                throw;
-            }
-        }
-        public List<Tablero> GetByUsuario(int id_usuario)
-        {
-            try
-            {
-                List<Tablero> tableros = new List<Tablero>();
-                string query = "SELECT * FROM Tablero WHERE id_usuario_propietario=@id_usuario";
-                using (var connection = new SqliteConnection(_ConnectionString))
-                {
-                    connection.Open();
-                    using (var command = new SqliteCommand(query, connection))
-                    {
-                        command.Parameters.AddWithValue("@id_usuario", id_usuario);
-                        using (var reader = command.ExecuteReader())
-                        {
-                            while (reader.Read())
-                            {
-                                tableros.Add(new Tablero
-                                {
-                                    Id_tablero = reader.GetInt32(0),
-                                    Id_usuario_propietario = reader.GetInt32(1),
-                                    Nombre = reader.GetString(2),
-                                    Descripcion = reader.GetString(3)
-                                });
-                            }
-                        }
-                    }
-                    connection.Close();
-                }
-                return tableros;
-            }
-            catch (Exception ex)
-            {
-                Console.Error.WriteLine($"Error en GetByUsuario: {ex.ToString()}");
-                throw;
-            }
+            return tableros;
         }
         public List<Tablero> GetByParticipante(int id_usuario)
         {
-            try
-            {
-                List<Tablero> tableros = new List<Tablero>();
-                string query = @"
+            List<Tablero> tableros = new List<Tablero>();
+            string query = @"
                 SELECT DISTINCT Tb.id_tablero, Tb.id_usuario_propietario, Tb.nombre, Tb.descripcion 
                 FROM Tablero Tb
                 JOIN Tarea Tr ON Tb.id_tablero = Tr.id_tablero
                 WHERE Tr.id_usuario_asignado = @id_usuario AND Tb.id_usuario_propietario != @id_usuario;";
-                using (var connection = new SqliteConnection(_ConnectionString))
+            using (var connection = new SqliteConnection(_ConnectionString))
+            {
+                connection.Open();
+                using (var command = new SqliteCommand(query, connection))
                 {
-                    connection.Open();
-                    using (var command = new SqliteCommand(query, connection))
-                    {
-                        command.Parameters.AddWithValue("@id_usuario", id_usuario);
+                    command.Parameters.AddWithValue("@id_usuario", id_usuario);
 
-                        using (var reader = command.ExecuteReader())
+                    using (var reader = command.ExecuteReader())
+                    {
+                        while (reader.Read())
                         {
-                            while (reader.Read())
+                            tableros.Add(new Tablero
                             {
-                                tableros.Add(new Tablero
-                                {
-                                    Id_tablero = reader.GetInt32(reader.GetOrdinal("id_tablero")),
-                                    Id_usuario_propietario = reader.GetInt32(reader.GetOrdinal("id_usuario_propietario")),
-                                    Nombre = reader.GetString(reader.GetOrdinal("nombre")),
-                                    Descripcion = reader.GetString(reader.GetOrdinal("descripcion"))
-                                });
-                            }
+                                Id_tablero = reader.GetInt32(reader.GetOrdinal("id_tablero")),
+                                Id_usuario_propietario = reader.GetInt32(reader.GetOrdinal("id_usuario_propietario")),
+                                Nombre = reader.GetString(reader.GetOrdinal("nombre")),
+                                Descripcion = reader.GetString(reader.GetOrdinal("descripcion"))
+                            });
                         }
                     }
                 }
-                return tableros;
             }
-            catch (Exception ex)
-            {
-                Console.Error.WriteLine($"Error en GetByParticipante: {ex.ToString()}");
-                throw;
-            }
+            return tableros;
         }
         public bool Remove(int id_tablero)
         {
-            try
+            bool success = false;
+            string query = "DELETE FROM Tablero WHERE id_tablero=@id_tablero";
+            using (var connection = new SqliteConnection(_ConnectionString))
             {
-                bool success = false;
-                string query = "DELETE FROM Tablero WHERE id_tablero=@id_tablero";
-                using (var connection = new SqliteConnection(_ConnectionString))
+                connection.Open();
+                using (var command = new SqliteCommand(query, connection))
                 {
-                    connection.Open();
-                    using (var command = new SqliteCommand(query, connection))
-                    {
-                        command.Parameters.AddWithValue("@id_tablero", id_tablero);
-                        success = command.ExecuteNonQuery() > 0;
-                    }
-                    connection.Close();
+                    command.Parameters.AddWithValue("@id_tablero", id_tablero);
+                    success = command.ExecuteNonQuery() > 0;
                 }
-                return success;
+                connection.Close();
             }
-            catch (Exception ex)
-            {
-                Console.Error.WriteLine($"Error en Remove: {ex.ToString()}");
-                return false;
-            }
+            return success;
         }
     }
 }

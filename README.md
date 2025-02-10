@@ -6,4 +6,7 @@
 # Revisar
 * revisrar permisos
 * revisar codigos devueltos
+
 ✅ Usuario
+❌ Tablero
+❌ Tareas

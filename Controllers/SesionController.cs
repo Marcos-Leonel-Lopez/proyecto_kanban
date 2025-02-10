@@ -10,10 +10,12 @@ using IUsuarioRepo;
 public class SesionController : Controller
 {
     private readonly ILogger<SesionController> _logger;
+    private readonly ExceptionHandlerService _exceptionHandler;
     private readonly IUsuarioRepository _usuarioRepository;
-    public SesionController(ILogger<SesionController> logger, IUsuarioRepository usuarioRepository)
+    public SesionController(ILogger<SesionController> logger, ExceptionHandlerService exceptionHandler, IUsuarioRepository usuarioRepository)
     {
         _logger = logger;
+        _exceptionHandler = exceptionHandler;
         _usuarioRepository = usuarioRepository;
     }
     [HttpGet]
@@ -32,28 +34,18 @@ public class SesionController : Controller
         try
         {
             Usuario usuario = _usuarioRepository.GetUsuario(model.Username, model.Password);
-
-            if (usuario == null)
-            {
-                // Si el usuario no existe o las credenciales son incorrectas, envía un mensaje de error.
-                _logger.LogWarning($"Intento de acceso inválido - Usuario: {model.Username} Clave ingresada: {model.Password}");
-                ViewData["ErrorMessage"] = "El usuario no existe o los datos son incorrectos.";
-                return View("Index", model);// Regresa a la vista Index con el mensaje de error.
-            }
             HttpContext.Session.SetString("nombreUsuario", usuario.Nombre_de_usuario);
             HttpContext.Session.SetInt32("idUsuario", usuario.Id_usuario);
             HttpContext.Session.SetString("rolUsuario", usuario.Rol_usuario.ToString());
-
             HttpContext.Session.SetString("IsAuthenticated", "true");
             HttpContext.Session.SetString("AccessLevel", usuario.Rol_usuario.ToString());
 
-             _logger.LogInformation($"El usuario {usuario.Nombre_de_usuario} ingresó correctamente");
-             
+            _logger.LogInformation($"El usuario {usuario.Nombre_de_usuario} ingresó correctamente");
+
             return RedirectToAction("Index", "Home");
         }
         catch (Exception ex)
         {
-            // Maneja excepciones y muestra un mensaje de error genérico.
             _logger.LogError($"Error en Login: {ex.Message.ToString()}");
             ViewData["ErrorMessage"] = "Hubo un problema al iniciar sesión. Intente nuevamente.";
             return View("Index", model); // Regresa a la vista Index con el mensaje de error.
@@ -70,9 +62,7 @@ public class SesionController : Controller
         }
         catch (Exception ex)
         {
-            _logger.LogError($"Error en Logout: {ex.ToString()}");
-            ViewData["ErrorMessage"] = "Hubo un problema al cerrar sesión.";
-            return View("Error");
+            return _exceptionHandler.HandleException(ex, "Sesion", nameof(Logout));
         }
     }
     [HttpGet]

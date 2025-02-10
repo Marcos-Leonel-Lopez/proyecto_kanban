@@ -1,6 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
-using Microsoft.Extensions.Logging;
 
 public class AccessLevelAuthorizeFilter : IAuthorizationFilter
 {
@@ -40,7 +39,7 @@ public class AccessLevelAuthorizeFilter : IAuthorizationFilter
             return;
         }
 
-        _logger.LogInformation($"Acceso permitido: Usuario {nombreUsuario} accedió a {context.ActionDescriptor.DisplayName}.");
+        //_logger.LogInformation($"Acceso permitido: Usuario {nombreUsuario} accedió a {context.ActionDescriptor.DisplayName}.");
     }
 
     private static bool IsAuthenticated(AuthorizationFilterContext context) => context.HttpContext.Session.GetString("IsAuthenticated") == "true";

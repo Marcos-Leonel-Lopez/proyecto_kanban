@@ -13,13 +13,15 @@ namespace trabajo_final.Controllers;
 public class TareaController : Controller
 {
     private readonly ILogger<TareaController> _logger;
+    private readonly ExceptionHandlerService _exceptionHandler;
     private readonly ITareaRepository _tareaRepository;
     private readonly ITableroRepository _tableroRepository;
     private readonly IColorRepository _colorRepository;
     private readonly IUsuarioRepository _usuarioRepository;
-    public TareaController(ILogger<TareaController> logger, ITareaRepository tareaRepository, ITableroRepository tableroRepository, IColorRepository colorRepository, IUsuarioRepository usuarioRepository)
+    public TareaController(ILogger<TareaController> logger, ExceptionHandlerService exceptionHandler, ITareaRepository tareaRepository, ITableroRepository tableroRepository, IColorRepository colorRepository, IUsuarioRepository usuarioRepository)
     {
         _logger = logger;
+        _exceptionHandler = exceptionHandler;
         _tareaRepository = tareaRepository;
         _tableroRepository = tableroRepository;
         _colorRepository = colorRepository;
@@ -56,23 +58,9 @@ public class TareaController : Controller
             };
             return View(viewModel);
         }
-        catch (NoEncontradoException ex)
-        {
-            _logger.LogWarning(ex.ToString());
-            ViewData["ErrorMessage"] = ex.Message;
-            return View("Error");
-        }
-        catch (SqliteException ex)
-        {
-            _logger.LogError($"Error en base de datos en GetByTablero: {ex.ToString()}");
-            ViewData["ErrorMessage"] = "Hubo un problema con la base de datos. Intente más tarde.";
-            return View("Error");
-        }
         catch (Exception ex)
         {
-            _logger.LogError($"Error en GetByTablero: {ex.ToString()}");
-            ViewData["ErrorMessage"] = "Hubo un problema al obtener las tareas.";
-            return View("Error");
+            return _exceptionHandler.HandleException(ex, "Tarea", nameof(GetByTablero));
         }
     }
 
@@ -122,19 +110,10 @@ public class TareaController : Controller
             _tareaRepository.Create(nuevaTarea, model.NuevaTarea.Id_tablero);
             return RedirectToAction("Create");
         }
-        catch (SqliteException ex)
-        {
-            _logger.LogError($"Error en base de datos en Create: {ex.ToString()}");
-            ViewData["ErrorMessage"] = "Hubo un problema con la base de datos. Intente más tarde.";
-            return View("Error");
-        }
         catch (Exception ex)
         {
-            _logger.LogError($"Error en Create: {ex.ToString()}");
-            ViewData["ErrorMessage"] = "Hubo un problema al crear la tarea.";
-            return View("Error");
+            return _exceptionHandler.HandleException(ex, "Tarea", nameof(Create));
         }
-
     }
     [HttpPost]
     [AccessAuthorize("Administrador","Operador")]
@@ -151,23 +130,9 @@ public class TareaController : Controller
             _tareaRepository.UpdateEstado(tareaAnterior, nuevoEstado);
             return RedirectToAction("Kanban", "Tablero", new { id_tablero = tareaAnterior.Id_tablero });
         }
-        catch (NoEncontradoException ex)
-        {
-            _logger.LogWarning(ex.ToString());
-            ViewData["ErrorMessage"] = ex.Message;
-            return View("Error");
-        }
-        catch (SqliteException ex)
-        {
-            _logger.LogError($"Error en base de datos en ActualizarEstado: {ex.ToString()}");
-            ViewData["ErrorMessage"] = "Hubo un problema con la base de datos. Intente más tarde.";
-            return View("Error");
-        }
         catch (Exception ex)
         {
-            _logger.LogError($"Error en Kanban: {ex.ToString()}");
-            ViewData["ErrorMessage"] = "Hubo un problema al actualizar tarea.";
-            return View("Error");
+            return _exceptionHandler.HandleException(ex, "Tarea", nameof(ActualizarEstado));
         }
     }
     [HttpPost]
@@ -186,23 +151,9 @@ public class TareaController : Controller
             _tareaRepository.UpdateUsuario(tareaAnterior, nuevoUsuario);
             return RedirectToAction("Kanban", "Tablero", new { id_tablero = tareaAnterior.Id_tablero });
         }
-        catch (NoEncontradoException ex)
-        {
-            _logger.LogWarning(ex.ToString());
-            ViewData["ErrorMessage"] = ex.Message;
-            return View("Error");
-        }
-        catch (SqliteException ex)
-        {
-            _logger.LogError($"Error en base de datos en ActualizarUsuario: {ex.ToString()}");
-            ViewData["ErrorMessage"] = "Hubo un problema con la base de datos. Intente más tarde.";
-            return View("Error");
-        }
         catch (Exception ex)
         {
-            _logger.LogError($"Error en Kanban: {ex.ToString()}");
-            ViewData["ErrorMessage"] = "Hubo un problema al actualizar tarea.";
-            return View("Error");
+            return _exceptionHandler.HandleException(ex, "Tarea", nameof(ActualizarUsuario));
         }
     }
     [HttpGet]
@@ -243,23 +194,9 @@ public class TareaController : Controller
 
             return View(viewModel);
         }
-        catch (NoEncontradoException ex)
-        {
-            _logger.LogWarning(ex.ToString());
-            ViewData["ErrorMessage"] = ex.Message;
-            return View("Error");
-        }
-        catch (SqliteException ex)
-        {
-            _logger.LogError($"Error en base de datos en GetByUsuario: {ex}");
-            ViewData["ErrorMessage"] = "Hubo un problema con la base de datos. Intente más tarde.";
-            return View("Error");
-        }
         catch (Exception ex)
         {
-            _logger.LogError($"Error en GetByUsuario: {ex}");
-            ViewData["ErrorMessage"] = "Hubo un problema al obtener las tareas.";
-            return View("Error");
+            return _exceptionHandler.HandleException(ex, "Tarea", nameof(GetByUsuario));
         }
     }
 
