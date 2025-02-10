@@ -8,5 +8,5 @@
 * revisar codigos devueltos
 
 ✅ Usuario
-❌ Tablero
-❌ Tareas
+✅ Tablero
+✅ Tareas

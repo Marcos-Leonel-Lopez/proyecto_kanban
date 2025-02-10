@@ -28,7 +28,7 @@ public class TareaController : Controller
         _usuarioRepository = usuarioRepository;
     }
     [HttpGet]
-    [AccessAuthorize("Administrador","Operador")]
+    [AccessAuthorize("Administrador", "Operador")]
     public IActionResult Index()
     {
         int idUsuario = HttpContext.Session.GetInt32("idUsuario").Value;
@@ -38,7 +38,7 @@ public class TareaController : Controller
         return View();
     }
     [HttpGet]
-    [AccessAuthorize("Administrador","Operador")]
+    [AccessAuthorize("Administrador", "Operador")]
     public IActionResult GetByTablero(int idTablero)
     {
         try
@@ -65,7 +65,7 @@ public class TareaController : Controller
     }
 
     [HttpGet]
-    [AccessAuthorize("Administrador","Operador")]
+    [AccessAuthorize("Administrador", "Operador")]
     public IActionResult Create()
     {
         var tableros = _tableroRepository.GetAll()
@@ -81,7 +81,7 @@ public class TareaController : Controller
         return View(nuevaTarea);
     }
     [HttpPost]
-    [AccessAuthorize("Administrador","Operador")]
+    [AccessAuthorize("Administrador", "Operador")]
     public IActionResult Create(CrearTareaViewModel model)
     {
         if (!ModelState.IsValid)
@@ -116,15 +116,17 @@ public class TareaController : Controller
         }
     }
     [HttpPost]
-    [AccessAuthorize("Administrador","Operador")]
+    [AccessAuthorize("Administrador", "Operador")]
     public IActionResult ActualizarEstado(KanbanViewModel model)
     {
-        if (HttpContext.Session.GetInt32("idUsuario").Value != model.TareaModificada.Id_usuario_asignado)
-        {
-            return RedirectToAction("Index", "Home");
-        }
         try
         {
+            int idUsuarioLogueado = HttpContext.Session.GetInt32("idUsuario").Value;
+            if (idUsuarioLogueado != model.TareaModificada.Id_usuario_asignado)
+            {
+                string nombre = HttpContext.Session.GetString("nombreUsuario");
+                throw new NoAutorizadoException(nombre, idUsuarioLogueado, HttpContext.Request.Path);
+            }
             var tareaAnterior = _tareaRepository.GetById(model.TareaModificada.Id_tarea);
             var nuevoEstado = (int)model.TareaModificada.Id_estado;
             _tareaRepository.UpdateEstado(tareaAnterior, nuevoEstado);
@@ -136,16 +138,18 @@ public class TareaController : Controller
         }
     }
     [HttpPost]
-    [AccessAuthorize("Administrador","Operador")]
+    [AccessAuthorize("Administrador", "Operador")]
     public IActionResult ActualizarUsuario(KanbanViewModel model)
     {
         // verificar que el creador del tablero y el id de quien esta logueado sean iguales
-        if (HttpContext.Session.GetInt32("idUsuario").Value != model.IdPropietario)
-        {
-            return RedirectToAction("Index", "Home");
-        }
         try
         {
+            int idUsuarioLogueado = HttpContext.Session.GetInt32("idUsuario").Value;
+            if (idUsuarioLogueado != model.IdPropietario)
+            {
+                string nombre = HttpContext.Session.GetString("nombreUsuario");
+                throw new NoAutorizadoException(nombre, idUsuarioLogueado, HttpContext.Request.Path);
+            }
             var tareaAnterior = _tareaRepository.GetById(model.TareaModificada.Id_tarea);
             int? nuevoUsuario = model.TareaModificada.Id_usuario_asignado;
             _tareaRepository.UpdateUsuario(tareaAnterior, nuevoUsuario);
@@ -157,7 +161,7 @@ public class TareaController : Controller
         }
     }
     [HttpGet]
-    [AccessAuthorize("Administrador","Operador")]
+    [AccessAuthorize("Administrador", "Operador")]
     public IActionResult GetByUsuario(int idUsuario)
     {
         try
