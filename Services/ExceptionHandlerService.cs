@@ -17,7 +17,7 @@ public class ExceptionHandlerService
     {
         int statusCode;
         string errorMessage;
-        string view = "Error";;
+        string view = "Error";
 
         switch (ex)
         {
@@ -26,7 +26,7 @@ public class ExceptionHandlerService
                 statusCode = 404;
                 errorMessage = notFoundEx.Message;
                 break;
-            
+
             case SqliteException dbEx:
                 _logger.LogError($"Error en base de datos en {controlador}/{accion}: {dbEx.Message}");
                 statusCode = 500;
@@ -58,12 +58,12 @@ public class ExceptionHandlerService
             Controller = controlador
         };
 
-                return new ViewResult
+        return new ViewResult
         {
             ViewName = view,
             ViewData = new ViewDataDictionary(
-                new EmptyModelMetadataProvider(),
-                new ModelStateDictionary())
+        new EmptyModelMetadataProvider(),
+        new ModelStateDictionary())
             {
                 Model = errorViewModel
             },
