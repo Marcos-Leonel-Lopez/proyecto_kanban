@@ -4,12 +4,13 @@
 @model Usuario
 
 <section class="container mt-5">
+    <h3 class="text-center mb-4">Crear un Usuario</h3>
     <div class="card shadow p-4">
-        <h3 class="text-center mb-4">Crear un Usuario</h3>
         <form asp-controller="Usuario" asp-action="Create" method="post" enctype="multipart/form-data">
             <div class="mb-3">
                 <label for="nombre_de_usuario" class="form-label">Nombre</label>
-                <input type="text" id="nombre_de_usuario" name="Nombre_de_usuario" class="form-control" asp-for="Nombre_de_usuario">
+                <input type="text" id="nombre_de_usuario" name="Nombre_de_usuario" class="form-control"
+                    asp-for="Nombre_de_usuario">
                 <span class="text-danger" asp-validation-for="Nombre_de_usuario"></span>
             </div>
             <div class="mb-3">

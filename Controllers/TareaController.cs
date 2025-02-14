@@ -31,45 +31,52 @@ public class TareaController : Controller
     [AccessAuthorize("Administrador", "Operador")]
     public IActionResult Index()
     {
-        int idUsuario = HttpContext.Session.GetInt32("idUsuario").Value;
         var rol = HttpContext.Session.GetString("rolUsuario");
-        ViewData["idUsuarioLogueado"] = idUsuario;
         ViewData["rolUsuario"] = rol;
+        if(rol == MisEnums.RolUsuario.Administrador.ToString()){
+            List<UsuarioViewModel> usaurios = _usuarioRepository.GetAll()
+            .Select( u => new UsuarioViewModel{
+                Id_usuario = u.Id_usuario,
+                Nombre = u.Nombre_de_usuario
+            })
+            .ToList();
+            ViewData["Usuarios"] = usaurios;
+        }
         return View();
     }
-    [HttpGet]
-    [AccessAuthorize("Administrador", "Operador")]
-    public IActionResult GetByTablero(int idTablero)
-    {
-        try
-        {
-            Tablero tablero = _tableroRepository.GetById(idTablero);
-            ListarTablerosUsuarioViewModel viewModel = new ListarTablerosUsuarioViewModel
-            {
-                Id_tablero = tablero.Id_tablero,
-                Nombre = tablero.Nombre,
-                Tareas = _tareaRepository.GetByTablero(idTablero)
-                .Select(tarea => new TareaListaViewModel
-                {
-                    Nombre = tarea.Nombre,
-                    Descripcion = tarea.Descripcion,
-                    Estado = tarea.Id_estado.ToString()
-                }).ToList()
-            };
-            return View(viewModel);
-        }
-        catch (Exception ex)
-        {
-            return _exceptionHandler.HandleException(ex, "Tarea", nameof(GetByTablero));
-        }
-    }
-
+    // [HttpGet]
+    // [AccessAuthorize("Administrador", "Operador")]
+    // public IActionResult GetByTablero(int idTablero)
+    // {
+    //     try
+    //     {
+    //         Tablero tablero = _tableroRepository.GetById(idTablero);
+    //         ListarTablerosUsuarioViewModel viewModel = new ListarTablerosUsuarioViewModel
+    //         {
+    //             Id_tablero = tablero.Id_tablero,
+    //             Nombre = tablero.Nombre,
+    //             Tareas = _tareaRepository.GetByTablero(idTablero)
+    //             .Select(tarea => new TareaListaViewModel
+    //             {
+    //                 Nombre = tarea.Nombre,
+    //                 Descripcion = tarea.Descripcion,
+    //                 Estado = tarea.Id_estado.ToString()
+    //             }).ToList()
+    //         };
+    //         return View(viewModel);
+    //     }
+    //     catch (Exception ex)
+    //     {
+    //         return _exceptionHandler.HandleException(ex, "Tarea", nameof(GetByTablero));
+    //     }
+    // }
     [HttpGet]
     [AccessAuthorize("Administrador", "Operador")]
     public IActionResult Create()
     {
+        int idUsuarioLogueado = HttpContext.Session.GetInt32("idUsuario").Value;
         var tableros = _tableroRepository.GetAll()
-            .Where(tablero => tablero.Id_usuario_propietario == HttpContext.Session.GetInt32("idUsuario").Value)
+            .Where(tablero => tablero.Id_usuario_propietario == idUsuarioLogueado)
             .Select(tablero => new TableroViewModel(tablero, _usuarioRepository.GetById(tablero.Id_usuario_propietario).Nombre_de_usuario))
             .ToList();
 
@@ -77,7 +84,27 @@ public class TareaController : Controller
         var usuarios = _usuarioRepository.GetAll()
             .Select(usuario => new UsuarioViewModel(usuario))
             .ToList();
-        var nuevaTarea = new CrearTareaViewModel(new NuevaTareaViewModel(), tableros, colores, usuarios);
+
+        var tareasCreadas = _tareaRepository.GetAll()
+        .Where(t => tableros.Any(tab => tab.Id_tablero == t.Id_tablero)) // Solo tareas de tableros del usuario
+        .GroupBy(t => t.Id_tablero)
+        .Select(g => new TareasCreadasViewModel
+        {
+            Nombre_tablero = tableros.First(tab => tab.Id_tablero == g.Key).Nombre,
+            Tareas = g.Select(t => new TareaListaViewModel
+            {
+                Nombre = t.Nombre,
+            }).ToList()
+        }).ToList();
+
+        var nuevaTarea = new CrearTareaViewModel
+        {
+            NuevaTarea = new NuevaTareaViewModel(),
+            Tableros = tableros,
+            Colores = colores,
+            Usuarios = usuarios,
+            TareasCreadas = tareasCreadas
+        };
         return View(nuevaTarea);
     }
     [HttpPost]
@@ -166,6 +193,12 @@ public class TareaController : Controller
     {
         try
         {
+            if (HttpContext.Session.GetString("rolUsuario") != MisEnums.RolUsuario.Administrador.ToString() && HttpContext.Session.GetInt32("idUsuario").Value != idUsuario)
+            {
+                int idUsuarioLogueado = HttpContext.Session.GetInt32("idUsuario").Value;
+                string nombre = HttpContext.Session.GetString("nombreUsuario");
+                throw new NoAutorizadoException(nombre, idUsuarioLogueado, HttpContext.Request.Path);
+            }
             _usuarioRepository.GetById(idUsuario);
             List<ListarTablerosUsuarioViewModel> viewModel = new List<ListarTablerosUsuarioViewModel>();
             // Obtener solo las tareas donde el usuario está asignado
@@ -203,7 +236,7 @@ public class TareaController : Controller
             return _exceptionHandler.HandleException(ex, "Tarea", nameof(GetByUsuario));
         }
     }
-    
+
     [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
     public IActionResult Error()
     {

@@ -5,23 +5,16 @@
     <div class="card-body">
         <ul class="list-group list-group-flush">
             <li class="list-group-item">
-                <a asp-controller="Usuario" asp-action="GetAll">Ver lista completa de usuarios</a>
+                <a asp-controller="Usuario" asp-action="GetAll"><i class="me-3 bi bi-list-ul"></i> Ver lista completa de usuarios</a>
             </li>
             <li class="list-group-item">
-                <form asp-controller="Usuario" asp-action="GetById" method="get" class="d-flex align-items-center">
-                    <label for="idUsuario" class="form-label me-2">Ver Usuario por ID:</label>
-                    <input type="text" id="idUsuario" name="idUsuario" class="form-control me-2" required />
-                    <button type="submit" class="btn btn-primary">Ver Usuario</button>
-                </form>
+                <a asp-controller="Usuario" asp-action="Create"><i class="me-3 bi bi-person-plus-fill"></i>Crear un nuevo usuario</a>
             </li>
             <li class="list-group-item">
-                <a asp-controller="Usuario" asp-action="Create">Crear un nuevo usuario</a>
+                <a asp-controller="Usuario" asp-action="ListToEdit"><i class="me-3 bi bi-person-fill-gear"></i>Editar usuarios</a>
             </li>
             <li class="list-group-item">
-                <a asp-controller="Usuario" asp-action="ListToEdit">Editar usuarios</a>
-            </li>
-            <li class="list-group-item">
-                <a asp-controller="Usuario" asp-action="UpdatePass">Cambiar contraseña</a>
+                <a asp-controller="Usuario" asp-action="UpdatePass"><i class="me-3 bi bi-key-fill"></i>Cambiar contraseña</a>
             </li>
         </ul>
     

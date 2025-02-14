@@ -1,6 +1,8 @@
-@{
+@* @{
     ViewData["Title"] = "Eliminar un Usuario";
-    var ocupado = (bool)ViewData["conTareas"];
+    var conTablero = (bool)ViewData["conTablero"];
+    var conTarea = (bool)ViewData["conTareas"];
+
 }
 @model UsuarioViewModel;
 
@@ -26,14 +28,81 @@
     <form asp-action="DeleteConfirmed" method="post">
         <a asp-controller="Usuario" asp-action="ListToEdit" class="btn btn-secondary">CANCELAR</a>
         <input type="hidden" name="idUsuario" value="@Model.Id_usuario" />
-        @if (ocupado)
+        @if (conTablero)
         {
             <button type="submit" class="btn btn-danger" disabled>ELIMINAR</button>
-            <spam>Este usuario no se puede eliminar</spam>
         }
         else
         {
             <button type="submit" class="btn btn-danger">ELIMINAR</button>
         }
     </form>
+    @if (conTablero)
+    {
+        <spam>Este usuario no se puede eliminar, posee al menos un tablero activo.</spam>
+    }
+    @if (!conTablero && conTarea)
+    {
+        <h2>!!Advertencia</h2>
+        <ul>
+            <li>Las tareas pertenecientes a esta usuario quedará sin asignar</li>
+        </ul>
+    }
+</section> *@
+
+@{
+    ViewData["Title"] = "Eliminar un Usuario";
+    var conTablero = (bool)ViewData["conTablero"];
+    var conTarea = (bool)ViewData["conTareas"];
+}
+@model UsuarioViewModel;
+
+<section class="container mt-5">
+    <h3 class="text-center mb-4">Eliminar Usuario</h3>
+    <div class="card shadow p-4">
+
+        <table class="table table-bordered text-center">
+            <thead class=" bg-dark text-white p-2 rounded">
+                <tr>
+                    <th>Id</th>
+                    <th>Nombre</th>
+                    <th>Rol</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>@Model.Id_usuario</td>
+                    <td>@Model.Nombre</td>
+                    <td>@Model.Rol</td>
+                </tr>
+            </tbody>
+        </table>
+       
+
+        <form asp-action="DeleteConfirmed" method="post" class="text-center">
+            <input type="hidden" name="idUsuario" value="@Model.Id_usuario" />
+            <div class="d-flex justify-content-between">
+                <a asp-controller="Usuario" asp-action="ListToEdit" class="btn btn-secondary">Cancelar</a>
+                <button type="submit" class="btn btn-danger" @(conTablero ? "disabled" : "")>Eliminar</button>
+            </div>
+        </form>
+        
+
+        @if (conTablero)
+        {
+            <div class="alert alert-warning mt-3 text-center">
+                <strong>Este usuario no se puede eliminar, posee al menos un tablero activo.</strong>
+            </div>
+        }
+
+        @if (!conTablero && conTarea)
+        {
+            <div class="alert alert-danger mt-3">
+                <h5 class="text-center">¡Advertencia!</h5>
+                <ul>
+                    <li>Las tareas pertenecientes a este usuario quedarán sin asignar.</li>
+                </ul>
+            </div>
+        }
+    </div>
 </section>

@@ -83,6 +83,37 @@ namespace TareaRepo
             }
             return tarea;
         }
+        public List<Tarea> GetAll()
+        {
+            List<Tarea> tareas = new List<Tarea>();
+            string query = "SELECT * FROM Tarea";
+            using (var connection = new SqliteConnection(_ConnectionString))
+            {
+                connection.Open();
+                using (var command = new SqliteCommand(query, connection))
+                {
+                    using (var reader = command.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            Tarea tarea = new Tarea
+                            {
+                                Id_tarea = reader.GetInt32(0),
+                                Id_tablero = reader.GetInt32(1),
+                                Nombre = reader.GetString(2),
+                                Id_estado = (MisEnums.EstadoTarea)reader.GetInt32(3),
+                                Descripcion = reader.IsDBNull(4) ? null : reader.GetString(4),
+                                Id_color = reader.GetInt32(5),
+                                Id_usuario_asignado = reader.IsDBNull(6) ? null : reader.GetInt32(6)
+                            };
+                            tareas.Add(tarea);
+                        }
+                    }
+                }
+                connection.Close();
+            }
+            return tareas;
+        }
         public Tarea GetById(int id_tarea)
         {
             Tarea tarea = null;
@@ -197,6 +228,21 @@ namespace TareaRepo
                 connection.Close();
             }
             return success;
+        }
+
+        public void Unlink(int id_usuario)
+        {
+            string query = "UPDATE Tarea SET id_usuario_asignado = NULL WHERE id_usuario_asignado = @id_usuario;";
+
+            using (var connection = new SqliteConnection(_ConnectionString))
+            {
+                connection.Open();
+                using (var command = new SqliteCommand(query, connection))
+                {
+                    command.Parameters.AddWithValue("@id_usuario", id_usuario);
+                    command.ExecuteNonQuery(); // No necesitamos el resultado
+                }
+            }
         }
     }
 }

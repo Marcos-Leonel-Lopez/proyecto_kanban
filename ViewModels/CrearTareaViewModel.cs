@@ -25,6 +25,10 @@ public class NuevaTareaViewModel
     public int? Id_color { get => id_color; set => id_color = value; }
     public int? Id_usuario_asignado { get => id_usuario_asignado; set => id_usuario_asignado = value; }
 }
+public class TareasCreadasViewModel{
+    public string Nombre_tablero { get; set; }
+    public List<TareaListaViewModel> Tareas { get; set; }
+}
 
 public class CrearTareaViewModel
 {
@@ -32,17 +36,12 @@ public class CrearTareaViewModel
     private List<TableroViewModel> tableros;
     private List<Color> colores;
     private List<UsuarioViewModel> usuarios;
+    private List<TareasCreadasViewModel> tareasCreadas;
     public CrearTareaViewModel() { }
-    public CrearTareaViewModel(NuevaTareaViewModel nuevaTarea, List<TableroViewModel> tableros, List<Color> colores, List<UsuarioViewModel> usuarios)
-    {
-        this.nuevaTarea = nuevaTarea;
-        this.tableros = tableros;
-        this.colores = colores;
-        this.usuarios = usuarios;
-    }
 
     public NuevaTareaViewModel NuevaTarea { get => nuevaTarea; set => nuevaTarea = value; }
     public List<TableroViewModel> Tableros { get => tableros; set => tableros = value; }
     public List<Color> Colores { get => colores; set => colores = value; }
     public List<UsuarioViewModel> Usuarios { get => usuarios; set => usuarios = value; }
+    public List<TareasCreadasViewModel> TareasCreadas { get => tareasCreadas; set => tareasCreadas = value; }
 }

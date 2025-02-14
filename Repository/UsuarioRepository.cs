@@ -1,6 +1,7 @@
 using IUsuarioRepo;
 using Microsoft.Data.Sqlite;
 
+
 namespace UsuarioRepo
 {
     public class UsuarioRepository : IUsuarioRepository

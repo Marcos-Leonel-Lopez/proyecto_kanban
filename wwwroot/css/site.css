@@ -112,3 +112,12 @@ button a, li a{
   white-space: normal;
   word-wrap: break-word;
 }
+
+textarea {
+  height: 62px;
+  resize: none;
+}
+
+.crear-tarea{
+  height: 530px;
+}

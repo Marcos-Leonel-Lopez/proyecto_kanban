@@ -1,0 +1,19 @@
+<div class="card shadow-lg border-0">
+    <div class="card-header bg-success text-white">
+        <h4 class="mb-0">Gestión de Tableros</h4>
+    </div>
+    <div class="card-body">
+        <ul class="list-group list-group-flush">
+            <li class="list-group-item">
+                <a asp-controller="Tablero" asp-action="GetByUsuario"><i class="bi bi-trello me-3"></i>Ver mis
+                    tableros</a>
+            </li>
+            <li class="list-group-item">
+                <a asp-controller="Tablero" asp-action="GetAll"><i class="bi bi-kanban-fill me-3"></i>Ver todos los
+                    tableros</a>
+            </li>
+            <li class="list-group-item">
+                <a asp-controller="Tablero" asp-action="Create"><i class="bi bi-plus-circle-fill me-3"></i>Crear un
+                    nuevo tablero</a>
+            </li>
+        </ul>

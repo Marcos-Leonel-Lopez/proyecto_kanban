@@ -1,4 +1,4 @@
-@{
+@* @{
     ViewData["Title"] = "Todos los Usuarios";
 }
 @model List<UsuarioViewModel>;
@@ -49,4 +49,61 @@
 
     <!-- Botón de regreso -->
     <a href="@Url.Action("Index", "Usuario")" class="btn btn-secondary mt-4">Volver</a>
+</section> *@
+
+@{
+    ViewData["Title"] = "Todos los Usuarios";
+}
+@model List<UsuarioViewModel>;
+
+<section class="container mt-5">
+    <div class="card shadow p-4">
+        <h2 class="text-center mb-4">Listado de Usuarios</h2>
+
+        <section class="row bg-dark text-white p-3 rounded text-center">
+            <section class="col-2 fw-bold">ID</section>
+            <section class="col-3 fw-bold">Nombre</section>
+            <section class="col-3 fw-bold">Rol</section>
+            <section class="col-4 fw-bold">Acciones</section>
+        </section>
+
+        @if (Model != null && Model.Any())
+        {
+            @foreach (var usuario in Model)
+            {
+                <section class="row bg-light p-3 border-bottom d-flex align-items-center text-center">
+                    <section class="col-2">@usuario.Id_usuario</section>
+                    <section class="col-3">@usuario.Nombre</section>
+                    <section class="col-3">@usuario.Rol</section>
+                    <section class="col-4 d-flex justify-content-evenly">
+                        <form asp-action="EditarPerfil" method="get">
+                            <input type="hidden" name="idUsuario" value="@usuario.Id_usuario" />
+                            <button type="submit" class="btn btn-primary btn-sm d-flex align-items-center px-3">
+                                <i class="bi bi-pencil me-1"></i>
+                                <span>Actualizar</span>
+                            </button>
+                        </form>
+                        <form asp-action="Delete" method="get">
+                            <input type="hidden" name="idUsuario" value="@usuario.Id_usuario" />
+                            <button type="submit" class="btn btn-danger btn-sm d-flex align-items-center px-3">
+                                <i class="bi bi-trash me-1"></i>
+                                <span>Eliminar</span>
+                            </button>
+                        </form>
+                    </section>
+                </section>
+            }
+        }
+        else
+        {
+            <section class="row bg-light p-3 border-bottom text-center">
+                <section class="col-12 text-muted"><em>No hay usuarios disponibles</em></section>
+            </section>
+        }
+
+        <!-- Botón de regreso -->
+        <div class="card-footer text-end">
+            <a href="@Url.Action("Index", "Usuario")" class="btn btn-secondary text-white w-100">Volver</a>
+        </div>
+    </div>
 </section>

@@ -6,68 +6,95 @@
 
 <section class="container mt-4">
     <h2 class="text-center mb-4">Crear una Tarea</h2>
-    <div class="card shadow">
-        <div class="card-body">
-            <form asp-controller="Tarea" asp-action="Create" method="post" enctype="multipart/form-data"
-                class="d-flex flex-column">
-                <!-- Campo para el nombre -->
-                <section class="col-md-6 mb-3">
-                    <label for="nombre" class="form-label fw-bold">Nombre</label>
-                    <input type="text" id="nombre" class="form-control" asp-for="NuevaTarea.Nombre" />
-                    <span class="text-danger" asp-validation-for="NuevaTarea.Nombre"></span>
-                </section>
-                <!-- Campo para la descripción -->
-                <section class="col-md-6 mb-3">
-                    <label for="descripcion" class="form-label fw-bold">Descripción</label>
-                    <textarea id="descripcion" class="form-control h-200" asp-for="NuevaTarea.Descripcion"></textarea>
-                    <span class="text-danger" asp-validation-for="NuevaTarea.Descripcion"></span>
-                </section>
+    <div class="row">
+        <!-- Formulario de creación -->
+        <div class="col-md-6">
+            <div class="card shadow crear-tarea">
+                <div class="card-body">
+                    <form asp-controller="Tarea" asp-action="Create" method="post" enctype="multipart/form-data"
+                        class="d-flex flex-column ">
+                        <!-- Campo para el nombre -->
+                        <section class="col-md-12 mb-3">
+                            <label for="nombre" class="form-label fw-bold">Nombre</label>
+                            <input type="text" id="nombre" class="form-control" asp-for="NuevaTarea.Nombre" />
+                            <span class="text-danger" asp-validation-for="NuevaTarea.Nombre"></span>
+                        </section>
+                        <!-- Campo para la descripción -->
+                        <section class="col-md-12 mb-3">
+                            <label for="descripcion" class="form-label fw-bold">Descripción</label>
+                            <textarea id="descripcion" class="form-control h-200"
+                                asp-for="NuevaTarea.Descripcion"></textarea>
+                            <span class="text-danger" asp-validation-for="NuevaTarea.Descripcion"></span>
+                        </section>
+                        <!-- Selector para el color -->
+                        <section class="col-md-12 mb-3">
+                            <label for="Id_color" class="form-label fw-bold">Color</label>
+                            <select id="Id_color" class="form-select" asp-for="NuevaTarea.Id_color">
+                                @foreach (var color in Model.Colores)
+                                {
+                                    <option value="@color.Id_color">@color.Nombre</option>
+                                }
+                            </select>
+                            <span class="text-danger" asp-validation-for="NuevaTarea.Id_color"></span>
+                        </section>
+                        <!-- Selector para el tablero -->
+                        <section class="col-md-12 mb-3">
+                            <label for="Id_tablero" class="form-label fw-bold">Tablero</label>
+                            <select id="Id_tablero" class="form-select" asp-for="NuevaTarea.Id_tablero">
+                                <option value="">Seleccione un Tablero</option>
+                                @foreach (var tablero in Model.Tableros)
+                                {
+                                    <option value="@tablero.Id_tablero">@tablero.Nombre</option>
+                                }
+                            </select>
+                            <span class="text-danger" asp-validation-for="NuevaTarea.Id_tablero"></span>
+                        </section>
+                        <!-- Selector para el usuario -->
+                        <section class="col-md-12 mb-3">
+                            <label for="Id_usuario_asignado" class="form-label fw-bold">Usuario</label>
+                            <select id="Id_usuario_asignado" class="form-select"
+                                asp-for="NuevaTarea.Id_usuario_asignado">
+                                <option value="">Seleccione un Usuario</option>
+                                @foreach (var usuario in Model.Usuarios)
+                                {
+                                    <option value="@usuario.Id_usuario">@usuario.Nombre</option>
+                                }
+                            </select>
+                            <span class="text-danger" asp-validation-for="NuevaTarea.Id_usuario_asignado"></span>
+                        </section>
+                        <!-- Botones -->
+                        <section class="col-md-12 mb-3">
+                            <a asp-controller="Tarea" asp-action="Index" class="text-white text-decoration-none me-1">
+                                <button type="button" class="btn btn-secondary">Volver</button>
+                            </a>
+                            <button type="submit" class="btn btn-primary ms-1">CREAR</button>
+                        </section>
+                    </form>
+                </div>
+            </div>
+        </div>
 
-                <!-- Selector para el color -->
-                <section class="col-md-6 mb-3">
-                    <label for="Id_color" class="form-label fw-bold">Color</label>
-                    <select id="Id_color" class="form-select" asp-for="NuevaTarea.Id_color">
-                        @foreach (var color in Model.Colores)
-                        {
-                            <option value="@color.Id_color">@color.Nombre</option>
-                        }
-                    </select>
-                    <span class="text-danger" asp-validation-for="NuevaTarea.Id_color"></span>
-                </section>
-                <!-- Selector para el tablero -->
-                <section class="col-md-6 mb-3">
-                    <label for="Id_tablero" class="form-label fw-bold">Tablero</label>
-                    <select id="Id_tablero" class="form-select" asp-for="NuevaTarea.Id_tablero">
-                        <option value="">Seleccione un Tablero</option>
-                        @foreach (var tablero in Model.Tableros)
-                        {
-                            <option value="@tablero.Id_tablero">@tablero.Nombre</option>
-                        }
-                    </select>
-                    <span class="text-danger" asp-validation-for="NuevaTarea.Id_tablero"></span>
-                </section>
-
-                <!-- Selector para el usuario -->
-                <section class="col-md-6 mb-3">
-                    <label for="Id_usuario_asignado" class="form-label fw-bold">Usuario</label>
-                    <select id="Id_usuario_asignado" class="form-select" asp-for="NuevaTarea.Id_usuario_asignado">
-                        <option value="">Seleccione un Usuario</option>
-                        @foreach (var usuario in Model.Usuarios)
-                        {
-                            <option value="@usuario.Id_usuario">@usuario.Nombre</option>
-                        }
-                    </select>
-                    <span class="text-danger" asp-validation-for="NuevaTarea.Id_usuario_asignado"></span>
-                </section>
-                <!-- Botones -->
-                <section class="col-md-6 mb-3">
-                    <a asp-controller="Tarea" asp-action="Index" class="text-white text-decoration-none me-1">
-                        <button type="button" class="btn btn-secondary ">Volver</button>
-                    </a>
-                    <button type="submit" class="btn btn-primary ms-1">CREAR</button>
-                </section>
-
-            </form>
+        <!-- Sección de lista de tareas -->
+        <div class="col-md-6">
+            <div class="card shadow crear-tarea" style="overflow-y: auto;">
+                <div class="card-header bg-dark text-white">
+                    <h5 class="mb-0">Tareas recientes</h5>
+                </div>
+                <div class="card-body">
+                    @foreach (var tablero in Model.TareasCreadas)
+                    {
+                        <div class="mb-3">
+                            <h6 class="fw-bold">@tablero.Nombre_tablero</h6>
+                            <ul class="list-group">
+                                @foreach (var tarea in tablero.Tareas)
+                                {
+                                    <li class="list-group-item">@tarea.Nombre</li>
+                                }
+                            </ul>
+                        </div>
+                    }
+                </div>
+            </div>
         </div>
     </div>
 </section>

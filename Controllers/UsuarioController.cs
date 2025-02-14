@@ -5,6 +5,9 @@ using Microsoft.AspNetCore.Session; //Agregado
 using IUsuarioRepo;
 using Microsoft.Data.Sqlite;
 using Microsoft.AspNetCore.Mvc.Filters;
+using ITableroRepo;
+using ITareaRepo;
+
 
 namespace trabajo_final.Controllers;
 
@@ -13,11 +16,16 @@ public class UsuarioController : Controller
     private readonly ILogger<UsuarioController> _logger;
     private readonly ExceptionHandlerService _exceptionHandler;
     private readonly IUsuarioRepository _usuarioRepository;
-    public UsuarioController(ILogger<UsuarioController> logger, ExceptionHandlerService exceptionHandler, IUsuarioRepository usuarioRepository)
+    private readonly ITableroRepository _tableroRepository;
+    private readonly ITareaRepository _tareaRepository;
+   
+    public UsuarioController(ILogger<UsuarioController> logger, ExceptionHandlerService exceptionHandler, IUsuarioRepository usuarioRepository, ITableroRepository tableroRepository, ITareaRepository tareaRepository)
     {
         _logger = logger;
         _exceptionHandler = exceptionHandler;
         _usuarioRepository = usuarioRepository;
+        _tableroRepository = tableroRepository;
+        _tareaRepository = tareaRepository;
     }
 
     [HttpGet]
@@ -131,7 +139,8 @@ public class UsuarioController : Controller
                 Nombre = usuario.Nombre_de_usuario,
                 Rol = usuario.Rol_usuario.ToString()
             };
-            ViewData["conTareas"] = _usuarioRepository.UserBusy(idUsuario);
+            ViewData["conTareas"] = _tareaRepository.GetByUsuario(idUsuario).Count > 0;
+            ViewData["conTablero"] = _tableroRepository.GetByUsuario(idUsuario).Count > 0;
             return View(viewModel);
         }
         catch (Exception ex)
@@ -145,7 +154,7 @@ public class UsuarioController : Controller
     {
         try
         {
-            var usuario = _usuarioRepository.GetById(idUsuario);
+            _tareaRepository.Unlink(idUsuario);
             _usuarioRepository.Remove(idUsuario);
             return RedirectToAction("ListToEdit");
         }

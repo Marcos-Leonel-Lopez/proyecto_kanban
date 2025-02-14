@@ -33,6 +33,7 @@ public class TableroController : Controller
     [AccessAuthorize("Administrador", "Operador")]
     public IActionResult Index()
     {
+        ViewData["rolUsuario"] = HttpContext.Session.GetString("rolUsuario");
         return View();
     }
     [HttpGet]
@@ -69,7 +70,7 @@ public class TableroController : Controller
         }
     }
     [HttpGet]
-    [AccessAuthorize("Administrador", "Operador")]
+    [AccessAuthorize("Administrador")]
     public IActionResult GetAll()
     {
         try
@@ -160,6 +161,15 @@ public class TableroController : Controller
         {
             // Obtener el ID del usuario logueado.
             var idUsuarioLogueado = (int)HttpContext.Session.GetInt32("idUsuario");
+            // Determina si es Propietario
+            var idPropietario = _tableroRepository.GetById(id_tablero).Id_usuario_propietario;
+            // Determinar si el usuario logueado es propietario del tablero.
+            var esPropietario = idPropietario == idUsuarioLogueado;
+            if (HttpContext.Session.GetString("rolUsuario") != MisEnums.RolUsuario.Administrador.ToString() && !esPropietario)
+            {
+                string nombre = HttpContext.Session.GetString("nombreUsuario");
+                throw new NoAutorizadoException(nombre, idUsuarioLogueado, HttpContext.Request.Path);
+            }
             // Obtener los colores disponibles.
             var colores = _colorRepository.GetAll();
             // Mapear las tareas a TareaEnTableroViewModel.
@@ -173,10 +183,8 @@ public class TableroController : Controller
                     Id_usuario_asignado = tarea.Id_usuario_asignado,
                     Codigo_color = colores.FirstOrDefault(c => c.Id_color == tarea.Id_color)?.Hex ?? "#FFFFFF"
                 }).ToList();
-            // Propietario
-            var idPropietario = _tableroRepository.GetById(id_tablero).Id_usuario_propietario;
-            // Determinar si el usuario logueado es propietario del tablero.
-            var esPropietario = idPropietario == idUsuarioLogueado;
+
+
             // Obtengo los usuarios para asignar tareas.
             var usuarios = _usuarioRepository.GetAll()
                 .Select(u => new UsuarioViewModel
