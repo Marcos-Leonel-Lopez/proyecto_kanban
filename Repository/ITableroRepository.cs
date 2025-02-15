@@ -8,5 +8,6 @@ namespace ITableroRepo
         List<Tablero> GetByUsuario(int id_usuario);
         List<Tablero> GetByParticipante(int id_usuario);
         bool Remove(int id_tablero);
+        bool Participa(int id_usuario, int id_tablero);
     }
 }

@@ -165,7 +165,9 @@ public class TableroController : Controller
             var idPropietario = _tableroRepository.GetById(id_tablero).Id_usuario_propietario;
             // Determinar si el usuario logueado es propietario del tablero.
             var esPropietario = idPropietario == idUsuarioLogueado;
-            if (HttpContext.Session.GetString("rolUsuario") != MisEnums.RolUsuario.Administrador.ToString() && !esPropietario)
+            // Determinar si es participante
+            var esParticipante = _tableroRepository.Participa(idUsuarioLogueado,id_tablero);
+            if (HttpContext.Session.GetString("rolUsuario") != MisEnums.RolUsuario.Administrador.ToString() && !esPropietario && !esParticipante)
             {
                 string nombre = HttpContext.Session.GetString("nombreUsuario");
                 throw new NoAutorizadoException(nombre, idUsuarioLogueado, HttpContext.Request.Path);

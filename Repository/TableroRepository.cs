@@ -185,5 +185,22 @@ namespace TableroRepo
             }
             return success;
         }
+
+        public bool Participa(int id_usuario, int id_tablero){
+            int count = 0;
+            string query = "SELECT COUNT(1) FROM Tarea WHERE id_tablero = @id_Tb AND id_usuario_asignado = @id_U;";
+            using (var connection = new SqliteConnection(_ConnectionString))
+            {
+                connection.Open();
+                 using (var command = new SqliteCommand(query, connection))
+                {
+                    command.Parameters.AddWithValue("@id_Tb", id_tablero);
+                    command.Parameters.AddWithValue("@id_U", id_usuario);
+                    count = Convert.ToInt32(command.ExecuteScalar());
+                }
+                connection.Close();
+            }
+            return count > 0;
+        }
     }
 }
