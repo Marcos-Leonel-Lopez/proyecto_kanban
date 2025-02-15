@@ -1,10 +1,35 @@
 @{
     ViewData["Title"] = "Kanban";
     int idUsuarioLogueado = (int)ViewData["idUsuarioLogueado"];
+    int tableroActual = (int)ViewData["idTablero"];
 }
 @model KanbanViewModel
 
 <section class="container-fluid tablero-kanban">
+    <section>
+        <!-- Botón para agregar nueva tarea -->
+        <button type="button" class="btn btn-success mb-3" data-bs-toggle="modal" data-bs-target="#crearTareaModal">
+            Agregar una Nueva Tarea
+        </button>
+
+        <!-- Modal para crear una nueva tarea -->
+        <div class="modal fade" id="crearTareaModal" tabindex="-1" aria-labelledby="crearTareaModalLabel"
+            aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="crearTareaModalLabel">Crear Nueva Tarea</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                    </div>
+                    <div class="modal-body">
+                        @await Component.InvokeAsync("TareaCrear", new { model = Model.NuevaTarea, tableroId =
+                        ViewData["idTablero"] })
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
     <section class="d-flex overflow-auto" style="white-space: nowrap;"> <!-- Scroll horizontal -->
         @foreach (var estado in Enum.GetValues(typeof(MisEnums.EstadoTarea)))
         {
@@ -18,34 +43,35 @@
                                 style="background-color: @tarea.Codigo_color"> @* color a la tarea *@
                                 <!-- Cabecera  -->
                                 @await Component.InvokeAsync("TareaCabecera", new
-                                    {
-                                        propietario = Model.EsPropietario,
-                                        id_usuario_asignado = tarea.Id_usuario_asignado,
-                                        usuarios = Model.Usuarios
-                                    })
-                                <!-- Cuerpo  -->
-                                <h5 class="card-title">@tarea.Nombre</h5>
-                                <p class="card-text overflow-auto">@tarea.Descripcion</p>
-                                <!-- Botones  -->
-                                <section class="d-flex justify-content-between">
-                                    <!-- Botón para editar tarea -->
-                                    @await Component.InvokeAsync("TareaEditarEstado", new
-                                        {
-                                            tareaActual = tarea,
-                                            idUsuarioLogueadoActual = idUsuarioLogueado
-                                        })
-                                    <!-- Botón para reasignar tarea -->
-                                    @await Component.InvokeAsync("TareaReasignar", new
-                                        {
-                                            tareaActual = tarea,
-                                            esPropietario = Model.EsPropietario,
-                                            usuarios = Model.Usuarios,
-                                            idPropietario = Model.IdPropietario
-                                        })
-                                </section>
-                            </section>
+                                {
+                                    propietario = Model.EsPropietario,
+                                    id_usuario_asignado = tarea.Id_usuario_asignado,
+                                    usuarios = Model.Usuarios,
+                                    id_tarea = tarea.Id_tarea
+                                })
+                        <!-- Cuerpo  -->
+                        <h5 class="card-title">@tarea.Nombre</h5>
+                        <p class="card-text overflow-auto">@tarea.Descripcion</p>
+                        <!-- Botones  -->
+                        <section class="d-flex justify-content-between">
+                            <!-- Botón para editar tarea -->
+                            @await Component.InvokeAsync("TareaEditarEstado", new
+                            {
+                                tareaActual = tarea,
+                                idUsuarioLogueadoActual = idUsuarioLogueado
+                            })
+                            <!-- Botón para reasignar tarea -->
+                            @await Component.InvokeAsync("TareaReasignar", new
+                            {
+                                tareaActual = tarea,
+                                esPropietario = Model.EsPropietario,
+                                usuarios = Model.Usuarios,
+                                idPropietario = Model.IdPropietario
+                            })
                         </section>
-                    }
+                    </section>
+                </section>
+                                }
                 </section>
             </section>
         }

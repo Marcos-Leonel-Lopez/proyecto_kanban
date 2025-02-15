@@ -192,17 +192,30 @@ public class TableroController : Controller
                     Id_usuario = u.Id_usuario,
                     Nombre = u.Nombre_de_usuario
                 }).ToList();
+
+            var nuevaTarea = new CrearTareaViewModel
+            {
+                NuevaTarea = new NuevaTareaViewModel(),
+                Colores = colores,
+                Usuarios = usuarios
+            };
+
+
+
+
             // Crear el ViewModel del Kanban.
             var kanbanViewModel = new KanbanViewModel
             {
                 Tareas = tareasViewModel,
-                TareaModificada = new TareaEnTableroViewModel(), // Inicializamos una tarea vacía.
+                //TareaModificada = new TareaEnTableroViewModel(), // Inicializamos una tarea vacía.
                 EsPropietario = esPropietario,
                 Usuarios = usuarios,
-                IdPropietario = idPropietario
+                IdPropietario = idPropietario,
+                NuevaTarea = nuevaTarea
             };
             // Pasar el ID del usuario logueado a la vista.
             ViewData["idUsuarioLogueado"] = idUsuarioLogueado;
+            ViewData["idTablero"] = id_tablero;
             // Devolver la vista con el ViewModel.
             return View(kanbanViewModel);
         }

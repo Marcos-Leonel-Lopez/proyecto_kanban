@@ -1,0 +1,67 @@
+@model CrearTareaViewModel
+
+<form asp-controller="Tarea" asp-action="Create" method="post" enctype="multipart/form-data"
+    class="d-flex flex-column">
+    <section class="col-md-12 mb-3">
+        <label for="nombre" class="form-label fw-bold">Nombre</label>
+        <input type="text" id="nombre" class="form-control" asp-for="NuevaTarea.Nombre" />
+        <span class="text-danger" asp-validation-for="NuevaTarea.Nombre"></span>
+    </section>
+    <section class="col-md-12 mb-3">
+        <label for="descripcion" class="form-label fw-bold">Descripción</label>
+        <textarea id="descripcion" class="form-control h-200" asp-for="NuevaTarea.Descripcion"></textarea>
+        <span class="text-danger" asp-validation-for="NuevaTarea.Descripcion"></span>
+    </section>
+    <section class="col-md-12 mb-3">
+        <label for="Id_color" class="form-label fw-bold">Color</label>
+        <select id="Id_color" class="form-select" asp-for="NuevaTarea.Id_color">
+            @foreach (var color in Model.Colores)
+            {
+                <option value="@color.Id_color">@color.Nombre</option>
+            }
+        </select>
+        <span class="text-danger" asp-validation-for="NuevaTarea.Id_color"></span>
+    </section>
+    <section class="col-md-12 mb-3">
+    <label for="Id_tablero" class="form-label fw-bold">Tablero</label>
+    @if (Model.Tableros.Any())
+    {
+        <select id="Id_tablero" class="form-select" asp-for="NuevaTarea.Id_tablero">
+            <option value="">Seleccione un Tablero</option>
+            @foreach (var tablero in Model.Tableros)
+            {
+                <option value="@tablero.Id_tablero">@tablero.Nombre</option>
+            }
+        </select>
+    }
+    else
+    {
+        <!-- Campo visible solo para mostrar el valor -->
+        <input type="text" class="form-control" value="@Model.NuevaTarea.Id_tablero" readonly />
+        <!-- Campo oculto para enviar el ID del tablero -->
+        <input type="hidden" asp-for="NuevaTarea.Id_tablero" value="@Model.NuevaTarea.Id_tablero" />
+        
+        <input type="hidden" name="returnUrl" value="@Context.Request.Path@Context.Request.QueryString" />
+
+    }
+    <span class="text-danger" asp-validation-for="NuevaTarea.Id_tablero"></span>
+</section>
+
+    <section class="col-md-12 mb-3">
+        <label for="Id_usuario_asignado" class="form-label fw-bold">Usuario</label>
+        <select id="Id_usuario_asignado" class="form-select" asp-for="NuevaTarea.Id_usuario_asignado">
+            <option value="">Seleccione un Usuario</option>
+            @foreach (var usuario in Model.Usuarios)
+            {
+                <option value="@usuario.Id_usuario">@usuario.Nombre</option>
+            }
+        </select>
+        <span class="text-danger" asp-validation-for="NuevaTarea.Id_usuario_asignado"></span>
+    </section>
+    <section class="col-md-12 mb-3">
+        <a asp-controller="Tarea" asp-action="Index" class="text-white text-decoration-none me-1">
+            <button type="button" class="btn btn-secondary">Volver</button>
+        </a>
+        <button type="submit" class="btn btn-primary ms-1">CREAR</button>
+    </section>
+</form>

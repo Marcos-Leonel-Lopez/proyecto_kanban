@@ -1,6 +1,7 @@
 @model TareaCabeceraViewModel
 @if (Model.EsPropietario == true)
 {
+    <section class="d-flex justify-content-between align-items-center flex-wrap">
     @if (Model.IdUsuarioAsignado != null)
     {
         <h6 class="card-subtitle mb-2 text-muted"> Asignado a: @Model.Usuarios.FirstOrDefault(u => u.Id_usuario == Model.IdUsuarioAsignado)?.Nombre </h6>
@@ -9,4 +10,8 @@
     {
         <span class="badge bg-warning text-dark">Sin asignar</span>
     }
+        <button type="button" class="btn btn-danger">
+            <a asp-controller="Tarea" asp-action="Index" ><i class="bi bi-trash"></i></a>
+        </button>
+    </section>
 }

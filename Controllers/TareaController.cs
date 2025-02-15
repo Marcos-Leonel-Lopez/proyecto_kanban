@@ -33,9 +33,11 @@ public class TareaController : Controller
     {
         var rol = HttpContext.Session.GetString("rolUsuario");
         ViewData["rolUsuario"] = rol;
-        if(rol == MisEnums.RolUsuario.Administrador.ToString()){
+        if (rol == MisEnums.RolUsuario.Administrador.ToString())
+        {
             List<UsuarioViewModel> usaurios = _usuarioRepository.GetAll()
-            .Select( u => new UsuarioViewModel{
+            .Select(u => new UsuarioViewModel
+            {
                 Id_usuario = u.Id_usuario,
                 Nombre = u.Nombre_de_usuario
             })
@@ -109,7 +111,7 @@ public class TareaController : Controller
     }
     [HttpPost]
     [AccessAuthorize("Administrador", "Operador")]
-    public IActionResult Create(CrearTareaViewModel model)
+    public IActionResult Create(CrearTareaViewModel model, string returnUrl = null)
     {
         if (!ModelState.IsValid)
         {
@@ -135,6 +137,12 @@ public class TareaController : Controller
                 Id_usuario_asignado = model.NuevaTarea.Id_usuario_asignado
             };
             _tareaRepository.Create(nuevaTarea, model.NuevaTarea.Id_tablero);
+
+            // Redirigir a la URL de origen si está definida, sino a Create
+            if (!string.IsNullOrEmpty(returnUrl))
+            {
+                return Redirect(returnUrl);
+            }
             return RedirectToAction("Create");
         }
         catch (Exception ex)
