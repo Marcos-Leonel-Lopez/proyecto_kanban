@@ -10,8 +10,10 @@
     {
         <span class="badge bg-warning text-dark">Sin asignar</span>
     }
-        <button type="button" class="btn btn-danger">
-            <a asp-controller="Tarea" asp-action="Index" ><i class="bi bi-trash"></i></a>
-        </button>
+        <a asp-controller="Tarea" asp-action="Delete" asp-route-idTarea="@Model.IdTarea" class="btn btn-outline-danger btn-sm">
+            @* <button><i class="bi bi-trash"></i></button> *@
+            <i class="bi bi-trash-fill danger"></i>
+        </a>
+                
     </section>
 }

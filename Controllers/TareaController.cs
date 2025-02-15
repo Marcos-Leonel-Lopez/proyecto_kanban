@@ -244,6 +244,28 @@ public class TareaController : Controller
             return _exceptionHandler.HandleException(ex, "Tarea", nameof(GetByUsuario));
         }
     }
+    [HttpGet]
+    [AccessAuthorize("Administrador", "Operador")]
+    public IActionResult Delete(int idTarea)
+    {
+        try
+        {
+            Tarea tarea = _tareaRepository.GetById(idTarea);
+            Tablero tablero = _tableroRepository.GetById(tarea.Id_tablero);
+            int idUsuarioLogueado = HttpContext.Session.GetInt32("idUsuario").Value;
+            if (idUsuarioLogueado != tablero.Id_usuario_propietario)
+            {
+                string nombre = HttpContext.Session.GetString("nombreUsuario");
+                throw new NoAutorizadoException(nombre, idUsuarioLogueado, HttpContext.Request.Path);
+            }
+            _tareaRepository.Remove(idTarea);
+            return RedirectToAction("Kanban", "Tablero", new { id_tablero = tablero.Id_tablero });
+        }
+        catch (Exception ex)
+        {
+            return _exceptionHandler.HandleException(ex, "Tarea", nameof(Delete));
+        }
+    }
 
     [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
     public IActionResult Error()

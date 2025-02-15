@@ -7,11 +7,13 @@
 
 <section class="container-fluid tablero-kanban">
     <section>
-        <!-- Botón para agregar nueva tarea -->
-        <button type="button" class="btn btn-success mb-3" data-bs-toggle="modal" data-bs-target="#crearTareaModal">
-            Agregar una Nueva Tarea
-        </button>
-
+        @if(Model.EsPropietario){
+            <!-- Botón para agregar nueva tarea, solo si es propietario -->
+            <button type="button" class="btn btn-dark text-white mb-3" data-bs-toggle="modal" data-bs-target="#crearTareaModal">
+                <strong> Agregar una Nueva Tarea </strong>
+            </button>
+        }
+        
         <!-- Modal para crear una nueva tarea -->
         <div class="modal fade" id="crearTareaModal" tabindex="-1" aria-labelledby="crearTareaModalLabel"
             aria-hidden="true">
@@ -22,8 +24,11 @@
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
                     </div>
                     <div class="modal-body">
-                        @await Component.InvokeAsync("TareaCrear", new { model = Model.NuevaTarea, tableroId =
-                        ViewData["idTablero"] })
+                        @await Component.InvokeAsync("TareaCrear", new
+                        {
+                            model = Model.NuevaTarea,
+                            tableroId = ViewData["idTablero"]
+                        })
                     </div>
                 </div>
             </div>

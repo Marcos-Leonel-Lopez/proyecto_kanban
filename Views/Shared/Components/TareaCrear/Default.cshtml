@@ -1,7 +1,6 @@
 @model CrearTareaViewModel
 
-<form asp-controller="Tarea" asp-action="Create" method="post" enctype="multipart/form-data"
-    class="d-flex flex-column">
+<form asp-controller="Tarea" asp-action="Create" method="post" enctype="multipart/form-data" class="d-flex flex-column">
     <section class="col-md-12 mb-3">
         <label for="nombre" class="form-label fw-bold">Nombre</label>
         <input type="text" id="nombre" class="form-control" asp-for="NuevaTarea.Nombre" />
@@ -23,29 +22,29 @@
         <span class="text-danger" asp-validation-for="NuevaTarea.Id_color"></span>
     </section>
     <section class="col-md-12 mb-3">
-    <label for="Id_tablero" class="form-label fw-bold">Tablero</label>
-    @if (Model.Tableros.Any())
-    {
-        <select id="Id_tablero" class="form-select" asp-for="NuevaTarea.Id_tablero">
-            <option value="">Seleccione un Tablero</option>
-            @foreach (var tablero in Model.Tableros)
-            {
-                <option value="@tablero.Id_tablero">@tablero.Nombre</option>
-            }
-        </select>
-    }
-    else
-    {
-        <!-- Campo visible solo para mostrar el valor -->
-        <input type="text" class="form-control" value="@Model.NuevaTarea.Id_tablero" readonly />
-        <!-- Campo oculto para enviar el ID del tablero -->
-        <input type="hidden" asp-for="NuevaTarea.Id_tablero" value="@Model.NuevaTarea.Id_tablero" />
-        
-        <input type="hidden" name="returnUrl" value="@Context.Request.Path@Context.Request.QueryString" />
+        <label for="Id_tablero" class="form-label fw-bold">Tablero</label>
+        @if (Model.Tableros.Any())
+        {
+            <select id="Id_tablero" class="form-select" asp-for="NuevaTarea.Id_tablero">
+                <option value="">Seleccione un Tablero</option>
+                @foreach (var tablero in Model.Tableros)
+                {
+                    <option value="@tablero.Id_tablero">@tablero.Nombre</option>
+                }
+            </select>
+        }
+        else
+        {
+            <!-- Campo visible solo para mostrar el valor -->
+            <input type="text" class="form-control" value="@Model.NuevaTarea.Id_tablero" readonly />
+            <!-- Campo oculto para enviar el ID del tablero -->
+            <input type="hidden" asp-for="NuevaTarea.Id_tablero" value="@Model.NuevaTarea.Id_tablero" />
 
-    }
-    <span class="text-danger" asp-validation-for="NuevaTarea.Id_tablero"></span>
-</section>
+            <input type="hidden" name="returnUrl" value="@Context.Request.Path@Context.Request.QueryString" />
+
+        }
+        <span class="text-danger" asp-validation-for="NuevaTarea.Id_tablero"></span>
+    </section>
 
     <section class="col-md-12 mb-3">
         <label for="Id_usuario_asignado" class="form-label fw-bold">Usuario</label>
@@ -58,10 +57,24 @@
         </select>
         <span class="text-danger" asp-validation-for="NuevaTarea.Id_usuario_asignado"></span>
     </section>
+
+
+
     <section class="col-md-12 mb-3">
-        <a asp-controller="Tarea" asp-action="Index" class="text-white text-decoration-none me-1">
-            <button type="button" class="btn btn-secondary">Volver</button>
-        </a>
+        @if (Model.Tableros.Any())
+        {
+            <a asp-controller="Tarea" asp-action="Index" class="text-white text-decoration-none me-1">
+                <button type="button" class="btn btn-secondary">Volver</button>
+            </a>
+        }
+        else
+        {
+            <button type="button" class="btn btn-secondary">
+                <a asp-controller="Tablero" asp-action="Kanban" asp-route-id_tablero="@Model.NuevaTarea.Id_tablero">
+                    Volver
+                </a>
+            </button>
+        }
         <button type="submit" class="btn btn-primary ms-1">CREAR</button>
     </section>
 </form>
