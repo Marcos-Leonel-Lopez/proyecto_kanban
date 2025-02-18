@@ -18,7 +18,7 @@ public class UsuarioController : Controller
     private readonly IUsuarioRepository _usuarioRepository;
     private readonly ITableroRepository _tableroRepository;
     private readonly ITareaRepository _tareaRepository;
-   
+
     public UsuarioController(ILogger<UsuarioController> logger, ExceptionHandlerService exceptionHandler, IUsuarioRepository usuarioRepository, ITableroRepository tableroRepository, ITareaRepository tareaRepository)
     {
         _logger = logger;
@@ -47,7 +47,7 @@ public class UsuarioController : Controller
                 Nombre = usuario.Nombre_de_usuario,
                 Rol = usuario.Rol_usuario.ToString()
             }).ToList();
-            
+
             return View(usuarios);
         }
         catch (Exception ex)
@@ -255,7 +255,7 @@ public class UsuarioController : Controller
                 Password = passModif.NewPassword,
                 Rol_usuario = usuarioExistente.Rol_usuario
             };
-            
+
             _usuarioRepository.UpdatePass(usuarioModif, idUsuarioLogueado);
             return RedirectToAction("Index", "Home");
         }
@@ -264,6 +264,18 @@ public class UsuarioController : Controller
             return _exceptionHandler.HandleException(ex, "Usuario", nameof(UpdatePass));
         }
     }
+
+    // public IActionResult scriptHash(){
+    //     try
+    //     {
+    //         bool res = _usuarioRepository.scriptHash();
+    //         return Ok(res);
+    //     }
+    //     catch (Exception ex)
+    //     {
+    //         return _exceptionHandler.HandleException(ex, "Usuario", nameof(scriptHash));
+    //     }
+    // }
 
 
     [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
