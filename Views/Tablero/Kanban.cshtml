@@ -27,7 +27,7 @@
                         @await Component.InvokeAsync("TareaCrear", new
                         {
                             model = Model.NuevaTarea,
-                            tableroId = ViewData["idTablero"]
+                            idTablero = ViewData["idTablero"]
                         })
                     </div>
                 </div>
@@ -50,9 +50,9 @@
                                 @await Component.InvokeAsync("TareaCabecera", new
                                 {
                                     propietario = Model.EsPropietario,
-                                    id_usuario_asignado = tarea.Id_usuario_asignado,
+                                    idUsuarioAsignado = tarea.Id_usuario_asignado,
                                     usuarios = Model.Usuarios,
-                                    id_tarea = tarea.Id_tarea
+                                    idTarea = tarea.Id_tarea
                                 })
                         <!-- Cuerpo  -->
                         <h5 class="card-title">@tarea.Nombre</h5>

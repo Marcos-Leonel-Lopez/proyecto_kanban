@@ -2,20 +2,15 @@ using Microsoft.AspNetCore.Mvc;
 
 public class ModalConfirmacionViewComponent : ViewComponent
 {
-    public IViewComponentResult Invoke(int id_tablero, string nombre_tablero)
+    public IViewComponentResult Invoke(int idTablero, string nombreTablero)
     {
         var mensaje = new ModalConfirmacionViewModel
         {
-            IdTablero = id_tablero,
-            NombreTablero = nombre_tablero
+            IdTablero = idTablero,
+            NombreTablero = nombreTablero
         };
         return View(mensaje);
     }
     
 }
 
-public class ModalConfirmacionViewModel
-{
-    public int IdTablero { get; set; }
-    public string NombreTablero { get; set; }
-}

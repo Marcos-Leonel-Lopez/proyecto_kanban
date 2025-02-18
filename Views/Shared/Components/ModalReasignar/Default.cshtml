@@ -1,20 +1,20 @@
 @model ModalReasignarViewModel
 
-<div class="modal fade" id="reasignarTareaModal_@Model.Id_Tarea" tabindex="-1"
-    aria-labelledby="reasignarTareaModalLabel_@Model.Id_Tarea" aria-hidden="true">
+<div class="modal fade" id="reasignarTareaModal_@Model.IdTarea" tabindex="-1"
+    aria-labelledby="reasignarTareaModalLabel_@Model.IdTarea" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="reasignarTareaModalLabel_@Model.Id_Tarea">Reasignar Usuario</h5>
+                <h5 class="modal-title" id="reasignarTareaModalLabel_@Model.IdTarea">Reasignar Usuario</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
                 <form asp-controller="Tarea" asp-action="ActualizarUsuario" method="post">
-                    <input type="hidden" name="TareaModificada.Id_tarea" value="@Model.Id_Tarea" />
+                    <input type="hidden" name="TareaModificada.Id_tarea" value="@Model.IdTarea" />
                     <input type="hidden" name="IdPropietario" value="@Model.IdPropietario" />
                     <div class="mb-3">
-                        <label for="usuarioAsignado_@Model.Id_Tarea" class="form-label">Seleccionar Usuario</label>
-                        <select class="form-select" id="usuarioAsignado_@Model.Id_Tarea"
+                        <label for="usuarioAsignado_@Model.IdTarea" class="form-label">Seleccionar Usuario</label>
+                        <select class="form-select" id="usuarioAsignado_@Model.IdTarea"
                             name="TareaModificada.Id_usuario_asignado">
                             <option value="">Sin asignar</option> <!-- Opción para desasignar -->
                             @foreach (var usuario in Model.Usuarios)

@@ -5,7 +5,7 @@ public class ModalReasignarViewComponent : ViewComponent
     {
         var mensaje = new ModalReasignarViewModel
         {
-            Id_Tarea = idTarea,
+            IdTarea = idTarea,
             Usuarios = usuarios,
             IdPropietario = idPropietario
         };
@@ -13,9 +13,3 @@ public class ModalReasignarViewComponent : ViewComponent
     }
 }
 
-public class ModalReasignarViewModel
-{
-    public int Id_Tarea { get; set; }
-    public List<UsuarioViewModel> Usuarios { get; set; }
-    public int IdPropietario { get; set; }
-}

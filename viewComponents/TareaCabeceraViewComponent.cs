@@ -1,14 +1,14 @@
 using Microsoft.AspNetCore.Mvc;
 public class TareaCabeceraViewComponent : ViewComponent
 {
-    public IViewComponentResult Invoke(bool propietario, int? id_usuario_asignado, List<UsuarioViewModel> usuarios, int id_tarea)
+    public IViewComponentResult Invoke(bool propietario, int? idUsuarioAsignado, List<UsuarioViewModel> usuarios, int idTarea)
     {
         var cabecera = new TareaCabeceraViewModel
         {
             EsPropietario = propietario,
-            IdUsuarioAsignado = id_usuario_asignado,
+            IdUsuarioAsignado = idUsuarioAsignado,
             Usuarios = usuarios,
-            IdTarea = id_tarea
+            IdTarea = idTarea
         };
         return View(cabecera);
     }

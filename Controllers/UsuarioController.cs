@@ -265,17 +265,6 @@ public class UsuarioController : Controller
         }
     }
 
-    // public IActionResult scriptHash(){
-    //     try
-    //     {
-    //         bool res = _usuarioRepository.scriptHash();
-    //         return Ok(res);
-    //     }
-    //     catch (Exception ex)
-    //     {
-    //         return _exceptionHandler.HandleException(ex, "Usuario", nameof(UpdatePass));
-    //     }
-    // }
 
     [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
     public IActionResult Error()

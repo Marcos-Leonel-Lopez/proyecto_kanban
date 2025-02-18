@@ -6,8 +6,8 @@ public class ModalEstadoViewComponent : ViewComponent
     {
         var mensaje = new ModalEstadoViewModel
         {
-            Id_Tarea = idTarea,
-            Id_Usuario = idUsuario,
+            IdTarea = idTarea,
+            IdUsuario = idUsuario,
             Nombre = nombre,
             Descripcion = descripcion
         };
@@ -15,10 +15,3 @@ public class ModalEstadoViewComponent : ViewComponent
     }
 }
 
-public class ModalEstadoViewModel
-{
-    public int Id_Tarea { get; set; }
-    public int Id_Usuario { get; set; }
-    public string Nombre { get; set; }
-    public string Descripcion { get; set; }
-}

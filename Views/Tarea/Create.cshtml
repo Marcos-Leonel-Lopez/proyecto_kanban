@@ -11,7 +11,10 @@
         <div class="col-md-6">
             <div class="card shadow cuadro-tarea">
                 <div class="card-body">
-                    @await Component.InvokeAsync("TareaCrear", new { model = Model })
+                    @await Component.InvokeAsync("TareaCrear", new
+                    {
+                        model = Model
+                    })
                 </div>
             </div>
         </div>

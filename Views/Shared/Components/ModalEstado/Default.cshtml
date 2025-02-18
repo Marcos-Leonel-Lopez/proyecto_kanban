@@ -1,32 +1,32 @@
 @model ModalEstadoViewModel
 
-<div class="modal fade" id="editTareaModal_@Model.Id_Tarea" tabindex="-1"
-    aria-labelledby="editTareaModalLabel_@Model.Id_Tarea" aria-hidden="true">
+<div class="modal fade" id="editTareaModal_@Model.IdTarea" tabindex="-1"
+    aria-labelledby="editTareaModalLabel_@Model.IdTarea" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="editTareaModalLabel_@Model.Id_Tarea">Editar Tarea
+                <h5 class="modal-title" id="editTareaModalLabel_@Model.IdTarea">Editar Tarea
                 </h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
                 <form asp-controller="Tarea" asp-action="ActualizarEstado" method="post">
-                    <input type="hidden" name="TareaModificada.Id_tarea" value="@Model.Id_Tarea" />
+                    <input type="hidden" name="TareaModificada.Id_tarea" value="@Model.IdTarea" />
                     <input type="hidden" name="TareaModificada.Id_usuario_asignado"
-                        value="@Model.Id_Usuario" />
+                        value="@Model.IdUsuario" />
                     <div class="mb-3">
-                        <label for="nombreTarea_@Model.Id_Tarea" class="form-label">Nombre</label>
-                        <input type="text" class="form-control" id="nombreTarea_@Model.Id_Tarea"
+                        <label for="nombreTarea_@Model.IdTarea" class="form-label">Nombre</label>
+                        <input type="text" class="form-control" id="nombreTarea_@Model.IdTarea"
                             name="TareaModificada.Nombre" value="@Model.Nombre" readonly />
                     </div>
                     <div class="mb-3">
-                        <label for="descripcionTarea_@Model.Id_Tarea" class="form-label">Descripción</label>
-                        <textarea class="form-control" id="descripcionTarea_@Model.Id_Tarea"
+                        <label for="descripcionTarea_@Model.IdTarea" class="form-label">Descripción</label>
+                        <textarea class="form-control" id="descripcionTarea_@Model.IdTarea"
                             name="TareaModificada.Descripcion" rows="3" readonly>@Model.Descripcion</textarea>
                     </div>
                     <div class="mb-3">
-                        <label for="estadoTarea_@Model.Id_Tarea" class="form-label">Estado</label>
-                        <select class="form-select" id="estadoTarea_@Model.Id_Tarea"
+                        <label for="estadoTarea_@Model.IdTarea" class="form-label">Estado</label>
+                        <select class="form-select" id="estadoTarea_@Model.IdTarea"
                             name="TareaModificada.Id_estado">
                             @foreach (var est in Enum.GetValues(typeof(MisEnums.EstadoTarea)))
                             {
